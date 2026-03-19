@@ -13,7 +13,7 @@ Arklint enforces **architectural rules** before bad code ever lands — whether 
 ```
 $ arklint check
 
-Arklint v0.1.0 — Scanning 142 files against 5 rules...
+Arklint v0.1.1 — Scanning 142 files against 5 rules...
 
   ✗ FAIL  no-direct-db-in-routes
          API routes must not import database modules directly
