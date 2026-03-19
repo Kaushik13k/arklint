@@ -19,13 +19,13 @@ import shutil
 import tempfile
 from pathlib import Path
 
-from mcp.server.fastmcp import FastMCP
-
 from arklint.config import ConfigError, load_config
 from arklint.engine import run_rules
 
 
-def create_server(config_path: Path | None = None) -> FastMCP:
+def create_server(config_path: Path | None = None):
+    from mcp.server.fastmcp import FastMCP  # optional dependency
+
     mcp = FastMCP("arklint")
 
     # ------------------------------------------------------------------

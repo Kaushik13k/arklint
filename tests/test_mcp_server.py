@@ -13,6 +13,8 @@ from unittest.mock import patch
 
 import pytest
 
+mcp = pytest.importorskip("mcp", reason="mcp package not installed; skipping MCP server tests")
+
 from arklint.mcp_server import create_server
 
 
