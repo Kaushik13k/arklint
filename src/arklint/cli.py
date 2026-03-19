@@ -17,7 +17,7 @@ from arklint.config import load_config, ConfigError
 from arklint.engine import run_rules
 from arklint.init_templates import STARTER_TEMPLATE
 from arklint.reporter import console, err_console, print_header, print_report
-from arklint.scanner import collect_files
+from arklint.scanner import collect_diff_files, collect_files
 
 
 app = typer.Typer(
@@ -83,6 +83,12 @@ def check(
         "--json",
         help="Emit violations as JSON (useful for CI integrations).",
     ),
+    diff: Optional[str] = typer.Option(
+        None,
+        "--diff",
+        metavar="BASE",
+        help="Only scan files changed vs BASE (e.g. HEAD, origin/main).",
+    ),
 ) -> None:
     """Scan the codebase against your architectural rules."""
     scan_root = (path or Path.cwd()).resolve()
@@ -93,10 +99,16 @@ def check(
         err_console.print(f"[bold red]Config error:[/bold red] {exc}")
         raise typer.Exit(2) from exc
 
-    files = collect_files(scan_root)
+    if diff is not None:
+        files = collect_diff_files(scan_root, base=diff)
+        if not files:
+            console.print("[dim]No changed files to scan.[/dim]")
+            return
+    else:
+        files = collect_files(scan_root)
 
     if json_output:
-        _check_json(cfg, files, scan_root, strict)
+        _check_json(cfg, files, scan_root, strict, diff_base=diff)
         return
 
     print_header(__version__, len(files), len(cfg.rules))
@@ -129,7 +141,7 @@ def _root(
 # JSON output helper
 # ---------------------------------------------------------------------------
 
-def _check_json(cfg, files, scan_root, strict: bool) -> None:
+def _check_json(cfg, files, scan_root, strict: bool, diff_base: str | None = None) -> None:
     import json
 
     results = run_rules(cfg, files, scan_root=scan_root)
