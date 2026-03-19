@@ -169,7 +169,7 @@ arklint check -c path/to/.arklint.yml   Use a specific config
 
 ```yaml
 - repo: https://github.com/Kaushik13k/ark-lint
-  rev: v0.1.0
+  rev: v0.1.1
   hooks:
     - id: arklint
 ```
