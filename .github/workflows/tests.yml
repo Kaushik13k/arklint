@@ -1,0 +1,54 @@
+name: Tests
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    name: pytest
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.12"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: pip install -e ".[dev]"
+
+      - name: Run tests
+        run: pytest --tb=short -q
+
+  tests-changed:
+    name: Tests required for source changes
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check tests exist for source changes
+        run: |
+          SRC_CHANGED=$(git diff --name-only origin/main...HEAD | grep '^src/' || true)
+          TEST_CHANGED=$(git diff --name-only origin/main...HEAD | grep '^tests/' || true)
+
+          if [ -n "$SRC_CHANGED" ] && [ -z "$TEST_CHANGED" ]; then
+            echo "❌ Source files changed but no tests were added or updated."
+            echo ""
+            echo "Changed source files:"
+            echo "$SRC_CHANGED"
+            echo ""
+            echo "Every source change must be accompanied by a test."
+            exit 1
+          fi
+
+          echo "✓ Test coverage requirement satisfied."
