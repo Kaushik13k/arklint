@@ -18,7 +18,13 @@ jobs:
         with:
           python-version: "3.12"
 
-      - uses: ./                  # uses the action.yml in this repo
-        with:
-          strict: "false"
-          diff: ${{ github.event_name == 'pull_request' && 'origin/main' || '' }}
+      - name: Install arklint from source
+        run: pip install -e . --quiet
+
+      - name: Run arklint
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            arklint check --diff origin/main
+          else
+            arklint check
+          fi
