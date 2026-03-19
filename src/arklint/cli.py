@@ -198,6 +198,32 @@ def watch(
 
 
 # ---------------------------------------------------------------------------
+# arklint mcp
+# ---------------------------------------------------------------------------
+
+@app.command()
+def mcp(
+    config: Optional[Path] = typer.Option(
+        None,
+        "--config",
+        "-c",
+        help="Path to .arklint.yml. Auto-discovered if omitted.",
+    ),
+) -> None:
+    """Start the arklint MCP server (stdio transport) for AI agent integration."""
+    try:
+        from arklint.mcp_server import run_stdio
+    except ImportError:
+        err_console.print(
+            "[bold red]mcp package is required for MCP server mode.[/bold red]\n"
+            "Install it with: [bold]pip install 'arklint[mcp]'[/bold]"
+        )
+        raise typer.Exit(1)
+
+    run_stdio(config_path=config)
+
+
+# ---------------------------------------------------------------------------
 # --version flag (attached to the root callback)
 # ---------------------------------------------------------------------------
 
