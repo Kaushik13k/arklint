@@ -1,0 +1,77 @@
+"""Starter .arklint.yml template emitted by `arklint init`."""
+
+# Single-quoted YAML strings treat backslashes literally, which makes regex
+# patterns in the template readable without extra escaping.
+
+STARTER_TEMPLATE = r"""version: "1"
+
+# Arklint — architectural rules for your codebase
+# Docs: https://github.com/arklint/arklint
+
+rules:
+  # ── BOUNDARY ──────────────────────────────────────────────────────────────
+  # API routes must never touch the database directly.
+  - id: no-direct-db-in-routes
+    type: boundary
+    description: "API routes must not import database modules directly"
+    source: "routes/**"
+    blocked_imports:
+      - "sqlalchemy"
+      - "psycopg2"
+      - "pymongo"
+      - "prisma"
+    severity: error
+
+  # ── DEPENDENCY ────────────────────────────────────────────────────────────
+  # Pick one HTTP client and stick with it.
+  - id: single-http-client
+    type: dependency
+    description: "Only one HTTP client library allowed"
+    allow_only_one_of:
+      - "requests"
+      - "httpx"
+      - "aiohttp"
+    severity: error
+
+  # ── FILE-PATTERN ──────────────────────────────────────────────────────────
+  # Data models belong in models/ or schemas/ — nowhere else.
+  - id: models-in-models-dir
+    type: file-pattern
+    description: "Data models must live in models/ or schemas/"
+    pattern: 'class\s+\w*(Model|Schema)\s*[:(]'
+    allowed_in:
+      - "models/**"
+      - "schemas/**"
+    severity: warning
+
+  # ── PATTERN-BAN ───────────────────────────────────────────────────────────
+  # Use structured logging — never bare print().
+  - id: no-print-statements
+    type: pattern-ban
+    description: "Use structured logging, not print()"
+    pattern: 'print\('
+    exclude:
+      - "tests/**"
+      - "scripts/**"
+    severity: warning
+
+  # ── LAYER-BOUNDARY ────────────────────────────────────────────────────────
+  # Enforce a strict dependency direction: routes → services → repositories.
+  - id: layered-architecture
+    type: layer-boundary
+    description: "Enforce routes → services → repositories dependency direction"
+    layers:
+      - name: routes
+        path: "routes/**"
+      - name: services
+        path: "services/**"
+      - name: repositories
+        path: "repositories/**"
+    allowed_dependencies:
+      routes:
+        - services
+      services:
+        - repositories
+      repositories: []
+    severity: error
+"""
