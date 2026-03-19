@@ -120,6 +120,84 @@ def check(
 
 
 # ---------------------------------------------------------------------------
+# arklint watch
+# ---------------------------------------------------------------------------
+
+@app.command()
+def watch(
+    path: Optional[Path] = typer.Argument(
+        None,
+        help="Directory to watch. Defaults to the current directory.",
+        show_default=False,
+    ),
+    config: Optional[Path] = typer.Option(
+        None, "--config", "-c", help="Path to .arklint.yml.",
+    ),
+    strict: bool = typer.Option(
+        False, "--strict", help="Treat warnings as errors.",
+    ),
+) -> None:
+    """Watch for file changes and re-run checks automatically."""
+    try:
+        from watchdog.events import FileSystemEvent, FileSystemEventHandler
+        from watchdog.observers import Observer
+    except ImportError:  # pragma: no cover
+        err_console.print(
+            "[bold red]watchdog is required for watch mode.[/bold red]\n"
+            "Install it with: [bold]pip install watchdog[/bold]"
+        )
+        raise typer.Exit(1)
+
+    import time
+
+    scan_root = (path or Path.cwd()).resolve()
+
+    try:
+        cfg = load_config(config)
+    except ConfigError as exc:
+        err_console.print(f"[bold red]Config error:[/bold red] {exc}")
+        raise typer.Exit(2) from exc
+
+    def _run() -> None:
+        console.rule("[dim]arklint[/dim]")
+        files = collect_files(scan_root)
+        print_header(__version__, len(files), len(cfg.rules))
+        results = run_rules(cfg, files, scan_root=scan_root)
+        errors, warnings = print_report(results, scan_root)
+        if errors > 0 or (strict and warnings > 0):
+            console.print("[bold red]✗ violations found[/bold red]")
+        else:
+            console.print("[bold green]✓ all rules passed[/bold green]")
+
+    class _Handler(FileSystemEventHandler):
+        def on_any_event(self, event: FileSystemEvent) -> None:
+            if event.is_directory:
+                return
+            src = str(event.src_path)
+            # ignore hidden dirs, caches, build artefacts
+            if any(part.startswith(".") or part in ("__pycache__", "dist", "build")
+                   for part in Path(src).parts):
+                return
+            _run()
+
+    _run()
+    console.print(f"\n[dim]Watching [cyan]{scan_root}[/cyan] — press Ctrl+C to stop.[/dim]\n")
+
+    observer = Observer()
+    observer.schedule(_Handler(), str(scan_root), recursive=True)
+    observer.start()
+    try:
+        while observer.is_alive():
+            time.sleep(1)
+    except KeyboardInterrupt:
+        pass
+    finally:
+        observer.stop()
+        observer.join()
+        console.print("\n[dim]Watch stopped.[/dim]")
+
+
+# ---------------------------------------------------------------------------
 # --version flag (attached to the root callback)
 # ---------------------------------------------------------------------------
 
