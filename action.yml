@@ -1,5 +1,5 @@
 name: Arklint
-description: Enforce architectural rules before bad code ever lands.
+description: "Enforce architectural rules before bad code ever lands."
 author: Kaushik K
 
 branding:
@@ -8,23 +8,23 @@ branding:
 
 inputs:
   version:
-    description: Arklint version to install (default: latest).
+    description: "Arklint version to install. Defaults to latest."
     required: false
     default: ""
   strict:
-    description: Treat warnings as errors (exit 1 on warnings).
+    description: "Treat warnings as errors (exit 1 on warnings)."
     required: false
     default: "false"
   diff:
-    description: Only scan files changed vs this ref (e.g. origin/main). Leave empty to scan all files.
+    description: "Only scan files changed vs this ref (e.g. origin/main). Leave empty to scan all files."
     required: false
     default: ""
   config:
-    description: Path to .arklint.yml (auto-discovered if omitted).
+    description: "Path to .arklint.yml. Auto-discovered if omitted."
     required: false
     default: ""
   working-directory:
-    description: Directory to run arklint in.
+    description: "Directory to run arklint in."
     required: false
     default: "."
 
