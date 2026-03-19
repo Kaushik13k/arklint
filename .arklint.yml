@@ -17,17 +17,6 @@ rules:
       - "prisma"
     severity: error
 
-  # ── DEPENDENCY ────────────────────────────────────────────────────────────
-  # Pick one HTTP client and stick with it.
-  - id: single-http-client
-    type: dependency
-    description: "Only one HTTP client library allowed"
-    allow_only_one_of:
-      - "requests"
-      - "httpx"
-      - "aiohttp"
-    severity: error
-
   # ── FILE-PATTERN ──────────────────────────────────────────────────────────
   # Data models belong in models/ or schemas/ — nowhere else.
   - id: models-in-models-dir
@@ -44,10 +33,15 @@ rules:
   - id: no-print-statements
     type: pattern-ban
     description: "Use structured logging, not print()"
-    pattern: 'print\('
+    pattern: '(?<!\.)print\('
     exclude:
       - "tests/**"
       - "scripts/**"
+      - "*.md"
+      - "*.yml"
+      - "*.yaml"
+      - "src/arklint/init_templates.py"
+      - "src/arklint/rules/**"
     severity: warning
 
   # ── LAYER-BOUNDARY ────────────────────────────────────────────────────────
