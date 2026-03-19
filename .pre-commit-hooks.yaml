@@ -1,0 +1,7 @@
+- id: arklint
+  name: Arklint
+  description: Enforce architectural rules before bad code ever lands.
+  language: python
+  entry: arklint check
+  pass_filenames: false
+  additional_dependencies: []

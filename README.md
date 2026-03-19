@@ -34,17 +34,6 @@ Results: 2 errors, 1 warning, 2 passed
 ────────────────────────────────────────────────────────
 ```
 
-## Why Arklint
-
-| Other tools | Arklint |
-|---|---|
-| Review **after** code is written (PR comments) | Enforce **before** (pre-commit, CI gate) |
-| Focus on syntax, style, security | Focus on **architecture and boundaries** |
-| SaaS, $15–30/user/month | Open-source, free, runs locally |
-| Complex setup | `arklint init` → working in 60 seconds |
-
-Arklint is **not** a linter (ESLint/Ruff), **not** a security scanner (Semgrep/Snyk), and **not** an AI reviewer (CodeRabbit). It operates at the architecture level — patterns, conventions, and structural rules that no existing tool enforces.
-
 ---
 
 ## Installation
@@ -179,13 +168,10 @@ arklint check -c path/to/.arklint.yml   Use a specific config
 ## pre-commit
 
 ```yaml
-- repo: local
+- repo: https://github.com/Kaushik13k/ark-lint
+  rev: v0.1.0
   hooks:
     - id: arklint
-      name: arklint
-      entry: arklint check
-      language: python
-      pass_filenames: false
 ```
 
 ---
