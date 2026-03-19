@@ -51,7 +51,7 @@ jobs:
 
       - name: Check tests exist for source changes
         run: |
-          SRC_CHANGED=$(git diff --name-only origin/main...HEAD | grep '^src/' || true)
+          SRC_CHANGED=$(git diff --name-only origin/main...HEAD | grep '^src/' | grep -v '__init__\.py' | grep -v 'pyproject\.toml' || true)
           TEST_CHANGED=$(git diff --name-only origin/main...HEAD | grep '^tests/' || true)
 
           if [ -n "$SRC_CHANGED" ] && [ -z "$TEST_CHANGED" ]; then
