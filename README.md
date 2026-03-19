@@ -158,11 +158,23 @@ arklint check -c path/to/.arklint.yml   Use a specific config
 ## CI integration
 
 ```yaml
-# GitHub Actions
+# GitHub Actions — one-liner with the official action
+- uses: actions/checkout@v4
+  with:
+    fetch-depth: 0
+- uses: Kaushik13k/ark-lint@v0.1.1
+  with:
+    strict: "true"               # exit 1 on warnings too
+    diff: origin/main            # only scan changed files (fast)
+```
+
+Or with pip directly:
+
+```yaml
 - name: Arklint
   run: |
     pip install arklint
-    arklint check --strict
+    arklint check --diff origin/main --strict
 ```
 
 ## pre-commit

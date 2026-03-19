@@ -1,0 +1,24 @@
+name: Arklint
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  arklint:
+    name: Architectural lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0          # needed for --diff origin/main
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - uses: ./                  # uses the action.yml in this repo
+        with:
+          strict: "false"
+          diff: ${{ github.event_name == 'pull_request' && 'origin/main' || '' }}
