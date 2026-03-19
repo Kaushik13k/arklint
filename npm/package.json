@@ -1,0 +1,20 @@
+{
+  "name": "arklint",
+  "version": "0.2.0",
+  "description": "The architectural rulebook for your codebase. Prevention, not detection.",
+  "bin": {
+    "arklint": "./run.js"
+  },
+  "files": [
+    "run.js"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Kaushik13k/arklint"
+  },
+  "keywords": ["architecture", "linting", "cli", "code-quality", "ai"],
+  "license": "MIT",
+  "engines": {
+    "node": ">=16"
+  }
+}
