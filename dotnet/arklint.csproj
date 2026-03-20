@@ -16,6 +16,12 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/Kaushik13k/arklint</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Kaushik13k/arklint</RepositoryUrl>
-    <PackageTags>architecture;linting;cli;code-quality</PackageTags>
+    <PackageTags>architecture;linting;cli;code-quality;ai;layer-boundary</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageIcon></PackageIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
 </Project>

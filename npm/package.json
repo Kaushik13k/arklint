@@ -6,13 +6,15 @@
     "arklint": "./run.js"
   },
   "files": [
-    "run.js"
+    "run.js",
+    "README.md"
   ],
+  "homepage": "https://github.com/Kaushik13k/arklint#readme",
   "repository": {
     "type": "git",
     "url": "https://github.com/Kaushik13k/arklint"
   },
-  "keywords": ["architecture", "linting", "cli", "code-quality", "ai"],
+  "keywords": ["architecture", "linting", "cli", "code-quality", "ai", "layer-boundary", "import-analysis"],
   "license": "MIT",
   "engines": {
     "node": ">=16"

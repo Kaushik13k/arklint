@@ -94,6 +94,40 @@ arklint check --strict   # exits 1 on warnings too
 
 ---
 
+## Official rule packs
+
+Arklint ships with ready-made rule packs for popular frameworks. Add one in seconds:
+
+```bash
+arklint search fastapi          # browse available packs
+arklint add arklint/fastapi     # add to .arklint.yml
+```
+
+| Pack | Rules | Description |
+|------|-------|-------------|
+| `arklint/fastapi` | 4 | FastAPI service/route/schema separation |
+| `arklint/django` | 4 | Django model/view/serializer placement |
+| `arklint/nextjs` | 3 | Next.js server/client boundary rules |
+| `arklint/express` | 3 | Express route/service separation |
+| `arklint/clean-arch` | 2 | Clean architecture layer ordering |
+
+Packs are composable — mix framework packs with your own project rules:
+
+```yaml
+# .arklint.yml
+version: "1"
+extends:
+  - arklint/fastapi
+  - arklint/clean-arch
+rules:
+  # your project-specific rules here
+  - id: no-direct-db-in-routes
+    type: boundary
+    ...
+```
+
+---
+
 ## Rule types
 
 ### `boundary` — Import restrictions between directories
@@ -180,18 +214,40 @@ Control which layers are allowed to import from which.
 ## CLI reference
 
 ```
-arklint init                        Create a starter .arklint.yml
-arklint init --force                Overwrite existing config
+arklint init                          Create a starter .arklint.yml
+arklint init --force                  Overwrite existing config
 
-arklint check                       Scan from current directory
-arklint check ./src                 Scan a specific directory
-arklint check --strict              Exit 1 on warnings too
-arklint check --json                Machine-readable JSON output
-arklint check --diff origin/main    Only scan files changed vs base
-arklint check -c path/to/.arklint.yml   Use a specific config
+arklint check                         Scan from current directory
+arklint check ./src                   Scan a specific directory
+arklint check --strict                Exit 1 on warnings too
+arklint check --quiet / -q            Suppress passing rules
+arklint check --json                  Machine-readable JSON output
+arklint check --diff origin/main      Only scan files changed vs base
+arklint check --github-annotations    Emit GitHub PR inline annotations
+arklint check -c path/.arklint.yml    Use a specific config
 
-arklint watch                       Re-run on every file save
-arklint mcp                         Start MCP server for AI agents
+arklint validate                      Validate config without checking
+arklint validate -c path/.arklint.yml Validate a specific config file
+
+arklint search <query>                Search official rule packs
+arklint add arklint/<pack>            Add a pack to .arklint.yml
+
+arklint export --format cursorrules   Export rules for Cursor IDE
+arklint export --format claude        Export rules for Claude Code
+arklint export --format copilot       Export rules for GitHub Copilot
+
+arklint learn --describe <text>       Generate a rule from plain English
+arklint learn --provider anthropic    AI provider (anthropic or openai)
+arklint learn --append                Append rule without prompting
+
+arklint visualize                     Print Mermaid diagram of rules
+arklint visualize -o diagram.md       Write diagram to a file
+
+arklint watch                         Re-run on every file save
+arklint watch --strict                Watch mode with strict severity
+
+arklint mcp                           Start MCP server for AI agents
+arklint --version                     Show version and exit
 ```
 
 ---
@@ -219,6 +275,15 @@ arklint mcp                         Start MCP server for AI agents
     arklint check --diff origin/main --strict
 ```
 
+### .NET projects
+
+```yaml
+- name: Arklint
+  run: |
+    dotnet tool install -g arklint
+    arklint check --diff origin/main --strict
+```
+
 ---
 
 ## pre-commit
@@ -234,7 +299,7 @@ arklint mcp                         Start MCP server for AI agents
 
 ## MCP server (AI agents)
 
-Connect Claude or any MCP-compatible agent to arklint so it can query your architectural rules before generating code:
+Connect Claude, Cursor, or any MCP-compatible agent to arklint so it can query your architectural rules before generating code:
 
 ```bash
 pip install 'arklint[mcp]'
@@ -255,6 +320,29 @@ Add to `claude_desktop_config.json`:
 ```
 
 Tools exposed: `list_rules`, `get_rule_details`, `check_file`, `check_snippet`.
+
+---
+
+## Export rules for AI assistants
+
+Keep your AI coding tools aligned with the same architectural constraints:
+
+```bash
+arklint export --format cursorrules   # → .cursorrules
+arklint export --format claude        # → CLAUDE.md
+arklint export --format copilot       # → .github/copilot-instructions.md
+```
+
+---
+
+## Visualize your architecture
+
+Generate a [Mermaid](https://mermaid.live) diagram of your layer dependencies and import boundaries:
+
+```bash
+arklint visualize
+arklint visualize -o docs/architecture.md
+```
 
 ---
 

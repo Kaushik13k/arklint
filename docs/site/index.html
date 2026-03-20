@@ -172,10 +172,15 @@ code.i{font-family:var(--mono);font-size:12.5px;background:var(--bg-ci);padding:
     <a href="#rule-layer-boundary" class="sidebar-link sidebar-sub">layer-boundary</a>
   </div>
   <div class="sidebar-section">
+    <div class="sidebar-label">Configuration</div>
+    <a href="#packs" class="sidebar-link">Rule Packs</a>
+  </div>
+  <div class="sidebar-section">
     <div class="sidebar-label">Reference</div>
     <a href="#cli" class="sidebar-link">CLI Reference</a>
     <a href="#watch" class="sidebar-link">Watch Mode</a>
     <a href="#diff" class="sidebar-link">Diff Mode</a>
+    <a href="#visualize" class="sidebar-link">Visualize</a>
     <a href="#mcp" class="sidebar-link">MCP Server</a>
     <a href="#export" class="sidebar-link">Export Rules</a>
     <a href="#learn" class="sidebar-link">AI Rule Generation</a>
@@ -405,6 +410,85 @@ code.i{font-family:var(--mono);font-size:12.5px;background:var(--bg-ci);padding:
   </div>
 </section>
 
+<section class="ds" id="packs">
+  <h2>Rule Packs <a href="#packs" class="anchor">#</a></h2>
+  <p class="lead">Rule packs are shareable bundles of arklint rules for a specific framework or architecture pattern. Use them to get started in seconds without writing rules from scratch.</p>
+<h3>Browsing packs</h3>
+<div class="cb"><div class="cb-h"><span class="l">Terminal</span><span class="r">bash</span></div><pre><span class="p">$ </span><span class="cmd">arklint search fastapi</span>
+<span class="p">$ </span><span class="cmd">arklint search django</span>
+<span class="p">$ </span><span class="cmd">arklint search clean</span>
+</pre></div>
+<h3>Adding a pack</h3>
+<div class="cb"><div class="cb-h"><span class="l">Terminal</span><span class="r">bash</span></div><pre><span class="p">$ </span><span class="cmd">arklint add arklint/fastapi</span>
+<span class="dim">Fetching pack 'arklint/fastapi'…</span>
+<span class="dim">✓ Added arklint/fastapi (4 rules) to .arklint.yml</span>
+<span class="dim">  Run arklint validate to confirm.</span>
+</pre></div>
+<p>This appends the pack to the <code class="i">extends</code> list in your <code class="i">.arklint.yml</code>. Your own rules always take precedence — if you define a rule with the same <code class="i">id</code> as a pack rule, yours wins.</p>
+<h3>Official packs</h3>
+<table class="ct">
+<thead>
+<tr>
+<th>Pack</th>
+<th>Rules</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="i">arklint/fastapi</code></td>
+<td>4</td>
+<td>FastAPI service/route/schema separation, single HTTP client</td>
+</tr>
+<tr>
+<td><code class="i">arklint/django</code></td>
+<td>4</td>
+<td>Django model/view/serializer placement, no raw SQL in views</td>
+</tr>
+<tr>
+<td><code class="i">arklint/nextjs</code></td>
+<td>3</td>
+<td>Next.js server/client boundary, no DB in server actions</td>
+</tr>
+<tr>
+<td><code class="i">arklint/express</code></td>
+<td>3</td>
+<td>Express route/service separation, no console.log in prod</td>
+</tr>
+<tr>
+<td><code class="i">arklint/clean-arch</code></td>
+<td>2</td>
+<td>Clean architecture layer ordering, no framework in entities</td>
+</tr>
+</tbody>
+</table>
+<h3>Using extends manually</h3>
+<div class="cb"><div class="cb-h"><span class="l">.arklint.yml</span><span class="r">yaml</span></div><pre><span class="c"># .arklint.yml</span>
+<span class=<span class="s">"k"</span>>version:</span> <span class="s">&quot;1&quot;</span>
+<span class=<span class="s">"k"</span>>extends:</span>
+  - arklint/fastapi
+  - arklint/clean-arch
+  - ./local-packs/my-company.yml   <span class="c"># local file packs also work</span>
+
+<span class=<span class="s">"k"</span>>rules:</span>
+  <span class="c"># project-specific rules — these override pack rules with the same id</span>
+  - id: fastapi/no-db-in-routes
+    <span class=<span class="s">"k"</span>>type:</span> boundary
+    <span class=<span class="s">"k"</span>>description:</span> <span class="s">&quot;Customised version of the pack rule&quot;</span>
+    <span class=<span class="s">"k"</span>>source:</span> <span class="s">&quot;api/**&quot;</span>
+    <span class=<span class="s">"k"</span>>blocked_imports:</span> [<span class="s">&quot;sqlalchemy&quot;</span>, <span class="s">&quot;psycopg2&quot;</span>, <span class="s">&quot;motor&quot;</span>]
+    <span class=<span class="s">"k"</span>>severity:</span> error
+</pre></div>
+<h3>Local packs</h3>
+<p>Point <code class="i">extends</code> at a relative path to share rules across a monorepo:</p>
+<div class="cb"><div class="cb-h"><span class="l">.arklint.yml</span><span class="r">yaml</span></div><pre><span class=<span class="s">"k"</span>>extends:</span>
+  - ../../shared/arklint-rules.yml
+</pre></div>
+<p>The referenced file must have the same structure as a named pack — a <code class="i">rules:</code> list at the top level.</p>
+<h3>Contributing a pack</h3>
+<p>See <a href="https://github.com/Kaushik13k/arklint/blob/main/packs/CONTRIBUTING.md">packs/CONTRIBUTING.md</a> for the full guide. No Python required — just YAML.</p>
+</section>
+
 <section class="ds" id="cli">
   <h2>CLI Reference <a href="#cli" class="anchor">#</a></h2>
   <p class="lead">Every command and flag Arklint supports.</p>
@@ -465,6 +549,14 @@ code.i{font-family:var(--mono);font-size:12.5px;background:var(--bg-ci);padding:
 <td>Validate a config file at a custom path</td>
 </tr>
 <tr>
+<td><code class="i">arklint search &lt;query&gt;</code></td>
+<td>Search official rule packs by name, description, or tag</td>
+</tr>
+<tr>
+<td><code class="i">arklint add &lt;pack&gt;</code></td>
+<td>Add an official rule pack to <code class="i">.arklint.yml</code></td>
+</tr>
+<tr>
 <td><code class="i">arklint export --format &lt;fmt&gt;</code></td>
 <td>Export rules as an AI assistant instruction file</td>
 </tr>
@@ -483,6 +575,14 @@ code.i{font-family:var(--mono);font-size:12.5px;background:var(--bg-ci);padding:
 <tr>
 <td><code class="i">arklint learn --append</code></td>
 <td>Append suggested rule to <code class="i">.arklint.yml</code> without prompting</td>
+</tr>
+<tr>
+<td><code class="i">arklint visualize</code></td>
+<td>Print a Mermaid diagram of your architecture rules</td>
+</tr>
+<tr>
+<td><code class="i">arklint visualize -o &lt;file&gt;</code></td>
+<td>Write diagram to a file instead of stdout</td>
 </tr>
 <tr>
 <td><code class="i">arklint watch</code></td>
@@ -520,6 +620,92 @@ code.i{font-family:var(--mono);font-size:12.5px;background:var(--bg-ci);padding:
 <span class="p">$ </span><span class="cmd">arklint check --diff origin/main     # changes vs main branch</span>
 </pre></div>
 <p>Diff mode runs <code class="i">git diff --name-only</code> under the hood, including both staged and unstaged changes. Only the changed files are scanned against your rules.</p>
+</section>
+
+<section class="ds" id="visualize">
+  <h2>Visualize <a href="#visualize" class="anchor">#</a></h2>
+  <p class="lead">Generate a [Mermaid](https://mermaid.live) diagram of your architecture rules directly from `.arklint.yml`.</p>
+<div class="cb"><div class="cb-h"><span class="l">Terminal</span><span class="r">bash</span></div><pre><span class="p">$ </span><span class="cmd">arklint visualize</span>
+</pre></div>
+<h3>Output</h3>
+<p>The command prints a <code class="i">flowchart LR</code> Mermaid block to stdout. You can paste it into any Markdown file or drop it into <a href="https://mermaid.live">mermaid.live</a> to render it interactively.</p>
+<p>For a three-layer setup the output looks like:</p>
+<div class="cb"><div class="cb-h"><span class="l">Code</span><span class="r"></span></div><pre>flowchart LR
+
+    subgraph arch_layers [&quot;Clean layers&quot;]
+        routes[&quot;routes\nroutes/**&quot;]
+        services[&quot;services\nservices/**&quot;]
+        repositories[&quot;repositories\nrepositories/**&quot;]
+        routes --&gt; services
+        routes -. blocked .-&gt; repositories
+        services --&gt; repositories
+        services -. blocked .-&gt; routes
+        repositories -. blocked .-&gt; routes
+        repositories -. blocked .-&gt; services
+    end
+</pre></div>
+<p>Solid arrows (<code class="i">--&gt;</code>) are <strong>allowed</strong> dependencies. Dashed arrows (<code class="i">-. blocked .-&gt;</code>) are <strong>blocked</strong> ones.</p>
+<h3>Write to a file</h3>
+<div class="cb"><div class="cb-h"><span class="l">Terminal</span><span class="r">bash</span></div><pre><span class="p">$ </span><span class="cmd">arklint visualize -o docs/architecture.md</span>
+<span class="dim">✓ Diagram written to docs/architecture.md</span>
+</pre></div>
+<p>You can then embed it in a Markdown page:</p>
+<div class="cb"><div class="cb-h"><span class="l">Code</span><span class="r">markdown</span></div><pre>```mermaid
+flowchart LR
+    ...
+```
+</pre></div>
+<p>GitHub and most documentation platforms render Mermaid natively inside fenced code blocks.</p>
+<h3>What gets visualised</h3>
+<table class="ct">
+<thead>
+<tr>
+<th>Rule type</th>
+<th>Rendered as</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="i">layer-boundary</code></td>
+<td>Directed graph with allowed/blocked edges per layer</td>
+</tr>
+<tr>
+<td><code class="i">boundary</code></td>
+<td>Source directories → blocked import packages</td>
+</tr>
+<tr>
+<td><code class="i">dependency</code></td>
+<td>&ldquo;choose one&rdquo; node connected to competing packages</td>
+</tr>
+<tr>
+<td><code class="i">pattern-ban</code></td>
+<td>Not rendered (text-based, no graph structure)</td>
+</tr>
+<tr>
+<td><code class="i">file-pattern</code></td>
+<td>Not rendered (text-based, no graph structure)</td>
+</tr>
+</tbody>
+</table>
+<h3>Options</h3>
+<table class="ct">
+<thead>
+<tr>
+<th>Flag</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="i">-o / --output &lt;file&gt;</code></td>
+<td>Write diagram to a file instead of stdout</td>
+</tr>
+<tr>
+<td><code class="i">-c / --config &lt;path&gt;</code></td>
+<td>Use a config file from a custom path</td>
+</tr>
+</tbody>
+</table>
 </section>
 
 <section class="ds" id="mcp">

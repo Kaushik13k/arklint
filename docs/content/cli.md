@@ -16,11 +16,15 @@ Every command and flag Arklint supports.
 | `arklint check -c <path>` | Use a config file from a custom path |
 | `arklint validate` | Validate `.arklint.yml` without running any checks |
 | `arklint validate -c <path>` | Validate a config file at a custom path |
+| `arklint search <query>` | Search official rule packs by name, description, or tag |
+| `arklint add <pack>` | Add an official rule pack to `.arklint.yml` |
 | `arklint export --format <fmt>` | Export rules as an AI assistant instruction file |
 | `arklint export --output <dir>` | Write exported file to a specific directory |
 | `arklint learn --describe <text>` | Generate a rule from a plain-English description using AI |
 | `arklint learn --provider <name>` | AI provider: `anthropic` or `openai` (required) |
 | `arklint learn --append` | Append suggested rule to `.arklint.yml` without prompting |
+| `arklint visualize` | Print a Mermaid diagram of your architecture rules |
+| `arklint visualize -o <file>` | Write diagram to a file instead of stdout |
 | `arklint watch` | Watch for file changes and re-run checks automatically |
 | `arklint watch --strict` | Watch mode with strict severity |
 | `arklint mcp` | Start the MCP server (stdio) for AI agent integration |
