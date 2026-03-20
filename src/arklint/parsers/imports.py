@@ -55,7 +55,7 @@ _RUBY_RE = re.compile(r"""^\s*require(?:_relative)?\s+['"]([^'"]+)['"]""", re.MU
 _RUST_RE = re.compile(r"^\s*(?:use\s+([\w:]+)|extern\s+crate\s+([\w]+))", re.MULTILINE)
 
 # Java ────────────────────────────────────────────────────────────────────────
-_JAVA_RE = re.compile(r"^\s*import\s+(?:static\s+)?([\w.]+)\s*;", re.MULTILINE)
+_JAVA_RE = re.compile(r"^\s*import\s+(?:static\s+)?([\w.]+\*?)\s*;", re.MULTILINE)
 
 # C# ──────────────────────────────────────────────────────────────────────────
 _CS_RE = re.compile(r"^\s*using\s+([\w.]+)\s*;", re.MULTILINE)
