@@ -4,6 +4,7 @@ Commands
 --------
 arklint init    Create a starter .arklint.yml in the current directory.
 arklint check   Scan the codebase against all configured rules.
+arklint export  Export rules as AI assistant instruction files.
 """
 from __future__ import annotations
 
@@ -235,6 +236,63 @@ def validate(
         f"[bold green]✓ Valid[/bold green] — "
         f"[bold]{len(cfg.rules)}[/bold] rule{'s' if len(cfg.rules) != 1 else ''} loaded "
         f"from [cyan]{cfg.root / '.arklint.yml'}[/cyan]"
+    )
+
+
+# ---------------------------------------------------------------------------
+# arklint export
+# ---------------------------------------------------------------------------
+
+@app.command()
+def export(
+    fmt: str = typer.Option(
+        ...,
+        "--format",
+        "-f",
+        help="Output format: cursorrules, claude, or copilot.",
+        metavar="FORMAT",
+    ),
+    config: Optional[Path] = typer.Option(
+        None,
+        "--config",
+        "-c",
+        help="Path to .arklint.yml. Auto-discovered if omitted.",
+    ),
+    output: Optional[Path] = typer.Option(
+        None,
+        "--output",
+        "-o",
+        help="Directory to write the file into. Defaults to the current directory.",
+    ),
+) -> None:
+    """Export rules as an AI assistant instruction file.
+
+    Formats:
+      [bold]cursorrules[/bold]  →  .cursorrules
+      [bold]claude[/bold]       →  CLAUDE.md
+      [bold]copilot[/bold]      →  .github/copilot-instructions.md
+    """
+    from arklint.exporter import export as do_export, SUPPORTED_FORMATS
+
+    if fmt not in SUPPORTED_FORMATS:
+        err_console.print(
+            f"[bold red]Unknown format:[/bold red] {fmt!r}. "
+            f"Choose from: {', '.join(SUPPORTED_FORMATS)}"
+        )
+        raise typer.Exit(1)
+
+    try:
+        cfg = load_config(config)
+    except ConfigError as exc:
+        err_console.print(f"[bold red]Config error:[/bold red] {exc}")
+        raise typer.Exit(2) from exc
+
+    out_dir = (output or Path.cwd()).resolve()
+    dest = do_export(cfg, fmt, out_dir)
+
+    console.print(
+        f"[bold green]✓ Exported[/bold green] [bold]{len(cfg.rules)}[/bold] "
+        f"rule{'s' if len(cfg.rules) != 1 else ''} → [cyan]{dest}[/cyan]"
     )
 
 
