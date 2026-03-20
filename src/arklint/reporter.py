@@ -53,6 +53,34 @@ def print_report(
 
 
 # ---------------------------------------------------------------------------
+# GitHub Actions annotations
+# ---------------------------------------------------------------------------
+
+def emit_github_annotations(
+    results: list[CheckResult],
+    scan_root: Path,
+) -> None:
+    """Write GitHub Actions workflow commands for every violation.
+
+    Each line is picked up by the GitHub Actions runner and shown as an
+    inline annotation on the PR diff — no API token required.
+    """
+    for result in results:
+        for v in result.violations:
+            level = "error" if v.severity == "error" else "warning"
+            try:
+                rel = str(v.file.relative_to(scan_root))
+            except ValueError:
+                rel = str(v.file)
+
+            parts = [f"file={rel}"]
+            if v.line:
+                parts.append(f"line={v.line}")
+            params = ",".join(parts)
+            print(f"::{level} {params}::{v.rule_id}: {v.message}")
+
+
+# ---------------------------------------------------------------------------
 # Internal renderers
 # ---------------------------------------------------------------------------
 
