@@ -536,6 +536,47 @@ def mcp(
 
 
 # ---------------------------------------------------------------------------
+# arklint visualize
+# ---------------------------------------------------------------------------
+
+@app.command()
+def visualize(
+    config: Optional[Path] = typer.Option(
+        None,
+        "--config",
+        "-c",
+        help="Path to .arklint.yml. Auto-discovered if omitted.",
+    ),
+    output: Optional[Path] = typer.Option(
+        None,
+        "--output",
+        "-o",
+        help="Write diagram to a file instead of printing to stdout.",
+    ),
+) -> None:
+    """Generate a Mermaid diagram of your architecture rules.
+
+    Paste the output into any Markdown file or visit [bold]mermaid.live[/bold]
+    to render it interactively.
+    """
+    from arklint.visualize import build_mermaid
+
+    try:
+        cfg = load_config(config)
+    except ConfigError as exc:
+        err_console.print(f"[bold red]Config error:[/bold red] {exc}")
+        raise typer.Exit(1) from exc
+
+    diagram = build_mermaid(cfg)
+
+    if output:
+        output.write_text(diagram)
+        console.print(f"[bold green]✓[/bold green] Diagram written to [cyan]{output}[/cyan]")
+    else:
+        console.print(diagram)
+
+
+# ---------------------------------------------------------------------------
 # --version flag (attached to the root callback)
 # ---------------------------------------------------------------------------
 
