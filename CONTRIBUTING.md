@@ -79,7 +79,7 @@ A pack is a `.yml` file in `packs/` that bundles related rules for a specific fr
 2. Name your file `packs/<framework>.yml` (e.g. `packs/flask.yml`)
 3. Fill in the rules — see [packs/CONTRIBUTING.md](packs/CONTRIBUTING.md) for the full guide and template
 4. Add an entry to `packs/registry.json`
-5. Open a PR — no tests required for pack-only changes
+5. Open a PR — for pack-only changes, Python tests are not required; mark the "tests added/updated" checklist item as N/A in the PR description.
 
 See [packs/CONTRIBUTING.md](packs/CONTRIBUTING.md) for the detailed guide, schema reference, and quality checklist.
 
