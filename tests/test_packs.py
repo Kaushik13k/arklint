@@ -4,6 +4,7 @@ from __future__ import annotations
 import textwrap
 from pathlib import Path
 from unittest.mock import MagicMock, patch
+import urllib.error
 
 import pytest
 import yaml
@@ -61,7 +62,8 @@ def _make_local_pack(tmp_path: Path, content: str = SIMPLE_PACK) -> Path:
 class TestExtractRules:
     def test_returns_rules_list(self):
         data = {"rules": [{"id": "r1", "type": "pattern-ban"}]}
-        assert _extract_rules(data, "ref") == [{"id": "r1", "type": "pattern-ban"}]
+        assert _extract_rules(data, "ref") == [
+            {"id": "r1", "type": "pattern-ban"}]
 
     def test_empty_rules(self):
         assert _extract_rules({"rules": []}, "ref") == []
@@ -121,15 +123,15 @@ class TestResolvePackNamed:
         mock_resp.__exit__ = MagicMock(return_value=False)
 
         with patch("arklint.packs.urllib.request.urlopen", return_value=mock_resp), \
-             patch("arklint.packs.PACKS_CACHE_DIR", tmp_path):
+                patch("arklint.packs.PACKS_CACHE_DIR", tmp_path):
             rules = resolve_pack("arklint/fastapi", tmp_path)
 
         assert len(rules) == 1
         assert rules[0]["id"] == "test/no-print"
 
     def test_network_failure_raises(self, tmp_path):
-        with patch("arklint.packs.urllib.request.urlopen", side_effect=Exception("timeout")), \
-             patch("arklint.packs.PACKS_CACHE_DIR", tmp_path):
+        with patch("arklint.packs.urllib.request.urlopen", side_effect=urllib.error.URLError("timeout")), \
+                patch("arklint.packs.PACKS_CACHE_DIR", tmp_path):
             with pytest.raises(PackError, match="Could not fetch pack"):
                 resolve_pack("arklint/fastapi", tmp_path)
 
