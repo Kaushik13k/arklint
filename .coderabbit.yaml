@@ -1,0 +1,20 @@
+language: en
+
+reviews:
+  profile: assertive
+  request_changes_workflow: false
+  auto_review:
+    enabled: true
+    drafts: false
+  path_filters:
+    - "!docs/**"
+    - "!npm/**"
+    - "!dotnet/**"
+    - "!dist/**"
+    - "!*.md"
+    - "!*.html"
+  poem: false
+  collapse_walkthrough: false
+
+chat:
+  auto_reply: true
