@@ -29,7 +29,7 @@ class ArklintConfig:
 
 
 class ConfigError(Exception):
-    pass
+    """Raised when .arklint.yml cannot be found, parsed, or validated."""
 
 
 def load_config(path: Path | None = None) -> ArklintConfig:

@@ -18,12 +18,16 @@ import json
 import shutil
 import tempfile
 from pathlib import Path
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from mcp.server.fastmcp import FastMCP
 
 from arklint.config import ConfigError, load_config
 from arklint.engine import run_rules
 
 
-def create_server(config_path: Path | None = None):
+def create_server(config_path: Path | None = None) -> "FastMCP":
     from mcp.server.fastmcp import FastMCP  # optional dependency
 
     mcp = FastMCP("arklint")

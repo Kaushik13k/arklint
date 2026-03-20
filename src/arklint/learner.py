@@ -16,6 +16,10 @@ import textwrap
 
 SUPPORTED_PROVIDERS = ("anthropic", "openai")
 
+_ANTHROPIC_MODEL = "claude-haiku-4-5-20251001"
+_OPENAI_MODEL = "gpt-4o-mini"
+_MAX_TOKENS = 512
+
 SYSTEM_PROMPT = textwrap.dedent("""\
     You are an expert software architect helping users define architectural
     rules for their codebase using the arklint tool.
@@ -124,8 +128,8 @@ def _suggest_anthropic(description: str, api_key: str | None) -> str:
 
     client = anthropic.Anthropic(api_key=key)
     message = client.messages.create(
-        model="claude-haiku-4-5-20251001",
-        max_tokens=512,
+        model=_ANTHROPIC_MODEL,
+        max_tokens=_MAX_TOKENS,
         system=SYSTEM_PROMPT,
         messages=[{"role": "user", "content": description}],
     )
@@ -150,8 +154,8 @@ def _suggest_openai(description: str, api_key: str | None) -> str:
 
     client = openai.OpenAI(api_key=key)
     response = client.chat.completions.create(
-        model="gpt-4o-mini",
-        max_tokens=512,
+        model=_OPENAI_MODEL,
+        max_tokens=_MAX_TOKENS,
         messages=[
             {"role": "system", "content": SYSTEM_PROMPT},
             {"role": "user", "content": description},

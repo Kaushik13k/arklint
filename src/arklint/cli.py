@@ -8,10 +8,11 @@ arklint export  Export rules as AI assistant instruction files.
 """
 from __future__ import annotations
 
+import time
 from pathlib import Path
-from typing import Optional
 
 import typer
+import yaml
 
 from arklint import __version__
 from arklint.config import load_config, ConfigError
@@ -63,12 +64,12 @@ def init(
 
 @app.command()
 def check(
-    path: Optional[Path] = typer.Argument(
+    path: Path | None = typer.Argument(
         None,
         help="Directory to scan. Defaults to the current directory.",
         show_default=False,
     ),
-    config: Optional[Path] = typer.Option(
+    config: Path | None = typer.Option(
         None,
         "--config",
         "-c",
@@ -84,7 +85,7 @@ def check(
         "--json",
         help="Emit violations as JSON (useful for CI integrations).",
     ),
-    diff: Optional[str] = typer.Option(
+    diff: str | None = typer.Option(
         None,
         "--diff",
         metavar="BASE",
@@ -140,12 +141,12 @@ def check(
 
 @app.command()
 def watch(
-    path: Optional[Path] = typer.Argument(
+    path: Path | None = typer.Argument(
         None,
         help="Directory to watch. Defaults to the current directory.",
         show_default=False,
     ),
-    config: Optional[Path] = typer.Option(
+    config: Path | None = typer.Option(
         None, "--config", "-c", help="Path to .arklint.yml.",
     ),
     strict: bool = typer.Option(
@@ -162,8 +163,6 @@ def watch(
             "Install it with: [bold]pip install watchdog[/bold]"
         )
         raise typer.Exit(1)
-
-    import time
 
     scan_root = (path or Path.cwd()).resolve()
 
@@ -218,7 +217,7 @@ def watch(
 
 @app.command()
 def validate(
-    config: Optional[Path] = typer.Option(
+    config: Path | None = typer.Option(
         None,
         "--config",
         "-c",
@@ -252,13 +251,13 @@ def export(
         help="Output format: cursorrules, claude, or copilot.",
         metavar="FORMAT",
     ),
-    config: Optional[Path] = typer.Option(
+    config: Path | None = typer.Option(
         None,
         "--config",
         "-c",
         help="Path to .arklint.yml. Auto-discovered if omitted.",
     ),
-    output: Optional[Path] = typer.Option(
+    output: Path | None = typer.Option(
         None,
         "--output",
         "-o",
@@ -309,7 +308,7 @@ def learn(
         help="Plain-English description of the rule you want to enforce.",
         metavar="TEXT",
     ),
-    config: Optional[Path] = typer.Option(
+    config: Path | None = typer.Option(
         None,
         "--config",
         "-c",
@@ -321,7 +320,7 @@ def learn(
         "-p",
         help="AI provider to use: anthropic or openai.",
     ),
-    api_key: Optional[str] = typer.Option(
+    api_key: str | None = typer.Option(
         None,
         "--api-key",
         help="API key for the chosen provider. Falls back to ANTHROPIC_API_KEY or OPENAI_API_KEY.",
@@ -382,7 +381,7 @@ def learn(
         raise typer.Exit(1) from exc
 
     with open(cfg_path, "a", encoding="utf-8") as f:
-        f.write(f"\n  {yaml_snippet.replace(chr(10), chr(10) + '  ')}\n")
+        f.write(f"\n  {yaml_snippet.replace('\n', '\n  ')}\n")
 
     console.print(
         f"[bold green]✓ Rule appended[/bold green] to [cyan]{cfg_path}[/cyan]\n"
@@ -392,8 +391,7 @@ def learn(
 
 def _find_config_path() -> Path:
     """Return the path to .arklint.yml, raising FileNotFoundError if absent."""
-    from pathlib import Path as _Path
-    current = _Path.cwd()
+    current = Path.cwd()
     for parent in [current, *current.parents]:
         candidate = parent / ".arklint.yml"
         if candidate.exists():
@@ -449,7 +447,7 @@ def add(
         help="Pack name to add — e.g. 'arklint/fastapi'.",
         metavar="PACK",
     ),
-    config: Optional[Path] = typer.Option(
+    config: Path | None = typer.Option(
         None,
         "--config",
         "-c",
@@ -457,7 +455,6 @@ def add(
     ),
 ) -> None:
     """Add an official rule pack to your .arklint.yml."""
-    import yaml as _yaml
     from arklint.packs import resolve_pack, PackError
 
     # resolve and validate config path
@@ -472,8 +469,8 @@ def add(
         raise typer.Exit(1)
 
     try:
-        raw_cfg = _yaml.safe_load(cfg_path.read_text())
-    except _yaml.YAMLError as exc:
+        raw_cfg = yaml.safe_load(cfg_path.read_text())
+    except yaml.YAMLError as exc:
         err_console.print(f"[bold red]Invalid YAML in config:[/bold red] {exc}")
         raise typer.Exit(1) from exc
 
@@ -500,7 +497,7 @@ def add(
 
     # safe YAML rewrite — no text surgery
     raw_cfg["extends"] = extends + [pack]
-    cfg_path.write_text(_yaml.dump(raw_cfg, default_flow_style=False, sort_keys=False))
+    cfg_path.write_text(yaml.dump(raw_cfg, default_flow_style=False, sort_keys=False))
 
     console.print(
         f"[bold green]✓ Added[/bold green] [cyan]{pack}[/cyan] "
@@ -515,7 +512,7 @@ def add(
 
 @app.command()
 def mcp(
-    config: Optional[Path] = typer.Option(
+    config: Path | None = typer.Option(
         None,
         "--config",
         "-c",
@@ -541,13 +538,13 @@ def mcp(
 
 @app.command()
 def visualize(
-    config: Optional[Path] = typer.Option(
+    config: Path | None = typer.Option(
         None,
         "--config",
         "-c",
         help="Path to .arklint.yml. Auto-discovered if omitted.",
     ),
-    output: Optional[Path] = typer.Option(
+    output: Path | None = typer.Option(
         None,
         "--output",
         "-o",
