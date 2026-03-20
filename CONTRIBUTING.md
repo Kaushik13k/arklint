@@ -68,6 +68,23 @@ The PR template includes this checklist — all items must be checked before rev
 
 ---
 
+## Contributing a rule pack
+
+Rule packs are the fastest way to contribute — no Python required, just YAML.
+
+A pack is a `.yml` file in `packs/` that bundles related rules for a specific framework or architecture pattern.
+
+**Quick steps:**
+1. Copy `packs/fastapi.yml` as a starting point
+2. Name your file `packs/<framework>.yml` (e.g. `packs/flask.yml`)
+3. Fill in the rules — see [packs/CONTRIBUTING.md](packs/CONTRIBUTING.md) for the full guide and template
+4. Add an entry to `packs/registry.json`
+5. Open a PR — no tests required for pack-only changes
+
+See [packs/CONTRIBUTING.md](packs/CONTRIBUTING.md) for the detailed guide, schema reference, and quality checklist.
+
+---
+
 ## Adding a new rule type
 
 1. Create `src/arklint/rules/your_rule.py` — implement `BaseRule` (see `rules/base.py`).
