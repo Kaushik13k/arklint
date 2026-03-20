@@ -45,10 +45,6 @@ EOF
             artifact-name: arklint-linux-x86_64
             binary-name: arklint
 
-          - os: macos-13
-            artifact-name: arklint-darwin-x86_64
-            binary-name: arklint
-
           - os: macos-14
             artifact-name: arklint-darwin-arm64
             binary-name: arklint
@@ -68,6 +64,7 @@ EOF
         run: pip install ".[dev]" pyinstaller
 
       - name: Build binary
+        shell: bash
         run: |
           pyinstaller \
             --onefile \
@@ -104,6 +101,5 @@ EOF
           generate_release_notes: true
           files: |
             dist/arklint-linux-x86_64/arklint-linux-x86_64
-            dist/arklint-darwin-x86_64/arklint-darwin-x86_64
             dist/arklint-darwin-arm64/arklint-darwin-arm64
             dist/arklint-windows-x86_64.exe/arklint-windows-x86_64.exe

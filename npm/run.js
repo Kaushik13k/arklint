@@ -9,10 +9,9 @@ const { spawnSync } = require("child_process");
 const VERSION = require("./package.json").version;
 
 const PLATFORM_MAP = {
-  "linux-x64":   "arklint-linux-x86_64",
-  "darwin-x64":  "arklint-darwin-x86_64",
+  "linux-x64":    "arklint-linux-x86_64",
   "darwin-arm64": "arklint-darwin-arm64",
-  "win32-x64":   "arklint-windows-x86_64.exe",
+  "win32-x64":    "arklint-windows-x86_64.exe",
 };
 
 function getBinaryName() {
