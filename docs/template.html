@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arklint — The Architectural Rulebook for Your Codebase</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#fff;--bg-s:#f8f9fb;--bg-code:#1b1b1f;--bg-ci:#f1f3f5;--border:#e5e7eb;--border-l:#f0f1f3;--text:#111827;--text-s:#4b5563;--text-t:#9ca3af;--accent:#059669;--accent-l:#ecfdf5;--accent-b:#a7f3d0;--accent-d:#047857;--mono:'JetBrains Mono',ui-monospace,monospace;--sans:'Inter',-apple-system,sans-serif;--sidebar-w:240px;--max:820px;--ease:cubic-bezier(.16,1,.3,1)}
+*{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:80px}body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.7;-webkit-font-smoothing:antialiased}::selection{background:var(--accent-l);color:var(--accent-d)}
+
+/* NAV */
+.topbar{position:fixed;top:0;left:0;right:0;z-index:200;height:56px;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 32px}
+.topbar-inner{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:1280px;margin:0 auto}
+.topbar-logo{font-family:var(--mono);font-weight:700;font-size:16px;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:8px}
+.topbar-logo .icon{width:28px;height:28px;border-radius:6px;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800}
+.topbar-right{display:flex;align-items:center;gap:24px}
+.topbar-right a{font-size:13px;font-weight:500;color:var(--text-s);text-decoration:none;transition:color .15s}
+.topbar-right a:hover{color:var(--text)}
+.gh-btn{display:inline-flex!important;align-items:center;gap:6px;background:var(--text)!important;color:#fff!important;padding:6px 14px;border-radius:6px;font-size:12px!important;font-weight:600!important;transition:opacity .15s!important}
+.gh-btn:hover{opacity:.85}
+.gh-btn svg{width:14px;height:14px}
+.menu-toggle{display:none;background:none;border:none;cursor:pointer;color:var(--text);padding:4px}
+
+/* LAYOUT */
+.layout{display:flex;max-width:1280px;margin:56px auto 0;min-height:calc(100vh - 56px)}
+
+/* SIDEBAR */
+.sidebar{width:var(--sidebar-w);flex-shrink:0;position:sticky;top:56px;height:calc(100vh - 56px);overflow-y:auto;padding:28px 0 28px 32px;border-right:1px solid var(--border-l)}
+.sidebar::-webkit-scrollbar{width:0}
+.sidebar-section{margin-bottom:24px}
+.sidebar-label{font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--text-t);margin-bottom:8px;padding-left:12px}
+.sidebar-link{display:block;padding:5px 12px;border-radius:6px;font-size:13px;font-weight:500;color:var(--text-s);text-decoration:none;transition:all .12s;margin-bottom:1px}
+.sidebar-link:hover{color:var(--text);background:var(--bg-s)}
+.sidebar-link.active{color:var(--accent-d);background:var(--accent-l);font-weight:600}
+.sidebar-sub{padding-left:24px;font-size:12px}
+
+/* MAIN */
+.main{flex:1;max-width:var(--max);padding:48px 48px 120px;min-width:0}
+
+/* HERO */
+.hero{margin-bottom:56px}
+.hero-version{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:12px;font-weight:500;color:var(--accent-d);background:var(--accent-l);border:1px solid var(--accent-b);border-radius:100px;padding:4px 12px;margin-bottom:20px}
+.hero-version .dot{width:5px;height:5px;border-radius:50%;background:var(--accent);animation:blink 2s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.hero h1{font-size:40px;font-weight:800;line-height:1.15;letter-spacing:-1.5px;margin-bottom:16px}
+.hero-tagline{font-size:18px;color:var(--text-s);line-height:1.6;max-width:580px;margin-bottom:32px}
+.features{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:36px}
+.fp{display:inline-flex;align-items:center;gap:7px;padding:8px 14px;border-radius:8px;background:var(--bg-s);border:1px solid var(--border);font-size:13px;font-weight:500;color:var(--text-s)}
+.fp svg{width:15px;height:15px;color:var(--accent);flex-shrink:0;stroke-width:2.2}
+.install-box{display:flex;align-items:center;gap:12px;background:var(--bg-code);border-radius:10px;padding:16px 20px;max-width:420px;cursor:pointer;transition:box-shadow .2s}
+.install-box:hover{box-shadow:0 2px 12px rgba(0,0,0,.08)}
+.install-box .prompt{font-family:var(--mono);font-size:13px;color:#059669;user-select:none;opacity:.7}
+.install-box code{font-family:var(--mono);font-size:13px;color:#e4e4e7;font-weight:500;flex:1}
+.install-box .copy-btn{background:rgba(255,255,255,.08);border:none;border-radius:4px;padding:4px 8px;font-family:var(--mono);font-size:11px;color:#9ca3af;cursor:pointer;transition:all .15s}
+.install-box .copy-btn:hover{background:rgba(255,255,255,.15);color:#e4e4e7}
+
+/* SECTIONS */
+.ds{margin-bottom:64px}
+.ds>h2{font-size:26px;font-weight:700;letter-spacing:-.8px;margin-bottom:8px;border-top:1px solid var(--border-l);padding-top:32px}
+.ds>h2 .anchor{color:var(--accent);opacity:0;margin-left:8px;text-decoration:none;font-weight:400;transition:opacity .15s}
+.ds>h2:hover .anchor{opacity:1}
+.ds>.lead{font-size:15px;color:var(--text-s);margin-bottom:28px;line-height:1.7;max-width:600px}
+.ds h3{font-size:18px;font-weight:700;margin-top:36px;margin-bottom:8px;letter-spacing:-.3px}
+.ds p{font-size:14.5px;color:var(--text-s);margin-bottom:16px;line-height:1.7}
+
+/* CODE */
+.cb{background:var(--bg-code);border-radius:10px;overflow:hidden;margin-bottom:24px}
+.cb-h{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:rgba(255,255,255,.04);border-bottom:1px solid rgba(255,255,255,.06)}
+.cb-h .l{font-family:var(--mono);font-size:11px;color:#9ca3af;font-weight:500}
+.cb-h .r{font-family:var(--mono);font-size:10px;color:#6b7280;background:rgba(255,255,255,.06);padding:2px 8px;border-radius:4px;font-weight:500}
+.cb pre{padding:18px 20px;font-family:var(--mono);font-size:13px;line-height:1.75;color:#d4d4d8;overflow-x:auto}
+.k{color:#34d399}.s{color:#fbbf24}.c{color:#6b7280;font-style:italic}.p{color:#34d399;opacity:.6;user-select:none}.cmd{color:#f4f4f5;font-weight:600}.dim{color:#6b7280}.fail{color:#f87171;font-weight:600}.warn{color:#fbbf24;font-weight:600}.pass{color:#34d399;font-weight:600}.rule{color:#e4e4e7;font-weight:500}
+code.i{font-family:var(--mono);font-size:12.5px;background:var(--bg-ci);padding:2px 6px;border-radius:4px;color:var(--text);font-weight:500}
+
+/* RULE CARDS */
+.rc-list{display:flex;flex-direction:column;gap:16px}
+.rc{background:var(--bg-s);border:1px solid var(--border);border-radius:10px;overflow:hidden;transition:border-color .2s}
+.rc:hover{border-color:var(--accent-b)}
+.rc-head{padding:18px 20px 14px;display:flex;align-items:flex-start;gap:12px}
+.rb{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--accent-d);background:var(--accent-l);border:1px solid var(--accent-b);padding:3px 8px;border-radius:4px;letter-spacing:.5px;text-transform:uppercase;white-space:nowrap;margin-top:2px}
+.rc-head .ri{flex:1}
+.rc-head h4{font-size:15px;font-weight:700;margin-bottom:4px}
+.rc-head p{font-size:13px;color:var(--text-s);line-height:1.55;margin:0}
+.rc .cb{border-radius:0;margin:0}
+
+/* TABLE */
+.ct{width:100%;border-collapse:collapse;font-size:14px;margin-bottom:24px}
+.ct th{text-align:left;font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--text-t);padding:0 0 10px;border-bottom:2px solid var(--border)}
+.ct td{padding:12px 16px 12px 0;border-bottom:1px solid var(--border-l);vertical-align:top}
+.ct td:first-child{font-family:var(--mono);font-size:12.5px;color:var(--accent-d);font-weight:600;white-space:nowrap;width:44%}
+.ct td:last-child{color:var(--text-s)}
+.ct tr:last-child td{border-bottom:none}
+
+/* TIP */
+.tip{background:var(--accent-l);border:1px solid var(--accent-b);border-radius:8px;padding:14px 18px;font-size:13.5px;color:var(--accent-d);line-height:1.6;margin-bottom:24px;display:flex;align-items:flex-start;gap:10px}
+.tip svg{flex-shrink:0;margin-top:2px}
+
+/* CI GRID */
+.ci-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.ci-card{border:1px solid var(--border);border-radius:10px;overflow:hidden;transition:border-color .2s}
+.ci-card:hover{border-color:var(--accent-b)}
+.ci-card-h{padding:12px 16px;border-bottom:1px solid var(--border-l);font-size:13px;font-weight:600;color:var(--text);display:flex;align-items:center;gap:8px;background:var(--bg-s)}
+.ci-dot{width:6px;height:6px;border-radius:50%;background:var(--accent)}
+.ci-card .cb{border-radius:0;margin:0}
+
+/* MCP TOOLS */
+.mcp-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px}
+.mcp-tool{background:var(--bg-s);border:1px solid var(--border);border-radius:8px;padding:16px}
+.mcp-tool h4{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--accent-d);margin-bottom:4px}
+.mcp-tool p{font-size:12.5px;color:var(--text-s);line-height:1.55;margin:0}
+
+/* TAGS */
+.tg{margin-bottom:20px}
+.tg-label{font-size:12px;font-weight:700;color:var(--text-t);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{background:var(--bg-s);border:1px solid var(--border);border-radius:6px;padding:6px 12px;font-size:13px;font-weight:500;color:var(--text-s);transition:all .15s}
+.tag:hover{border-color:var(--accent-b);color:var(--accent-d);background:var(--accent-l)}
+
+/* FOOTER */
+.footer{border-top:1px solid var(--border);padding:24px 48px;display:flex;align-items:center;justify-content:space-between;max-width:var(--max);font-size:12px;color:var(--text-t)}
+.footer a{color:var(--text-s);text-decoration:none}
+.footer a:hover{color:var(--accent-d)}
+.footer-links{display:flex;gap:16px}
+
+/* INSTALL TABS */
+.install-tabs{max-width:520px}
+.install-tab-buttons{display:flex;gap:4px;margin-bottom:12px;background:var(--bg-s);border:1px solid var(--border);border-radius:10px;padding:4px}
+.itb{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:7px;border:none;background:transparent;font-family:var(--sans);font-size:13px;font-weight:600;color:var(--text-t);cursor:pointer;transition:all .15s;flex:1;justify-content:center}
+.itb:hover{color:var(--text-s)}
+.itb.active{background:var(--bg);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.itb svg{color:var(--accent);opacity:.7}
+.itb.active svg{opacity:1}
+.install-tab-panel{display:none}
+.install-tab-panel.active{display:block}
+.install-note{display:block;margin-top:10px;font-size:12px;color:var(--text-t);font-weight:500}
+
+/* RESPONSIVE */
+@media(max-width:900px){.sidebar{display:none}.sidebar.open{display:block;position:fixed;top:56px;left:0;bottom:0;z-index:150;background:#fff;width:260px;box-shadow:4px 0 24px rgba(0,0,0,.08);padding:24px;border-right:1px solid var(--border)}.menu-toggle{display:block}.main{padding:32px 24px 100px}.ci-grid,.mcp-grid{grid-template-columns:1fr}.hero h1{font-size:32px}.footer{padding:20px 24px;flex-direction:column;gap:12px}}
+</style>
+</head>
+<body>
+
+<div class="topbar"><div class="topbar-inner">
+  <div style="display:flex;align-items:center;gap:16px">
+    <button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')" aria-label="Menu"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>
+    <a href="#" class="topbar-logo"><span class="icon">A</span> Arklint</a>
+  </div>
+  <div class="topbar-right">
+    <a href="https://pypi.org/project/arklint/">PyPI</a>
+    <a href="https://www.npmjs.com/package/arklint">npm</a>
+    <a href="https://www.nuget.org/packages/arklint">NuGet</a>
+    <a href="https://github.com/Kaushik13k/ark-lint" class="gh-btn"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>GitHub</a>
+  </div>
+</div></div>
+
+<div class="layout">
+<aside class="sidebar">
+  <div class="sidebar-section">
+    <div class="sidebar-label">Getting Started</div>
+    <a href="#overview" class="sidebar-link active">Overview</a>
+    <a href="#installation" class="sidebar-link">Installation</a>
+    <a href="#quickstart" class="sidebar-link">Quick Start</a>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-label">Configuration</div>
+    <a href="#rules" class="sidebar-link">Rule Types</a>
+    <a href="#rule-boundary" class="sidebar-link sidebar-sub">boundary</a>
+    <a href="#rule-dependency" class="sidebar-link sidebar-sub">dependency</a>
+    <a href="#rule-file-pattern" class="sidebar-link sidebar-sub">file-pattern</a>
+    <a href="#rule-pattern-ban" class="sidebar-link sidebar-sub">pattern-ban</a>
+    <a href="#rule-layer-boundary" class="sidebar-link sidebar-sub">layer-boundary</a>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-label">Reference</div>
+    <a href="#cli" class="sidebar-link">CLI Reference</a>
+    <a href="#watch" class="sidebar-link">Watch Mode</a>
+    <a href="#diff" class="sidebar-link">Diff Mode</a>
+    <a href="#mcp" class="sidebar-link">MCP Server</a>
+    <a href="#export" class="sidebar-link">Export Rules</a>
+    <a href="#learn" class="sidebar-link">AI Rule Generation</a>
+    <a href="#ci" class="sidebar-link">CI / Pre-commit</a>
+    <a href="#action" class="sidebar-link">GitHub Action</a>
+    <a href="#languages" class="sidebar-link">Language Support</a>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-label">Community</div>
+    <a href="#contributing" class="sidebar-link">Contributing</a>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-label">Links</div>
+    <a href="https://pypi.org/project/arklint/" class="sidebar-link">PyPI ↗</a>
+    <a href="https://www.npmjs.com/package/arklint" class="sidebar-link">npm ↗</a>
+    <a href="https://www.nuget.org/packages/arklint" class="sidebar-link">NuGet ↗</a>
+    <a href="https://github.com/Kaushik13k/ark-lint" class="sidebar-link">GitHub ↗</a>
+    <a href="https://github.com/Kaushik13k/ark-lint/blob/main/LICENSE" class="sidebar-link">License (MIT) ↗</a>
+  </div>
+</aside>
+
+<main class="main">
+
+<!-- HERO -->
+<section class="hero" id="overview">
+  <div class="hero-version"><span class="dot"></span> v0.2.0</div>
+  <h1>Arklint</h1>
+  <p class="hero-tagline">The architectural rulebook for your codebase. Define structural rules in YAML and enforce them before bad code — written by AI agents or humans — ever lands.</p>
+  <div class="features">
+    <div class="fp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Prevention, not detection</div>
+    <div class="fp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>Language-agnostic</div>
+    <div class="fp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>100% local</div>
+    <div class="fp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>60-second setup</div>
+    <div class="fp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.66 0 3-4.03 3-9s-1.34-9-3-9m0 18c-1.66 0-3-4.03-3-9s1.34-9 3-9"/></svg>MCP server for AI agents</div>
+  </div>
+  <!-- Multi-ecosystem install tabs -->
+  <div class="install-tabs">
+    <div class="install-tab-buttons">
+      <button class="itb active" data-tab="python" onclick="switchTab('python')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a5 5 0 015 5v2a5 5 0 01-10 0V7a5 5 0 015-5z"/><path d="M12 22a5 5 0 01-5-5v-2a5 5 0 0110 0v2a5 5 0 01-5 5z"/></svg>
+        Python
+      </button>
+      <button class="itb" data-tab="node" onclick="switchTab('node')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        Node.js
+      </button>
+      <button class="itb" data-tab="dotnet" onclick="switchTab('dotnet')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+        .NET
+      </button>
+    </div>
+    <div class="install-tab-panel active" id="tab-python">
+      <div class="install-box" onclick="navigator.clipboard.writeText('pip install arklint');this.querySelector('.copy-btn').textContent='copied!'">
+        <span class="prompt">$</span><code>pip install arklint</code><button class="copy-btn">copy</button>
+      </div>
+      <span class="install-note">Python 3.10+ · Core CLI with all features</span>
+    </div>
+    <div class="install-tab-panel" id="tab-node">
+      <div class="install-box" onclick="navigator.clipboard.writeText('npx arklint check');this.querySelector('.copy-btn').textContent='copied!'">
+        <span class="prompt">$</span><code>npx arklint check</code><button class="copy-btn">copy</button>
+      </div>
+      <span class="install-note">Node 16+ · Auto-downloads prebuilt binary · No Python needed</span>
+    </div>
+    <div class="install-tab-panel" id="tab-dotnet">
+      <div class="install-box" onclick="navigator.clipboard.writeText('dotnet tool install -g arklint');this.querySelector('.copy-btn').textContent='copied!'">
+        <span class="prompt">$</span><code>dotnet tool install -g arklint</code><button class="copy-btn">copy</button>
+      </div>
+      <span class="install-note">.NET 8.0+ · NuGet global tool · Auto-downloads prebuilt binary</span>
+    </div>
+  </div>
+</section>
+
+<!-- DEMO -->
+<div class="cb" style="margin-bottom:48px">
+  <div class="cb-h"><span class="l">Terminal</span><span class="r">~/my-project</span></div>
+  <pre><span class="p">$ </span><span class="cmd">arklint check</span>
+
+<span class="dim">Arklint v0.2.0 — Scanning 142 files against 5 rules...</span>
+
+  <span class="fail">✗ FAIL</span>  <span class="rule">no-direct-db-in-routes</span>
+         <span class="dim">routes/users.py → imports 'sqlalchemy' — blocked</span>
+         <span class="dim">routes/orders.py → imports 'psycopg2' — blocked</span>
+
+  <span class="fail">✗ FAIL</span>  <span class="rule">single-http-client</span>
+         <span class="dim">conflicting packages — keep one of requests, httpx</span>
+
+  <span class="warn">⚠ WARN</span>  <span class="rule">no-print-statements</span>
+         <span class="dim">services/email.py:45 → banned pattern: 'print('</span>
+
+  <span class="pass">✓ PASS</span>  <span class="rule">models-in-models-dir</span>
+  <span class="pass">✓ PASS</span>  <span class="rule">layered-architecture</span>
+
+<span class="dim">────────────────────────────────────────────────────</span>
+<span class="dim">Results:</span> <span class="fail">2 errors</span><span class="dim">,</span> <span class="warn">1 warning</span><span class="dim">,</span> <span class="pass">2 passed</span></pre>
+</div>
+
+<!-- CONTENT_SECTIONS -->
+
+<!-- FOOTER -->
+<div class="footer">
+  <span>Built by <a href="https://github.com/Kaushik13k">Kaushik</a> · MIT License</span>
+  <div class="footer-links">
+    <a href="https://pypi.org/project/arklint/">PyPI</a>
+    <a href="https://www.npmjs.com/package/arklint">npm</a>
+    <a href="https://www.nuget.org/packages/arklint">NuGet</a>
+    <a href="https://github.com/Kaushik13k/ark-lint">GitHub</a>
+    <a href="https://github.com/Kaushik13k/ark-lint/blob/main/LICENSE">License</a>
+  </div>
+</div>
+
+</main>
+</div>
+
+<script>
+function switchTab(tab){document.querySelectorAll('.itb').forEach(b=>{b.classList.toggle('active',b.dataset.tab===tab)});document.querySelectorAll('.install-tab-panel').forEach(p=>{p.classList.toggle('active',p.id==='tab-'+tab)})}
+const links=document.querySelectorAll('.sidebar-link[href^="#"]');
+const sections=[...links].map(l=>document.querySelector(l.getAttribute('href'))).filter(Boolean);
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){links.forEach(l=>l.classList.remove('active'));const a=document.querySelector(`.sidebar-link[href="#${e.target.id}"]`);if(a)a.classList.add('active')}})},{rootMargin:'-80px 0px -60% 0px',threshold:0});
+sections.forEach(s=>obs.observe(s));
+links.forEach(l=>l.addEventListener('click',()=>document.querySelector('.sidebar').classList.remove('open')));
+</script>
+</body>
+</html>

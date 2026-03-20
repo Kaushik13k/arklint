@@ -1,0 +1,6 @@
+{
+  "buildCommand": "pip install markdown pymdown-extensions && python docs/build.py",
+  "outputDirectory": "docs/site",
+  "installCommand": "",
+  "framework": null
+}
