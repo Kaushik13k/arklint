@@ -59,14 +59,24 @@ def load_config(path: Path | None = None) -> ArklintConfig:
 
     extended_rules: list[dict[str, Any]] = []
     seen_ids: set[str] = set()
-    for ref in extends:
+    for i, ref in enumerate(extends):
+        if not isinstance(ref, str):
+            raise ConfigError(
+                f"'extends' entry #{i + 1} must be a string, got {type(ref).__name__}: {ref!r}"
+            )
         try:
             pack_rules = resolve_pack(ref, path.parent)
         except PackError as exc:
             raise ConfigError(f"Failed to load pack '{ref}': {exc}") from exc
         for raw in pack_rules:
+            if not isinstance(raw, dict):
+                raise ConfigError(
+                    f"Pack '{ref}' contains an invalid rule entry (expected a mapping)"
+                )
             rule_id = raw.get("id", "")
-            if rule_id and rule_id not in seen_ids:
+            if not rule_id:
+                raise ConfigError(f"Pack '{ref}' contains a rule missing the 'id' field")
+            if rule_id not in seen_ids:
                 extended_rules.append(raw)
                 seen_ids.add(rule_id)
 

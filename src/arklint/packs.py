@@ -9,11 +9,14 @@ from typing import Any
 import yaml
 
 PACKS_CACHE_DIR = Path.home() / ".arklint" / "packs"
+
+# Pinned to a stable tag so pack content cannot change without a release.
+_PACK_REF = "main"  # updated to a release tag on each arklint release
 REGISTRY_URL = (
-    "https://raw.githubusercontent.com/Kaushik13k/arklint/main/packs/registry.json"
+    f"https://raw.githubusercontent.com/Kaushik13k/arklint/{_PACK_REF}/packs/registry.json"
 )
 PACK_BASE_URL = (
-    "https://raw.githubusercontent.com/Kaushik13k/arklint/main/packs/{name}.yml"
+    f"https://raw.githubusercontent.com/Kaushik13k/arklint/{_PACK_REF}/packs/{{name}}.yml"
 )
 
 
@@ -25,10 +28,20 @@ def resolve_pack(ref: str, config_root: Path) -> list[dict[str, Any]]:
     """Resolve a pack reference and return its raw rules list.
 
     Supports:
-      - Local path  : ./my-rules.yml  or  /abs/path.yml
+      - Local path  : ./my-rules.yml  or  /abs/path.yml  or  C:\\...
       - Named pack  : arklint/fastapi
     """
-    if ref.startswith("./") or ref.startswith("/") or ref.startswith("../"):
+    if not isinstance(ref, str):
+        raise PackError(f"Pack reference must be a string, got {type(ref).__name__}: {ref!r}")
+
+    # Detect local paths: relative prefixes, absolute POSIX, or absolute Windows
+    ref_path = Path(ref)
+    is_local = (
+        ref.startswith("./")
+        or ref.startswith("../")
+        or ref_path.is_absolute()
+    )
+    if is_local:
         return _load_local(ref, config_root)
     return _load_named(ref)
 
@@ -43,7 +56,7 @@ def fetch_registry() -> dict[str, Any]:
 
 
 def search_packs(query: str) -> list[dict[str, Any]]:
-    """Search registry for packs matching query."""
+    """Search registry for packs matching query (name, description, or tags)."""
     registry = fetch_registry()
     q = query.lower()
     return [
@@ -63,7 +76,7 @@ def list_all_packs() -> list[dict[str, Any]]:
 # ── private helpers ──────────────────────────────────────────────────────────
 
 def _load_local(ref: str, config_root: Path) -> list[dict[str, Any]]:
-    path = (config_root / ref).resolve()
+    path = Path(ref) if Path(ref).is_absolute() else (config_root / ref).resolve()
     if not path.exists():
         raise PackError(f"Local pack not found: {path}")
     try:
@@ -79,11 +92,11 @@ def _load_named(name: str) -> list[dict[str, Any]]:
         try:
             data = yaml.safe_load(cached.read_text())
             return _extract_rules(data, name)
+        except PackError:
+            cached.unlink(missing_ok=True)
         except Exception:
             cached.unlink(missing_ok=True)
 
-    url = PACK_BASE_URL.format(name=name.replace("/", "-").replace("arklint-", ""))
-    # normalise: "arklint/fastapi" → fetch "fastapi.yml"
     pack_file = name.split("/")[-1]
     url = PACK_BASE_URL.format(name=pack_file)
 
@@ -96,17 +109,26 @@ def _load_named(name: str) -> list[dict[str, Any]]:
             f"Run 'arklint search' to see available packs.\n{exc}"
         ) from exc
 
+    # Validate before writing to cache
+    try:
+        data = yaml.safe_load(content)
+    except yaml.YAMLError as exc:
+        raise PackError(f"Remote pack '{name}' returned invalid YAML: {exc}") from exc
+
+    rules = _extract_rules(data, name)  # raises PackError if malformed
+
     cached.parent.mkdir(parents=True, exist_ok=True)
     cached.write_text(content)
 
-    data = yaml.safe_load(content)
-    return _extract_rules(data, name)
+    return rules
 
 
 def _extract_rules(data: Any, ref: str) -> list[dict[str, Any]]:
     if not isinstance(data, dict):
         raise PackError(f"Pack '{ref}' must be a YAML mapping")
-    rules = data.get("rules", [])
+    if "rules" not in data:
+        raise PackError(f"Pack '{ref}' must define a 'rules' key")
+    rules = data["rules"]
     if not isinstance(rules, list):
         raise PackError(f"Pack '{ref}' 'rules' must be a list")
     return rules

@@ -12,9 +12,9 @@ rules:
 
   - id: fastapi/no-business-logic-in-routes
     type: pattern-ban
-    description: Keep business logic out of route handlers — move it to a service layer.
-    pattern: 'async def \w+\(.*\).*:\s*\n(?:\s+.*\n)*\s+(?:if|for|while|try)'
-    exclude: ["tests/**"]
+    description: Keep business logic out of route handlers — move if/for/while logic to a service layer.
+    pattern: '(?:async\s+)?def\s+\w+\s*\([^)]*(?:Request|Response|Depends)[^)]*\)[^:]*:\s*\n(?:\s+.*\n)*?\s+(?:if|for|while|try)\b'
+    exclude: ["tests/**", "**/services/**", "**/repositories/**"]
     severity: warning
 
   - id: fastapi/schemas-in-schemas-dir

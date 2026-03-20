@@ -3,11 +3,11 @@ description: Next.js App Router conventions — server/client component boundari
 version: "1"
 
 rules:
-  - id: nextjs/no-use-client-in-server-components
+  - id: nextjs/no-db-in-server-actions
     type: pattern-ban
-    description: Do not mix 'use client' directive in files that also use server-only data fetching (fetch with cache).
-    pattern: '"use client"'
-    exclude: ["**/components/client/**", "**/app/**/page.client.*"]
+    description: Do not import database clients directly in server actions — use a data access layer.
+    pattern: '"use server"'
+    exclude: ["**/actions/**", "**/app/**/_actions.*"]
     severity: warning
 
   - id: nextjs/no-direct-db-in-components

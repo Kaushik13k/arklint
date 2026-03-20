@@ -66,8 +66,9 @@ class TestExtractRules:
     def test_empty_rules(self):
         assert _extract_rules({"rules": []}, "ref") == []
 
-    def test_missing_rules_key_returns_empty(self):
-        assert _extract_rules({}, "ref") == []
+    def test_missing_rules_key_raises(self):
+        with pytest.raises(PackError, match="must define a 'rules' key"):
+            _extract_rules({}, "ref")
 
     def test_non_dict_raises(self):
         with pytest.raises(PackError, match="must be a YAML mapping"):

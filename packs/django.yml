@@ -7,7 +7,7 @@ rules:
     type: pattern-ban
     description: Avoid raw SQL in Django views. Use ORM queries or move to a manager/repository.
     pattern: '\.raw\(|cursor\.execute\('
-    exclude: ["tests/**", "migrations/**"]
+    exclude: ["tests/**", "migrations/**", "**/managers/**", "**/repositories/**", "**/admin.py"]
     severity: error
 
   - id: django/models-in-models-dir
@@ -20,7 +20,7 @@ rules:
   - id: django/serializers-in-serializers-dir
     type: file-pattern
     description: DRF serializers must live in serializers.py or serializers/ directory.
-    pattern: 'class\s+\w+\s*\(\s*(?:serializers\.\w+Serializer|ModelSerializer)\s*\)'
+    pattern: 'class\s+\w+\s*\(\s*(?:serializers\.\w+|ModelSerializer|BaseSerializer|Serializer)\s*\)'
     allowed_in: ["**/serializers.py", "**/serializers/**"]
     severity: warning
 
