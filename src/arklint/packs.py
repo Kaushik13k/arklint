@@ -48,7 +48,9 @@ def search_packs(query: str) -> list[dict[str, Any]]:
     q = query.lower()
     return [
         p for p in registry.get("packs", [])
-        if q in p.get("name", "").lower() or q in p.get("description", "").lower()
+        if q in p.get("name", "").lower()
+        or q in p.get("description", "").lower()
+        or any(q in t.lower() for t in p.get("tags", []))
     ]
 
 
