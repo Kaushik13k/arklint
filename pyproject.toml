@@ -45,6 +45,12 @@ dev = [
 mcp = [
     "mcp>=1.0",
 ]
+ai-anthropic = [
+    "anthropic>=0.40.0",
+]
+ai-openai = [
+    "openai>=1.0.0",
+]
 
 [tool.setuptools.packages.find]
 where = ["src"]

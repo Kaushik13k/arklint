@@ -297,6 +297,113 @@ def export(
 
 
 # ---------------------------------------------------------------------------
+# arklint learn
+# ---------------------------------------------------------------------------
+
+@app.command()
+def learn(
+    describe: str = typer.Option(
+        ...,
+        "--describe",
+        "-d",
+        help="Plain-English description of the rule you want to enforce.",
+        metavar="TEXT",
+    ),
+    config: Optional[Path] = typer.Option(
+        None,
+        "--config",
+        "-c",
+        help="Path to .arklint.yml to append the rule to. Auto-discovered if omitted.",
+    ),
+    provider: str = typer.Option(
+        ...,
+        "--provider",
+        "-p",
+        help="AI provider to use: anthropic or openai.",
+    ),
+    api_key: Optional[str] = typer.Option(
+        None,
+        "--api-key",
+        help="API key for the chosen provider. Falls back to ANTHROPIC_API_KEY or OPENAI_API_KEY.",
+        show_default=False,
+    ),
+    append: bool = typer.Option(
+        False,
+        "--append",
+        "-a",
+        help="Automatically append the suggested rule to .arklint.yml without prompting.",
+    ),
+) -> None:
+    """Generate an arklint rule from a plain-English description using AI.
+
+    Examples:
+
+      arklint learn --describe "no raw SQL in routes" --provider anthropic
+
+      arklint learn --describe "no raw SQL in routes" --provider openai
+    """
+    from arklint.learner import suggest_rule, SUPPORTED_PROVIDERS
+
+    if provider not in SUPPORTED_PROVIDERS:
+        err_console.print(
+            f"[bold red]Unknown provider:[/bold red] {provider!r}. "
+            f"Choose from: {', '.join(SUPPORTED_PROVIDERS)}"
+        )
+        raise typer.Exit(1)
+
+    console.print(f"[dim]Generating rule via {provider}…[/dim]")
+
+    try:
+        yaml_snippet = suggest_rule(description=describe, provider=provider, api_key=api_key)
+    except ImportError as exc:
+        err_console.print(f"[bold red]Missing dependency:[/bold red] {exc}")
+        raise typer.Exit(1) from exc
+    except ValueError as exc:
+        err_console.print(f"[bold red]Configuration error:[/bold red] {exc}")
+        raise typer.Exit(1) from exc
+    except RuntimeError as exc:
+        err_console.print(f"[bold red]API error:[/bold red] {exc}")
+        raise typer.Exit(1) from exc
+
+    console.print("\n[bold cyan]Suggested rule:[/bold cyan]\n")
+    console.print(yaml_snippet)
+    console.print()
+
+    if not append:
+        confirm = typer.confirm("Append this rule to .arklint.yml?")
+        if not confirm:
+            console.print("[dim]Aborted — rule not saved.[/dim]")
+            return
+
+    try:
+        cfg_path = config or _find_config_path()
+    except FileNotFoundError as exc:
+        err_console.print(f"[bold red]Config error:[/bold red] {exc}")
+        raise typer.Exit(1) from exc
+
+    with open(cfg_path, "a", encoding="utf-8") as f:
+        f.write(f"\n  {yaml_snippet.replace(chr(10), chr(10) + '  ')}\n")
+
+    console.print(
+        f"[bold green]✓ Rule appended[/bold green] to [cyan]{cfg_path}[/cyan]\n"
+        f"  Run [bold]arklint validate[/bold] to confirm the config is valid."
+    )
+
+
+def _find_config_path() -> Path:
+    """Return the path to .arklint.yml, raising FileNotFoundError if absent."""
+    from pathlib import Path as _Path
+    current = _Path.cwd()
+    for parent in [current, *current.parents]:
+        candidate = parent / ".arklint.yml"
+        if candidate.exists():
+            return candidate
+    raise FileNotFoundError(
+        "No .arklint.yml found. Run 'arklint init' to create one."
+    )
+
+
+# ---------------------------------------------------------------------------
 # arklint mcp
 # ---------------------------------------------------------------------------
 
