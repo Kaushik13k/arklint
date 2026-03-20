@@ -10,7 +10,7 @@
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>arklint</ToolCommandName>
     <PackageId>arklint</PackageId>
-    <Version>0.2.0</Version>
+    <Version>0.3.0</Version>
     <Authors>Kaushik13k</Authors>
     <Description>The architectural rulebook for your codebase. Prevention, not detection.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
