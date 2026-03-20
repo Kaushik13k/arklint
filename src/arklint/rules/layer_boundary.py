@@ -100,9 +100,13 @@ def _match_layer(rel_path: str, specs: dict[str, pathspec.PathSpec]) -> str | No
 
 def _import_to_layer(imp: str, specs: dict[str, pathspec.PathSpec]) -> str | None:
     # Heuristic: convert dotted Python import to a path and match against layer globs.
-    # "services.users" → try "services/users" and "services/users.py"
+    # "services.users" → try "services/users", "services/users.py", "services/users/__init__.py"
     as_path = imp.replace(".", "/")
     for name, spec in specs.items():
-        if spec.match_file(as_path) or spec.match_file(as_path + ".py"):
+        if (
+            spec.match_file(as_path)
+            or spec.match_file(as_path + ".py")
+            or spec.match_file(as_path + "/__init__.py")
+        ):
             return name
     return None
