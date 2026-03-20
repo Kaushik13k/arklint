@@ -1,0 +1,41 @@
+name: arklint/clean-arch
+description: Generic clean architecture — enforces entity/use-case/interface/infrastructure layer boundaries.
+version: "1"
+
+rules:
+  - id: clean-arch/layer-boundary
+    type: layer-boundary
+    description: >
+      Enforce clean architecture layer ordering:
+      interfaces → use_cases → entities (inner layers must not depend on outer layers).
+    layers:
+      - name: interfaces
+        path: "interfaces/**"
+      - name: use_cases
+        path: "use_cases/**"
+      - name: entities
+        path: "entities/**"
+      - name: infrastructure
+        path: "infrastructure/**"
+    allowed_dependencies:
+      interfaces: [use_cases]
+      use_cases: [entities]
+      entities: []
+      infrastructure: [use_cases, entities]
+    severity: error
+
+  - id: clean-arch/no-framework-in-entities
+    type: boundary
+    description: Domain entities must not depend on frameworks, ORMs, or infrastructure packages.
+    source: "entities/**"
+    blocked_imports:
+      - "sqlalchemy"
+      - "django"
+      - "flask"
+      - "fastapi"
+      - "express"
+      - "mongoose"
+      - "prisma"
+      - "redis"
+      - "celery"
+    severity: error

@@ -49,13 +49,37 @@ def load_config(path: Path | None = None) -> ArklintConfig:
         raise ConfigError(f"{path} must be a YAML mapping")
 
     version = str(data.get("version", "1"))
-    raw_rules = data.get("rules", [])
 
+    # ── resolve extends ───────────────────────────────────────────────────────
+    from arklint.packs import PackError, resolve_pack  # local import avoids cycle
+
+    extends = data.get("extends", [])
+    if not isinstance(extends, list):
+        raise ConfigError("'extends' must be a list of pack references")
+
+    extended_rules: list[dict[str, Any]] = []
+    seen_ids: set[str] = set()
+    for ref in extends:
+        try:
+            pack_rules = resolve_pack(ref, path.parent)
+        except PackError as exc:
+            raise ConfigError(f"Failed to load pack '{ref}': {exc}") from exc
+        for raw in pack_rules:
+            rule_id = raw.get("id", "")
+            if rule_id and rule_id not in seen_ids:
+                extended_rules.append(raw)
+                seen_ids.add(rule_id)
+
+    # ── local rules (override extended rules with same id) ────────────────────
+    raw_rules = data.get("rules", [])
     if not isinstance(raw_rules, list):
         raise ConfigError("'rules' must be a list")
 
+    local_ids = {r.get("id") for r in raw_rules if isinstance(r, dict)}
+    merged_raw = [r for r in extended_rules if r.get("id") not in local_ids] + raw_rules
+
     rules = []
-    for i, raw in enumerate(raw_rules):
+    for i, raw in enumerate(merged_raw):
         rule = _parse_rule(raw, i)
         rules.append(rule)
 

@@ -1,0 +1,31 @@
+name: arklint/fastapi
+description: FastAPI best practices — enforces clean separation of routers, services, schemas, and repositories.
+version: "1"
+
+rules:
+  - id: fastapi/no-db-in-routes
+    type: boundary
+    description: FastAPI routes must not import database sessions or ORM models directly. Use a service or dependency layer.
+    source: "routers/**"
+    blocked_imports: ["sqlalchemy", "psycopg2", "pymongo", "motor", "databases", "tortoise"]
+    severity: error
+
+  - id: fastapi/no-business-logic-in-routes
+    type: pattern-ban
+    description: Keep business logic out of route handlers — move it to a service layer.
+    pattern: 'async def \w+\(.*\).*:\s*\n(?:\s+.*\n)*\s+(?:if|for|while|try)'
+    exclude: ["tests/**"]
+    severity: warning
+
+  - id: fastapi/schemas-in-schemas-dir
+    type: file-pattern
+    description: Pydantic request/response schemas must live in schemas/ or models/.
+    pattern: 'class\s+\w+\s*\(\s*BaseModel\s*\)'
+    allowed_in: ["schemas/**", "models/**"]
+    severity: warning
+
+  - id: fastapi/single-http-client
+    type: dependency
+    description: Use only one HTTP client library — mixing httpx and requests causes inconsistency.
+    allow_only_one_of: ["httpx", "requests", "aiohttp"]
+    severity: warning

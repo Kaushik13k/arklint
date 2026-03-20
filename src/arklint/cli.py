@@ -404,6 +404,126 @@ def _find_config_path() -> Path:
 
 
 # ---------------------------------------------------------------------------
+# arklint search
+# ---------------------------------------------------------------------------
+
+@app.command()
+def search(
+    query: str = typer.Argument(
+        ...,
+        help="Search term — e.g. 'fastapi', 'django', 'clean-arch'.",
+        metavar="QUERY",
+    ),
+) -> None:
+    """Search available official rule packs."""
+    from arklint.packs import search_packs, PackError
+
+    try:
+        results = search_packs(query)
+    except PackError as exc:
+        err_console.print(f"[bold red]Registry error:[/bold red] {exc}")
+        raise typer.Exit(1) from exc
+
+    if not results:
+        console.print(f"[yellow]No packs found matching '{query}'.[/yellow]")
+        raise typer.Exit(0)
+
+    console.print(f"\n[bold]Packs matching '{query}':[/bold]\n")
+    for pack in results:
+        console.print(
+            f"  [bold cyan]{pack['name']}[/bold cyan]  "
+            f"[dim]({pack.get('rules', '?')} rules)[/dim]\n"
+            f"  {pack.get('description', '')}\n"
+        )
+    console.print(f"[dim]Add a pack with: arklint add <name>[/dim]")
+
+
+# ---------------------------------------------------------------------------
+# arklint add
+# ---------------------------------------------------------------------------
+
+@app.command()
+def add(
+    pack: str = typer.Argument(
+        ...,
+        help="Pack name to add — e.g. 'arklint/fastapi'.",
+        metavar="PACK",
+    ),
+    config: Optional[Path] = typer.Option(
+        None,
+        "--config",
+        "-c",
+        help="Path to .arklint.yml. Auto-discovered if omitted.",
+    ),
+) -> None:
+    """Add an official rule pack to your .arklint.yml."""
+    from arklint.packs import resolve_pack, PackError
+
+    # resolve config path
+    try:
+        cfg_path = config or _find_config_path()
+    except FileNotFoundError as exc:
+        err_console.print(f"[bold red]Config error:[/bold red] {exc}")
+        raise typer.Exit(1) from exc
+
+    # verify the pack actually resolves before writing
+    console.print(f"[dim]Fetching pack '{pack}'…[/dim]")
+    try:
+        rules = resolve_pack(pack, cfg_path.parent)
+    except PackError as exc:
+        err_console.print(f"[bold red]Pack error:[/bold red] {exc}")
+        raise typer.Exit(1) from exc
+
+    # read current config
+    import yaml as _yaml
+    raw = _yaml.safe_load(cfg_path.read_text()) or {}
+    extends: list = raw.get("extends", [])
+
+    if pack in extends:
+        console.print(f"[yellow]'{pack}' is already in extends.[/yellow]")
+        raise typer.Exit(0)
+
+    # patch the file — insert extends block if missing, or append to it
+    text = cfg_path.read_text()
+    if "extends:" in text:
+        # append under existing extends list
+        text = text.replace(
+            "extends:",
+            f"extends:",
+            1,
+        )
+        # insert new entry after 'extends:' line
+        lines = text.splitlines()
+        new_lines = []
+        in_extends = False
+        inserted = False
+        for line in lines:
+            new_lines.append(line)
+            if line.strip() == "extends:" or line.strip().startswith("extends:"):
+                in_extends = True
+            elif in_extends and not inserted and (not line.startswith(" ") and not line.startswith("-") and line.strip() != ""):
+                new_lines.insert(-1, f"  - {pack}")
+                inserted = True
+                in_extends = False
+        if in_extends and not inserted:
+            new_lines.append(f"  - {pack}")
+        text = "\n".join(new_lines)
+    else:
+        # prepend extends block before 'rules:' or at the top after version
+        if "rules:" in text:
+            text = text.replace("rules:", f"extends:\n  - {pack}\n\nrules:", 1)
+        else:
+            text = f"extends:\n  - {pack}\n\n" + text
+
+    cfg_path.write_text(text)
+    console.print(
+        f"[bold green]✓ Added[/bold green] [cyan]{pack}[/cyan] "
+        f"([bold]{len(rules)}[/bold] rules) to [cyan]{cfg_path}[/cyan]\n"
+        f"  Run [bold]arklint validate[/bold] to confirm."
+    )
+
+
+# ---------------------------------------------------------------------------
 # arklint mcp
 # ---------------------------------------------------------------------------
 

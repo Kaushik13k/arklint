@@ -1,0 +1,24 @@
+name: arklint/nextjs
+description: Next.js App Router conventions — server/client component boundaries and data fetching patterns.
+version: "1"
+
+rules:
+  - id: nextjs/no-use-client-in-server-components
+    type: pattern-ban
+    description: Do not mix 'use client' directive in files that also use server-only data fetching (fetch with cache).
+    pattern: '"use client"'
+    exclude: ["**/components/client/**", "**/app/**/page.client.*"]
+    severity: warning
+
+  - id: nextjs/no-direct-db-in-components
+    type: boundary
+    description: React components must not import database clients directly. Use server actions or API routes.
+    source: "**/components/**"
+    blocked_imports: ["prisma", "@prisma/client", "mongoose", "pg", "mysql2", "sqlite3"]
+    severity: error
+
+  - id: nextjs/single-state-manager
+    type: dependency
+    description: Use only one client-side state management library.
+    allow_only_one_of: ["zustand", "jotai", "recoil", "redux", "@reduxjs/toolkit", "mobx"]
+    severity: warning

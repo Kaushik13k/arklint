@@ -1,0 +1,34 @@
+{
+  "packs": [
+    {
+      "name": "arklint/fastapi",
+      "description": "FastAPI best practices — routers, dependencies, schemas, no direct DB in routes",
+      "tags": ["python", "fastapi", "api"],
+      "rules": 4
+    },
+    {
+      "name": "arklint/django",
+      "description": "Django conventions — views, models, serializers, no raw SQL in views",
+      "tags": ["python", "django", "web"],
+      "rules": 4
+    },
+    {
+      "name": "arklint/nextjs",
+      "description": "Next.js App Router conventions — server/client components, data fetching patterns",
+      "tags": ["javascript", "typescript", "nextjs", "react"],
+      "rules": 3
+    },
+    {
+      "name": "arklint/express",
+      "description": "Express.js patterns — middleware, routes, controllers separation",
+      "tags": ["javascript", "node", "express"],
+      "rules": 3
+    },
+    {
+      "name": "arklint/clean-arch",
+      "description": "Generic clean architecture — entities, use cases, interfaces, infrastructure layers",
+      "tags": ["architecture", "clean-arch", "language-agnostic"],
+      "rules": 2
+    }
+  ]
+}
