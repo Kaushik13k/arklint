@@ -1,6 +1,9 @@
 {
-  "buildCommand": "pip install markdown pymdown-extensions && python docs/build.py",
-  "outputDirectory": "docs/site",
-  "installCommand": "",
-  "framework": null
+  "version": 2,
+  "builds": [
+    { "src": "docs/site/**", "use": "@vercel/static" }
+  ],
+  "routes": [
+    { "src": "/(.*)", "dest": "/docs/site/$1" }
+  ]
 }
