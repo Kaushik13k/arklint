@@ -25,13 +25,18 @@ jobs:
             exit 1
           fi
 
-          # Fail if none of the required sections have real content
+          # Fail if any required section has no real content
           WHAT=$(echo "$PR_BODY" | awk '/## What does this PR do\?/{found=1; next} /^##/{found=0} found{print}' | tr -d '[:space:]')
           WHY=$(echo "$PR_BODY" | awk '/## Why is this change needed\?/{found=1; next} /^##/{found=0} found{print}' | tr -d '[:space:]')
           HOW=$(echo "$PR_BODY" | awk '/## How was it tested\?/{found=1; next} /^##/{found=0} found{print}' | tr -d '[:space:]')
 
-          if [ -z "$WHAT" ] || [ -z "$WHY" ] || [ -z "$HOW" ]; then
-            echo "::error::One or more required sections (What / Why / How) are empty. Fill in all sections before merging."
+          MISSING=""
+          [ -z "$WHAT" ] && MISSING="$MISSING 'What does this PR do?'"
+          [ -z "$WHY" ]  && MISSING="$MISSING 'Why is this change needed?'"
+          [ -z "$HOW" ]  && MISSING="$MISSING 'How was it tested?'"
+
+          if [ -n "$MISSING" ]; then
+            echo "::error::The following required sections are empty:$MISSING. Fill in all sections before merging."
             exit 1
           fi
 
