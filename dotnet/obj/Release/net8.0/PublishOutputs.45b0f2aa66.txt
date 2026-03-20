@@ -1,0 +1,5 @@
+/Users/kaushikk/Desktop/PROJECTS/Prod/GIT/Arklint/dotnet/bin/Release/net8.0/publish/arklint
+/Users/kaushikk/Desktop/PROJECTS/Prod/GIT/Arklint/dotnet/bin/Release/net8.0/publish/arklint.dll
+/Users/kaushikk/Desktop/PROJECTS/Prod/GIT/Arklint/dotnet/bin/Release/net8.0/publish/arklint.deps.json
+/Users/kaushikk/Desktop/PROJECTS/Prod/GIT/Arklint/dotnet/bin/Release/net8.0/publish/arklint.runtimeconfig.json
+/Users/kaushikk/Desktop/PROJECTS/Prod/GIT/Arklint/dotnet/bin/Release/net8.0/publish/arklint.pdb

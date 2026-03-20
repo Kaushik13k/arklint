@@ -1,0 +1,15 @@
+/Users/kaushikk/Desktop/PROJECTS/Prod/GIT/Arklint/dotnet/bin/Release/net8.0/arklint
+/Users/kaushikk/Desktop/PROJECTS/Prod/GIT/Arklint/dotnet/bin/Release/net8.0/arklint.deps.json
+/Users/kaushikk/Desktop/PROJECTS/Prod/GIT/Arklint/dotnet/bin/Release/net8.0/arklint.runtimeconfig.json
+/Users/kaushikk/Desktop/PROJECTS/Prod/GIT/Arklint/dotnet/bin/Release/net8.0/arklint.dll
+/Users/kaushikk/Desktop/PROJECTS/Prod/GIT/Arklint/dotnet/bin/Release/net8.0/arklint.pdb
+/Users/kaushikk/Desktop/PROJECTS/Prod/GIT/Arklint/dotnet/obj/Release/net8.0/arklint.GeneratedMSBuildEditorConfig.editorconfig
+/Users/kaushikk/Desktop/PROJECTS/Prod/GIT/Arklint/dotnet/obj/Release/net8.0/arklint.AssemblyInfoInputs.cache
+/Users/kaushikk/Desktop/PROJECTS/Prod/GIT/Arklint/dotnet/obj/Release/net8.0/arklint.AssemblyInfo.cs
+/Users/kaushikk/Desktop/PROJECTS/Prod/GIT/Arklint/dotnet/obj/Release/net8.0/arklint.csproj.CoreCompileInputs.cache
+/Users/kaushikk/Desktop/PROJECTS/Prod/GIT/Arklint/dotnet/obj/Release/net8.0/arklint.sourcelink.json
+/Users/kaushikk/Desktop/PROJECTS/Prod/GIT/Arklint/dotnet/obj/Release/net8.0/arklint.dll
+/Users/kaushikk/Desktop/PROJECTS/Prod/GIT/Arklint/dotnet/obj/Release/net8.0/refint/arklint.dll
+/Users/kaushikk/Desktop/PROJECTS/Prod/GIT/Arklint/dotnet/obj/Release/net8.0/arklint.pdb
+/Users/kaushikk/Desktop/PROJECTS/Prod/GIT/Arklint/dotnet/obj/Release/net8.0/arklint.genruntimeconfig.cache
+/Users/kaushikk/Desktop/PROJECTS/Prod/GIT/Arklint/dotnet/obj/Release/net8.0/ref/arklint.dll

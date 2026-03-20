@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>arklint</id>
+    <version>0.2.0</version>
+    <authors>Kaushik13k</authors>
+    <license type="expression">MIT</license>
+    <licenseUrl>https://licenses.nuget.org/MIT</licenseUrl>
+    <projectUrl>https://github.com/Kaushik13k/arklint</projectUrl>
+    <description>The architectural rulebook for your codebase. Prevention, not detection.</description>
+    <tags>architecture linting cli code-quality</tags>
+    <packageTypes>
+      <packageType name="DotnetTool" />
+    </packageTypes>
+    <repository type="git" url="https://github.com/Kaushik13k/arklint" commit="9a7a0171ddc92e9c1f8f6d71d156e7649f53f61f" />
+  </metadata>
+  <files>
+    <file src="/Users/kaushikk/Desktop/PROJECTS/Prod/GIT/Arklint/dotnet/obj/Release/net8.0/DotnetToolSettings.xml" target="tools/net8.0/any/DotnetToolSettings.xml" />
+    <file src="/Users/kaushikk/Desktop/PROJECTS/Prod/GIT/Arklint/dotnet/bin/Release/net8.0/publish/arklint.deps.json" target="tools/net8.0/any/arklint.deps.json" />
+    <file src="/Users/kaushikk/Desktop/PROJECTS/Prod/GIT/Arklint/dotnet/bin/Release/net8.0/publish/arklint.dll" target="tools/net8.0/any/arklint.dll" />
+    <file src="/Users/kaushikk/Desktop/PROJECTS/Prod/GIT/Arklint/dotnet/bin/Release/net8.0/publish/arklint.pdb" target="tools/net8.0/any/arklint.pdb" />
+    <file src="/Users/kaushikk/Desktop/PROJECTS/Prod/GIT/Arklint/dotnet/bin/Release/net8.0/publish/arklint.runtimeconfig.json" target="tools/net8.0/any/arklint.runtimeconfig.json" />
+  </files>
+</package>
