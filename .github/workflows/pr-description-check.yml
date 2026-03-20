@@ -1,0 +1,43 @@
+name: PR Description Check
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+jobs:
+  check-description:
+    name: Validate PR description
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check PR description is filled in
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          # Fail if body is empty or only whitespace
+          if [ -z "$(echo "$PR_BODY" | tr -d '[:space:]')" ]; then
+            echo "::error::PR description is empty. Please fill in all required sections."
+            exit 1
+          fi
+
+          # Fail if placeholder comments are still present (unfilled template)
+          if echo "$PR_BODY" | grep -q "<!-- Required:"; then
+            echo "::error::PR description still contains unfilled template placeholders. Fill in all required sections."
+            exit 1
+          fi
+
+          # Fail if any required section has no real content
+          WHAT=$(echo "$PR_BODY" | awk '/## What does this PR do\?/{found=1; next} /^##/{found=0} found{print}' | tr -d '[:space:]')
+          WHY=$(echo "$PR_BODY" | awk '/## Why is this change needed\?/{found=1; next} /^##/{found=0} found{print}' | tr -d '[:space:]')
+          HOW=$(echo "$PR_BODY" | awk '/## How was it tested\?/{found=1; next} /^##/{found=0} found{print}' | tr -d '[:space:]')
+
+          MISSING=""
+          [ -z "$WHAT" ] && MISSING="$MISSING 'What does this PR do?'"
+          [ -z "$WHY" ]  && MISSING="$MISSING 'Why is this change needed?'"
+          [ -z "$HOW" ]  && MISSING="$MISSING 'How was it tested?'"
+
+          if [ -n "$MISSING" ]; then
+            echo "::error::The following required sections are empty:$MISSING. Fill in all sections before merging."
+            exit 1
+          fi
+
+          echo "PR description looks good."
