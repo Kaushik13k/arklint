@@ -105,3 +105,21 @@ jobs:
             dist/arklint-linux-x86_64/arklint-linux-x86_64
             dist/arklint-darwin-arm64/arklint-darwin-arm64
             dist/arklint-windows-x86_64.exe/arklint-windows-x86_64.exe
+
+  publish-nuget:
+    name: Publish NuGet package
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0"
+
+      - name: Pack NuGet tool
+        run: dotnet pack dotnet/arklint.csproj -c Release -o nupkg
+
+      - name: Push to NuGet
+        run: dotnet nuget push nupkg/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
