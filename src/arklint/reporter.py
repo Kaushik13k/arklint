@@ -28,8 +28,15 @@ def print_header(version: str, file_count: int, rule_count: int) -> None:
     )
 
 
-def print_report(results: list[CheckResult], scan_root: Path) -> tuple[int, int]:
+def print_report(
+    results: list[CheckResult],
+    scan_root: Path,
+    quiet: bool = False,
+) -> tuple[int, int]:
     """Render all results to the terminal.
+
+    When *quiet* is True, passing rules are suppressed — only failures
+    and warnings are printed.
 
     Returns ``(total_errors, total_warnings)``.
     """
@@ -37,7 +44,7 @@ def print_report(results: list[CheckResult], scan_root: Path) -> tuple[int, int]
     total_warnings = 0
 
     for result in results:
-        _render_result(result, scan_root)
+        _render_result(result, scan_root, quiet=quiet)
         total_errors += result.error_count
         total_warnings += result.warning_count
 
@@ -49,9 +56,10 @@ def print_report(results: list[CheckResult], scan_root: Path) -> tuple[int, int]
 # Internal renderers
 # ---------------------------------------------------------------------------
 
-def _render_result(result: CheckResult, scan_root: Path) -> None:
+def _render_result(result: CheckResult, scan_root: Path, quiet: bool = False) -> None:
     if result.passed:
-        console.print(f"  [bold green]✓ PASS[/bold green]  [dim]{result.rule.id}[/dim]")
+        if not quiet:
+            console.print(f"  [bold green]✓ PASS[/bold green]  [dim]{result.rule.id}[/dim]")
         return
 
     severity = result.rule.severity
