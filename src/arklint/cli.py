@@ -381,7 +381,9 @@ def learn(
         raise typer.Exit(1) from exc
 
     with open(cfg_path, "a", encoding="utf-8") as f:
-        f.write(f"\n  {yaml_snippet.replace('\n', '\n  ')}\n")
+        with open(cfg_path, "a", encoding="utf-8") as f:
+            indented_snippet = yaml_snippet.replace("\n", "\n  ")
+            f.write("\n  " + indented_snippet + "\n")
 
     console.print(
         f"[bold green]✓ Rule appended[/bold green] to [cyan]{cfg_path}[/cyan]\n"
