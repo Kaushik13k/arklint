@@ -404,6 +404,112 @@ def _find_config_path() -> Path:
 
 
 # ---------------------------------------------------------------------------
+# arklint search
+# ---------------------------------------------------------------------------
+
+@app.command()
+def search(
+    query: str = typer.Argument(
+        ...,
+        help="Search term — e.g. 'fastapi', 'django', 'clean-arch'.",
+        metavar="QUERY",
+    ),
+) -> None:
+    """Search available official rule packs."""
+    from arklint.packs import search_packs, PackError
+
+    try:
+        results = search_packs(query)
+    except PackError as exc:
+        err_console.print(f"[bold red]Registry error:[/bold red] {exc}")
+        raise typer.Exit(1) from exc
+
+    if not results:
+        console.print(f"[yellow]No packs found matching '{query}'.[/yellow]")
+        raise typer.Exit(0)
+
+    console.print(f"\n[bold]Packs matching '{query}':[/bold]\n")
+    for pack in results:
+        console.print(
+            f"  [bold cyan]{pack['name']}[/bold cyan]  "
+            f"[dim]({pack.get('rules', '?')} rules)[/dim]\n"
+            f"  {pack.get('description', '')}\n"
+        )
+    console.print(f"[dim]Add a pack with: arklint add <name>[/dim]")
+
+
+# ---------------------------------------------------------------------------
+# arklint add
+# ---------------------------------------------------------------------------
+
+@app.command()
+def add(
+    pack: str = typer.Argument(
+        ...,
+        help="Pack name to add — e.g. 'arklint/fastapi'.",
+        metavar="PACK",
+    ),
+    config: Optional[Path] = typer.Option(
+        None,
+        "--config",
+        "-c",
+        help="Path to .arklint.yml. Auto-discovered if omitted.",
+    ),
+) -> None:
+    """Add an official rule pack to your .arklint.yml."""
+    import yaml as _yaml
+    from arklint.packs import resolve_pack, PackError
+
+    # resolve and validate config path
+    try:
+        cfg_path = config or _find_config_path()
+    except FileNotFoundError as exc:
+        err_console.print(f"[bold red]Config error:[/bold red] {exc}")
+        raise typer.Exit(1) from exc
+
+    if not cfg_path.exists():
+        err_console.print(f"[bold red]Config not found:[/bold red] {cfg_path}")
+        raise typer.Exit(1)
+
+    try:
+        raw_cfg = _yaml.safe_load(cfg_path.read_text())
+    except _yaml.YAMLError as exc:
+        err_console.print(f"[bold red]Invalid YAML in config:[/bold red] {exc}")
+        raise typer.Exit(1) from exc
+
+    if not isinstance(raw_cfg, dict):
+        err_console.print("[bold red]Config error:[/bold red] .arklint.yml must be a YAML mapping.")
+        raise typer.Exit(1)
+
+    extends: list = raw_cfg.get("extends", [])
+    if not isinstance(extends, list):
+        err_console.print("[bold red]Config error:[/bold red] 'extends' must be a list.")
+        raise typer.Exit(1)
+
+    if pack in extends:
+        console.print(f"[yellow]'{pack}' is already in extends.[/yellow]")
+        raise typer.Exit(0)
+
+    # verify the pack resolves before writing
+    console.print(f"[dim]Fetching pack '{pack}'…[/dim]")
+    try:
+        rules = resolve_pack(pack, cfg_path.parent)
+    except PackError as exc:
+        err_console.print(f"[bold red]Pack error:[/bold red] {exc}")
+        raise typer.Exit(1) from exc
+
+    # safe YAML rewrite — no text surgery
+    raw_cfg["extends"] = extends + [pack]
+    cfg_path.write_text(_yaml.dump(raw_cfg, default_flow_style=False, sort_keys=False))
+
+    console.print(
+        f"[bold green]✓ Added[/bold green] [cyan]{pack}[/cyan] "
+        f"([bold]{len(rules)}[/bold] rules) to [cyan]{cfg_path}[/cyan]\n"
+        f"  Run [bold]arklint validate[/bold] to confirm."
+    )
+
+
+# ---------------------------------------------------------------------------
 # arklint mcp
 # ---------------------------------------------------------------------------
 

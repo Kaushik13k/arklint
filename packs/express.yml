@@ -1,0 +1,24 @@
+name: arklint/express
+description: Express.js patterns — enforces middleware/routes/controllers separation.
+version: "1"
+
+rules:
+  - id: express/no-db-in-routes
+    type: boundary
+    description: Express routes must not import database clients directly. Use a controller or service layer.
+    source: "**/routes/**"
+    blocked_imports: ["mongoose", "pg", "mysql2", "sqlite3", "mongodb", "sequelize"]
+    severity: error
+
+  - id: express/no-console-log
+    type: pattern-ban
+    description: Use a structured logger (winston, pino) instead of console.log in production code.
+    pattern: 'console\.(log|warn|error)\('
+    exclude: ["tests/**", "*.test.*", "*.spec.*", "scripts/**"]
+    severity: warning
+
+  - id: express/single-http-framework
+    type: dependency
+    description: Use only one HTTP framework — mixing express and fastify causes confusion.
+    allow_only_one_of: ["express", "fastify", "koa", "hapi"]
+    severity: error

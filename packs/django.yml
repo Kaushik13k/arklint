@@ -1,0 +1,32 @@
+name: arklint/django
+description: Django conventions — enforces view/model/serializer separation and bans raw SQL in views.
+version: "1"
+
+rules:
+  - id: django/no-raw-sql-in-views
+    type: pattern-ban
+    description: Avoid raw SQL in Django views. Use ORM queries or move to a manager/repository.
+    pattern: '\.raw\(|cursor\.execute\('
+    exclude: ["tests/**", "migrations/**", "**/managers/**", "**/repositories/**", "**/admin.py"]
+    severity: error
+
+  - id: django/models-in-models-dir
+    type: file-pattern
+    description: Django models must live in models.py or models/ directory.
+    pattern: 'class\s+\w+\s*\(\s*models\.Model\s*\)'
+    allowed_in: ["**/models.py", "**/models/**"]
+    severity: warning
+
+  - id: django/serializers-in-serializers-dir
+    type: file-pattern
+    description: DRF serializers must live in serializers.py or serializers/ directory.
+    pattern: 'class\s+\w+\s*\(\s*(?:serializers\.\w+|ModelSerializer|BaseSerializer|Serializer)\s*\)'
+    allowed_in: ["**/serializers.py", "**/serializers/**"]
+    severity: warning
+
+  - id: django/no-debug-true-in-prod
+    type: pattern-ban
+    description: DEBUG = True must not appear in production settings files.
+    pattern: 'DEBUG\s*=\s*True'
+    exclude: ["**/settings/local.py", "**/settings/development.py", "**/settings/dev.py", "tests/**"]
+    severity: error
