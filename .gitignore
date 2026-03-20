@@ -11,3 +11,11 @@ build/
 .coverage
 htmlcov/
 generate_doc.py
+
+# .NET build artifacts
+dotnet/bin/
+dotnet/obj/
+dotnet/nupkg/
+
+# npm downloaded binaries
+npm/bin/
