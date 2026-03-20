@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import urllib.error
 import urllib.request
 from pathlib import Path
 from typing import Any
@@ -21,7 +22,7 @@ PACK_BASE_URL = (
 
 
 class PackError(Exception):
-    pass
+    """Raised when a pack cannot be resolved, fetched, or parsed."""
 
 
 def resolve_pack(ref: str, config_root: Path) -> list[dict[str, Any]]:
@@ -51,7 +52,7 @@ def fetch_registry() -> dict[str, Any]:
     try:
         with urllib.request.urlopen(REGISTRY_URL, timeout=10) as resp:
             return json.loads(resp.read().decode())
-    except Exception as exc:
+    except (urllib.error.URLError, json.JSONDecodeError, OSError) as exc:
         raise PackError(f"Could not fetch registry: {exc}") from exc
 
 
@@ -94,7 +95,7 @@ def _load_named(name: str) -> list[dict[str, Any]]:
             return _extract_rules(data, name)
         except PackError:
             cached.unlink(missing_ok=True)
-        except Exception:
+        except (yaml.YAMLError, OSError):
             cached.unlink(missing_ok=True)
 
     pack_file = name.split("/")[-1]
@@ -103,7 +104,7 @@ def _load_named(name: str) -> list[dict[str, Any]]:
     try:
         with urllib.request.urlopen(url, timeout=10) as resp:
             content = resp.read().decode()
-    except Exception as exc:
+    except (urllib.error.URLError, OSError) as exc:
         raise PackError(
             f"Could not fetch pack '{name}'. "
             f"Run 'arklint search' to see available packs.\n{exc}"
