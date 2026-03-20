@@ -17,6 +17,5 @@
     <PackageProjectUrl>https://github.com/Kaushik13k/arklint</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Kaushik13k/arklint</RepositoryUrl>
     <PackageTags>architecture;linting;cli;code-quality</PackageTags>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 </Project>
