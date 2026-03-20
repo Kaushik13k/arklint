@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <AssemblyName>arklint</AssemblyName>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+
+    <!-- NuGet global tool packaging -->
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>arklint</ToolCommandName>
+    <PackageId>arklint</PackageId>
+    <Version>0.2.0</Version>
+    <Authors>Kaushik13k</Authors>
+    <Description>The architectural rulebook for your codebase. Prevention, not detection.</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/Kaushik13k/arklint</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Kaushik13k/arklint</RepositoryUrl>
+    <PackageTags>architecture;linting;cli;code-quality</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+</Project>
