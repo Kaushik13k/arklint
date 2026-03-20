@@ -89,6 +89,12 @@ def check(
         metavar="BASE",
         help="Only scan files changed vs BASE (e.g. HEAD, origin/main).",
     ),
+    quiet: bool = typer.Option(
+        False,
+        "--quiet",
+        "-q",
+        help="Suppress passing rules — only show failures and warnings.",
+    ),
 ) -> None:
     """Scan the codebase against your architectural rules."""
     scan_root = (path or Path.cwd()).resolve()
@@ -113,7 +119,7 @@ def check(
 
     print_header(__version__, len(files), len(cfg.rules))
     results = run_rules(cfg, files, scan_root=scan_root)
-    errors, warnings = print_report(results, scan_root)
+    errors, warnings = print_report(results, scan_root, quiet=quiet)
 
     if errors > 0 or (strict and warnings > 0):
         raise typer.Exit(1)
@@ -195,6 +201,33 @@ def watch(
         observer.stop()
         observer.join()
         console.print("\n[dim]Watch stopped.[/dim]")
+
+
+# ---------------------------------------------------------------------------
+# arklint validate
+# ---------------------------------------------------------------------------
+
+@app.command()
+def validate(
+    config: Optional[Path] = typer.Option(
+        None,
+        "--config",
+        "-c",
+        help="Path to .arklint.yml. Auto-discovered if omitted.",
+    ),
+) -> None:
+    """Validate [bold].arklint.yml[/bold] without running any checks."""
+    try:
+        cfg = load_config(config)
+    except ConfigError as exc:
+        err_console.print(f"[bold red]✗ Invalid config:[/bold red] {exc}")
+        raise typer.Exit(1) from exc
+
+    console.print(
+        f"[bold green]✓ Valid[/bold green] — "
+        f"[bold]{len(cfg.rules)}[/bold] rule{'s' if len(cfg.rules) != 1 else ''} loaded "
+        f"from [cyan]{cfg.root / '.arklint.yml'}[/cyan]"
+    )
 
 
 # ---------------------------------------------------------------------------
