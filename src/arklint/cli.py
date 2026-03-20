@@ -16,7 +16,7 @@ from arklint import __version__
 from arklint.config import load_config, ConfigError
 from arklint.engine import run_rules
 from arklint.init_templates import STARTER_TEMPLATE
-from arklint.reporter import console, err_console, print_header, print_report
+from arklint.reporter import console, err_console, emit_github_annotations, print_header, print_report
 from arklint.scanner import collect_diff_files, collect_files
 
 
@@ -95,6 +95,11 @@ def check(
         "-q",
         help="Suppress passing rules — only show failures and warnings.",
     ),
+    github_annotations: bool = typer.Option(
+        False,
+        "--github-annotations",
+        help="Emit GitHub Actions workflow commands for inline PR annotations.",
+    ),
 ) -> None:
     """Scan the codebase against your architectural rules."""
     scan_root = (path or Path.cwd()).resolve()
@@ -120,6 +125,9 @@ def check(
     print_header(__version__, len(files), len(cfg.rules))
     results = run_rules(cfg, files, scan_root=scan_root)
     errors, warnings = print_report(results, scan_root, quiet=quiet)
+
+    if github_annotations:
+        emit_github_annotations(results, scan_root)
 
     if errors > 0 or (strict and warnings > 0):
         raise typer.Exit(1)
