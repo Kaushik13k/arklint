@@ -14,7 +14,7 @@ Arklint enforces **architectural rules** before bad code ever lands — whether 
 ```
 $ arklint check
 
-Arklint v0.2.0 — Scanning 142 files against 5 rules...
+Arklint v0.3.0 — Scanning 142 files against 5 rules...
 
   ✗ FAIL  no-direct-db-in-routes
          API routes must not import database modules directly
@@ -260,7 +260,7 @@ arklint --version                     Show version and exit
 - uses: actions/checkout@v5
   with:
     fetch-depth: 0
-- uses: Kaushik13k/arklint@v0.2.0
+- uses: Kaushik13k/arklint@v0.3.0
   with:
     strict: "true"          # exit 1 on warnings too
     diff: origin/main       # only scan changed files (fast)
@@ -290,7 +290,7 @@ arklint --version                     Show version and exit
 
 ```yaml
 - repo: https://github.com/Kaushik13k/arklint
-  rev: v0.2.0
+  rev: v0.3.0
   hooks:
     - id: arklint
 ```

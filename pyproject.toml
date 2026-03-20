@@ -8,7 +8,7 @@ Issues = "https://github.com/Kaushik13k/arklint/issues"
 
 [project]
 name = "arklint"
-version = "0.2.0"
+version = "0.3.0"
 description = "The architectural rulebook for your codebase. Prevention, not detection."
 readme = "README.md"
 license = "MIT"
