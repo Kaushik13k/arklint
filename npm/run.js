@@ -7,6 +7,7 @@ const path = require("path");
 const { spawnSync } = require("child_process");
 
 const VERSION = require("./package.json").version;
+const BINARY_VERSION = require("./package.json").binaryVersion || VERSION;
 
 const PLATFORM_MAP = {
   "linux-x64":    "arklint-linux-x86_64",
@@ -60,14 +61,26 @@ function download(url, dest) {
   });
 }
 
+function isBinaryStale(binaryPath) {
+  if (!fs.existsSync(binaryPath)) return true;
+  try {
+    const result = spawnSync(binaryPath, ["--version"], { encoding: "utf8" });
+    const output = (result.stdout || result.stderr || "").trim();
+    return !output.includes(BINARY_VERSION);
+  } catch {
+    return true;
+  }
+}
+
 async function main() {
   const binaryPath = getLocalBinaryPath();
 
-  if (!fs.existsSync(binaryPath)) {
+  if (isBinaryStale(binaryPath)) {
+    if (fs.existsSync(binaryPath)) fs.unlinkSync(binaryPath);
     const binaryName = getBinaryName();
-    const url = `https://github.com/Kaushik13k/arklint/releases/download/v${VERSION}/${binaryName}`;
+    const url = `https://github.com/Kaushik13k/arklint/releases/download/v${BINARY_VERSION}/${binaryName}`;
 
-    process.stderr.write(`Downloading arklint v${VERSION} for ${process.platform}-${process.arch}...\n`);
+    process.stderr.write(`Downloading arklint v${BINARY_VERSION} for ${process.platform}-${process.arch}...\n`);
 
     fs.mkdirSync(path.join(__dirname, "bin"), { recursive: true });
     await download(url, binaryPath);

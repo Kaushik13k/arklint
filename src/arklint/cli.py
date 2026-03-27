@@ -17,7 +17,7 @@ import yaml
 from arklint import __version__
 from arklint.config import load_config, ConfigError
 from arklint.engine import run_rules
-from arklint.init_templates import STARTER_TEMPLATE
+from arklint.init_templates import detect_template
 from arklint.reporter import console, err_console, emit_github_annotations, print_header, print_report
 from arklint.scanner import collect_diff_files, collect_files
 
@@ -51,9 +51,11 @@ def init(
         )
         raise typer.Exit(1)
 
-    target.write_text(STARTER_TEMPLATE)
+    template, ecosystem = detect_template(Path.cwd())
+    target.write_text(template)
     console.print(
-        "[bold green]✓[/bold green] Created [cyan].arklint.yml[/cyan] with starter rules.\n"
+        f"[bold green]✓[/bold green] Created [cyan].arklint.yml[/cyan] "
+        f"with starter rules for [bold]{ecosystem}[/bold].\n"
         "  Edit it to match your architecture, then run [bold]arklint check[/bold]."
     )
 
