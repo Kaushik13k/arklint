@@ -10,11 +10,7 @@ $ arklint watch --strict
 
 ## How it works
 
-<<<<<<< Updated upstream
-Watch mode uses `watchdog` to monitor filesystem events in your project directory. On every file change, Arklint re-runs all checks and prints the updated results — just like `arklint check`, but live.
-=======
 Watch mode uses `watchdog` to monitor filesystem events in your project directory. On every file change, Arklint re-runs all checks and prints the updated results.
->>>>>>> Stashed changes
 
 **What triggers a re-run:**
 - Any file save or creation in the watched directory tree
@@ -31,20 +27,12 @@ Press **Ctrl+C** to stop.
 | Flag | Description |
 |------|-------------|
 | `<path>` | Directory to watch. Defaults to current directory |
-<<<<<<< Updated upstream
-| `--strict` | Treat warnings as errors (exit 1 on any warning) |
-=======
 | `--strict` | Treat warnings as errors |
->>>>>>> Stashed changes
 | `-c / --config <path>` | Use a config file from a custom path |
 
 ## Typical usage
 
-<<<<<<< Updated upstream
-Watch mode is most useful during active development on a feature branch — run it once when you start coding and leave it in the background. Any boundary violation or banned pattern you introduce shows up immediately, before you commit.
-=======
 Run it once when you start coding and leave it in the background. Any violation you introduce shows up immediately.
->>>>>>> Stashed changes
 
 ```bash
 $ arklint watch ./src --strict

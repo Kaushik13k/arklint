@@ -13,11 +13,7 @@ The `anthropic` and `openai` SDKs are bundled in the prebuilt binary, so `arklin
 
 ## pip install — optional extras
 
-<<<<<<< Updated upstream
-If you installed via pip and want to use `arklint learn`, install the AI extra for your provider:
-=======
 If you installed via pip, install the AI extra for your provider:
->>>>>>> Stashed changes
 
 ```bash
 $ pip install 'arklint[ai-anthropic]'   # Claude (Anthropic)

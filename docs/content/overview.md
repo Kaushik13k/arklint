@@ -92,14 +92,6 @@ Arklint ships with five rule types covering the most common architectural violat
 
 ```bash
 $ pip install arklint
-<<<<<<< Updated upstream
-$ arklint init        # creates .arklint.yml with starter rules
-$ arklint check       # scan your codebase now
-```
-
-That's it. Refine your rules from there.
-=======
 $ arklint init
 $ arklint check
 ```
->>>>>>> Stashed changes

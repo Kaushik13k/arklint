@@ -44,11 +44,6 @@ Install the hook:
 $ pre-commit install
 ```
 
-<<<<<<< Updated upstream
-> For a faster pre-commit experience on large repos, add `args: [--diff, HEAD]` to only scan staged files.
-
-=======
->>>>>>> Stashed changes
 ## GitLab CI
 
 ```yaml
@@ -75,11 +70,7 @@ arklint:
 | Code | Meaning |
 |------|---------|
 | `0` | All checks passed |
-<<<<<<< Updated upstream
-| `1` | One or more errors (or warnings, with `--strict`) |
-=======
 | `1` | One or more errors (or warnings with `--strict`) |
->>>>>>> Stashed changes
 | `2` | Config file invalid or not found |
 
 All CI systems treat a non-zero exit code as a pipeline failure.
