@@ -1,13 +1,17 @@
 {
   "name": "arklint",
-  "version": "0.4.2",
-  "binaryVersion": "0.4.0",
+  "version": "0.5.1",
+  "binaryVersion": "0.5.1",
   "description": "The architectural rulebook for your codebase. Prevention, not detection.",
   "bin": {
     "arklint": "./run.js"
   },
+  "scripts": {
+    "postinstall": "node install.js"
+  },
   "files": [
     "run.js",
+    "install.js",
     "README.md"
   ],
   "homepage": "https://github.com/Kaushik13k/arklint#readme",

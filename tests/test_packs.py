@@ -14,6 +14,7 @@ from arklint.cli import app
 from arklint.packs import (
     PackError,
     _extract_rules,
+    _urlopen,
     resolve_pack,
     search_packs,
 )
@@ -277,6 +278,36 @@ class TestSearchCommand:
             result = runner.invoke(app, ["search", "fastapi"])
         assert result.exit_code == 1
         assert "Registry error" in result.output
+
+
+# ── _urlopen SSL fallback ─────────────────────────────────────────────────────
+
+class TestUrlOpenSSLFallback:
+    def test_retries_with_unverified_context_on_ssl_error(self):
+        ssl_error = urllib.error.URLError("CERTIFICATE_VERIFY_FAILED")
+        mock_resp = MagicMock()
+
+        with patch("arklint.packs.urllib.request.urlopen",
+                   side_effect=[ssl_error, mock_resp]) as mock_open:
+            result = _urlopen("https://example.com")
+
+        assert result is mock_resp
+        assert mock_open.call_count == 2
+        # second call must pass an SSL context
+        _, kwargs = mock_open.call_args
+        assert "context" in kwargs
+
+    def test_raises_on_non_ssl_error(self):
+        with patch("arklint.packs.urllib.request.urlopen",
+                   side_effect=urllib.error.URLError("timeout")):
+            with pytest.raises(urllib.error.URLError):
+                _urlopen("https://example.com")
+
+    def test_succeeds_without_ssl_error(self):
+        mock_resp = MagicMock()
+        with patch("arklint.packs.urllib.request.urlopen", return_value=mock_resp):
+            result = _urlopen("https://example.com")
+        assert result is mock_resp
 
 
 # ── CLI: arklint add ──────────────────────────────────────────────────────────

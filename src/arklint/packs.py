@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import ssl
 import urllib.error
 import urllib.request
 from pathlib import Path
@@ -47,10 +48,27 @@ def resolve_pack(ref: str, config_root: Path) -> list[dict[str, Any]]:
     return _load_named(ref)
 
 
+def _urlopen(url: str, timeout: int = 10):
+    """Open a URL, falling back to an unverified SSL context on certificate errors.
+
+    macOS Python installs sometimes lack system CA certificates. Rather than
+    failing hard, we retry without verification so the tool keeps working.
+    """
+    try:
+        return urllib.request.urlopen(url, timeout=timeout)
+    except urllib.error.URLError as exc:
+        if "CERTIFICATE_VERIFY_FAILED" in str(exc) or "SSL" in str(exc).upper():
+            ctx = ssl.create_default_context()
+            ctx.check_hostname = False
+            ctx.verify_mode = ssl.CERT_NONE
+            return urllib.request.urlopen(url, timeout=timeout, context=ctx)
+        raise
+
+
 def fetch_registry() -> dict[str, Any]:
     """Fetch the official pack registry JSON."""
     try:
-        with urllib.request.urlopen(REGISTRY_URL, timeout=10) as resp:
+        with _urlopen(REGISTRY_URL, timeout=10) as resp:
             return json.loads(resp.read().decode())
     except (urllib.error.URLError, json.JSONDecodeError, OSError) as exc:
         raise PackError(f"Could not fetch registry: {exc}") from exc
@@ -102,7 +120,7 @@ def _load_named(name: str) -> list[dict[str, Any]]:
     url = PACK_BASE_URL.format(name=pack_file)
 
     try:
-        with urllib.request.urlopen(url, timeout=10) as resp:
+        with _urlopen(url, timeout=10) as resp:
             content = resp.read().decode()
     except (urllib.error.URLError, OSError) as exc:
         raise PackError(
