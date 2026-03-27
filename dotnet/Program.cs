@@ -2,7 +2,7 @@ using System.Diagnostics;
 using System.Net.Http;
 using System.Runtime.InteropServices;
 
-const string Version = "0.3.0";
+const string Version = "0.5.1";
 const string Repo = "Kaushik13k/arklint";
 
 static string? GetBinaryName()
