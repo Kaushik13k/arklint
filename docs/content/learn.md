@@ -9,14 +9,18 @@ $ arklint learn --describe "no raw SQL queries in route handlers" --provider ope
 
 Arklint prompts the AI with your description and the full rule schema. The AI returns a ready-to-use YAML rule block. You can review it and optionally append it to your `.arklint.yml`.
 
-## Installation
+The `anthropic` and `openai` SDKs are bundled in the prebuilt binary, so `arklint learn` works out of the box regardless of whether you installed via pip, npm, or .NET. All you need is an API key.
 
-Install the optional AI dependency for your preferred provider:
+## pip install — optional extras
+
+If you installed via pip and want to use `arklint learn`, install the AI extra for your provider:
 
 ```bash
 $ pip install 'arklint[ai-anthropic]'   # Claude (Anthropic)
 $ pip install 'arklint[ai-openai]'      # GPT-4o-mini (OpenAI)
 ```
+
+> **Note:** The pip extras are named `ai-anthropic` and `ai-openai` — with the `ai-` prefix. `pip install arklint[anthropic]` will fail. The `--provider` flag uses just `anthropic` or `openai` (no prefix) — a different naming from the pip extras.
 
 ## Options
 

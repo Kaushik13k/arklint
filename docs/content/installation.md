@@ -1,31 +1,47 @@
 # Installation
 
-Arklint is available on **PyPI**, **npm**, and **NuGet**. All three install methods run the same binary.
+Arklint is available on **PyPI**, **npm**, and **NuGet**.
+
+## Which method should I use?
+
+| Feature | pip (PyPI) | npm | .NET (NuGet) |
+|---------|:----------:|:---:|:------------:|
+| `arklint check` | ✓ | ✓ | ✓ |
+| `arklint watch` | ✓ | ✓ | ✓ |
+| `arklint diff` | ✓ | ✓ | ✓ |
+| `arklint visualize` | ✓ | ✓ | ✓ |
+| `arklint learn` | ✓ | ✓ | ✓ |
+| `arklint mcp` | ✓ (with `[mcp]` extra) | ✓ | ✓ |
+| Python required | Yes (3.10+) | No | No |
+
+All three methods run the same binary. Use **npm or .NET** if you are not in a Python project. Use **pip** if you want to add the MCP server extra or contribute to the codebase.
 
 ## Python (PyPI)
 
-The core CLI. Requires Python 3.10+. Includes all rule types, watch mode, diff mode, and JSON output.
+Requires Python 3.10+.
 
 ```bash
 $ pip install arklint
 ```
 
-For MCP server support (AI agent integration), install with the optional extra:
+For MCP server support (AI agent integration):
 
 ```bash
 $ pip install 'arklint[mcp]'
 ```
 
-For AI-powered rule generation with `arklint learn`:
+For AI-powered rule generation with `arklint learn` (already bundled in npm/.NET, only needed here):
 
 ```bash
 $ pip install 'arklint[ai-anthropic]'   # Claude (Anthropic)
 $ pip install 'arklint[ai-openai]'      # GPT-4o-mini (OpenAI)
 ```
 
+> **Note:** The pip extras are named `ai-anthropic` and `ai-openai` — with the `ai-` prefix. `pip install arklint[anthropic]` will fail. The `--provider` flag uses just `anthropic` / `openai` (no prefix) — a different naming from the pip extras.
+
 ## Node.js (npm)
 
-A thin wrapper that auto-downloads the platform-specific prebuilt binary from GitHub Releases on first run. **No Python needed** on the machine.
+A thin wrapper that auto-downloads the platform-specific prebuilt binary on first run. **No Python required.**
 
 ```bash
 # Run directly without installing
@@ -40,7 +56,7 @@ Supports Linux x64, macOS ARM64 (Apple Silicon), and Windows x64.
 
 ## .NET (NuGet)
 
-A .NET global tool wrapper. Also auto-downloads the prebuilt binary and caches it at `~/.arklint/bin/`. Requires .NET 8.0+.
+A .NET global tool wrapper. Auto-downloads the prebuilt binary and caches it at `~/.arklint/bin/`. Requires .NET 8.0+.
 
 ```bash
 $ dotnet tool install -g arklint
