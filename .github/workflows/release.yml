@@ -65,7 +65,7 @@ jobs:
           python-version: "3.12"
 
       - name: Install arklint and PyInstaller
-        run: pip install ".[dev,ai-anthropic,ai-openai]" pyinstaller
+        run: pip install ".[dev,ai-anthropic,ai-openai,mcp]" pyinstaller
 
       - name: Build binary
         shell: bash
@@ -78,6 +78,7 @@ jobs:
             --hidden-import watchdog.events \
             --collect-all anthropic \
             --collect-all openai \
+            --collect-all mcp \
             src/arklint/__main__.py
 
       - name: Rename binary to artifact name
