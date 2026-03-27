@@ -14,7 +14,11 @@ Arklint is available on **PyPI**, **npm**, and **NuGet**.
 | `arklint mcp` | ✓ (with `[mcp]` extra) | ✓ | ✓ |
 | Python required | Yes (3.10+) | No | No |
 
+<<<<<<< Updated upstream
 All three methods run the same binary. Use **npm or .NET** if you are not in a Python project. Use **pip** if you want to add the MCP server extra or contribute to the codebase.
+=======
+All three methods run the same binary. Use **npm or .NET** if you are not in a Python project. Use **pip** if you want the MCP server extra or need to contribute.
+>>>>>>> Stashed changes
 
 ## Python (PyPI)
 

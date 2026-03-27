@@ -25,7 +25,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+<<<<<<< Updated upstream
           fetch-depth: 0          # needed for diff mode
+=======
+          fetch-depth: 0
+>>>>>>> Stashed changes
 
       - uses: Kaushik13k/ark-lint@main
         with:
@@ -42,7 +46,11 @@ jobs:
 | `version` | Arklint version to install. Pin for reproducible builds. | `latest` |
 | `strict` | Treat warnings as errors (`"true"` / `"false"`) | `"false"` |
 | `diff` | Only scan files changed vs this ref (e.g. `origin/main`) | (all files) |
+<<<<<<< Updated upstream
 | `config` | Path to `.arklint.yml`. Auto-discovered from project root if omitted. | (auto) |
+=======
+| `config` | Path to `.arklint.yml`. Auto-discovered if omitted. | (auto) |
+>>>>>>> Stashed changes
 | `working-directory` | Directory to run arklint in, for monorepos | `.` |
 
 ## Inline PR annotations

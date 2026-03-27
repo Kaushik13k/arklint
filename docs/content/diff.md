@@ -13,6 +13,7 @@ $ arklint check --diff main --strict    # fail on warnings too
 Diff mode runs `git diff --name-only <ref>` under the hood to get the list of changed files, then restricts scanning to only those files. All rules still apply — only the file set is narrowed.
 
 This means:
+<<<<<<< Updated upstream
 - A boundary rule only fires if a *changed* file has the forbidden import
 - A pattern-ban rule only fires on *changed* lines (in the context of the changed files)
 - Dependency rules always scan the full dependency file (since any change can introduce a conflict)
@@ -20,6 +21,15 @@ This means:
 ## Why use it
 
 On a repo with thousands of files, `arklint check` may scan every file every run. In CI, that can be slow. With `--diff origin/main`, only the files touched by the pull request are scanned — which is usually the right scope anyway.
+=======
+- A `boundary` rule only fires if a *changed* file has the forbidden import
+- A `pattern-ban` rule only fires on *changed* files
+- `dependency` rules always scan the full dependency file (since any change can introduce a conflict)
+
+## Why use it
+
+On a repo with thousands of files, `arklint check` scans everything every run. In CI, that can be slow. With `--diff origin/main`, only the files touched by the pull request are scanned — which is usually the right scope anyway.
+>>>>>>> Stashed changes
 
 ```bash
 # In CI: only check what this PR changed

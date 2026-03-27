@@ -186,8 +186,13 @@ def watch(
         print_header(__version__, len(files), len(cfg.rules))
         results = run_rules(cfg, files, scan_root=scan_root)
         errors, warnings = print_report(results, scan_root)
-        if errors > 0 or (strict and warnings > 0):
+        if errors > 0:
             console.print("[bold red]✗ violations found[/bold red]")
+<<<<<<< Updated upstream
+=======
+        elif strict and warnings > 0:
+            console.print("[bold red]✗ warnings treated as errors (--strict)[/bold red]")
+>>>>>>> Stashed changes
         elif warnings > 0:
             console.print("[bold yellow]⚠ warnings — run with --strict to treat as errors[/bold yellow]")
         else:

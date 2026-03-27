@@ -417,10 +417,16 @@ code.i{font-family:var(--mono);font-size:12.5px;background:var(--bg-ci);padding:
 </table>
 <h3>60 seconds to first check</h3>
 <div class="cb"><div class="cb-h"><span class="l">Terminal</span><span class="r">bash</span></div><pre><span class="p">$ </span><span class="cmd">pip install arklint</span>
+<<<<<<< Updated upstream
 <span class="p">$ </span><span class="cmd">arklint init        # creates .arklint.yml with starter rules</span>
 <span class="p">$ </span><span class="cmd">arklint check       # scan your codebase now</span>
 </pre></div>
 <p>That&rsquo;s it. Refine your rules from there.</p>
+=======
+<span class="p">$ </span><span class="cmd">arklint init</span>
+<span class="p">$ </span><span class="cmd">arklint check</span>
+</pre></div>
+>>>>>>> Stashed changes
 </section>
 
 <section class="ds" id="installation">
@@ -481,7 +487,11 @@ code.i{font-family:var(--mono);font-size:12.5px;background:var(--bg-ci);padding:
 </tr>
 </tbody>
 </table>
+<<<<<<< Updated upstream
 <p>All three methods run the same binary. Use <strong>npm or .NET</strong> if you are not in a Python project. Use <strong>pip</strong> if you want to add the MCP server extra or contribute to the codebase.</p>
+=======
+<p>All three methods run the same binary. Use <strong>npm or .NET</strong> if you are not in a Python project. Use <strong>pip</strong> if you want the MCP server extra or need to contribute.</p>
+>>>>>>> Stashed changes
 <h3>Python (PyPI)</h3>
 <p>Requires Python 3.10+.</p>
 <div class="cb"><div class="cb-h"><span class="l">Terminal</span><span class="r">bash</span></div><pre><span class="p">$ </span><span class="cmd">pip install arklint</span>
@@ -815,7 +825,11 @@ code.i{font-family:var(--mono);font-size:12.5px;background:var(--bg-ci);padding:
 <span class="p">$ </span><span class="cmd">arklint watch --strict</span>
 </pre></div>
 <h3>How it works</h3>
+<<<<<<< Updated upstream
 <p>Watch mode uses <code class="i">watchdog</code> to monitor filesystem events in your project directory. On every file change, Arklint re-runs all checks and prints the updated results — just like <code class="i">arklint check</code>, but live.</p>
+=======
+<p>Watch mode uses <code class="i">watchdog</code> to monitor filesystem events in your project directory. On every file change, Arklint re-runs all checks and prints the updated results.</p>
+>>>>>>> Stashed changes
 <p><strong>What triggers a re-run:</strong>
 - Any file save or creation in the watched directory tree
 - Changes to <code class="i">.arklint.yml</code> itself</p>
@@ -838,7 +852,11 @@ code.i{font-family:var(--mono);font-size:12.5px;background:var(--bg-ci);padding:
 </tr>
 <tr>
 <td><code class="i">--strict</code></td>
+<<<<<<< Updated upstream
 <td>Treat warnings as errors (exit 1 on any warning)</td>
+=======
+<td>Treat warnings as errors</td>
+>>>>>>> Stashed changes
 </tr>
 <tr>
 <td><code class="i">-c / --config &lt;path&gt;</code></td>
@@ -847,7 +865,11 @@ code.i{font-family:var(--mono);font-size:12.5px;background:var(--bg-ci);padding:
 </tbody>
 </table>
 <h3>Typical usage</h3>
+<<<<<<< Updated upstream
 <p>Watch mode is most useful during active development on a feature branch — run it once when you start coding and leave it in the background. Any boundary violation or banned pattern you introduce shows up immediately, before you commit.</p>
+=======
+<p>Run it once when you start coding and leave it in the background. Any violation you introduce shows up immediately.</p>
+>>>>>>> Stashed changes
 <div class="cb"><div class="cb-h"><span class="l">Terminal</span><span class="r">bash</span></div><pre><span class="p">$ </span><span class="cmd">arklint watch ./src --strict</span>
 <span class="dim">Watching ./src for changes…  (Ctrl+C to stop)</span>
 
@@ -874,11 +896,19 @@ code.i{font-family:var(--mono);font-size:12.5px;background:var(--bg-ci);padding:
 <h3>How it works</h3>
 <p>Diff mode runs <code class="i">git diff --name-only &lt;ref&gt;</code> under the hood to get the list of changed files, then restricts scanning to only those files. All rules still apply — only the file set is narrowed.</p>
 <p>This means:
+<<<<<<< Updated upstream
 - A boundary rule only fires if a <em>changed</em> file has the forbidden import
 - A pattern-ban rule only fires on <em>changed</em> lines (in the context of the changed files)
 - Dependency rules always scan the full dependency file (since any change can introduce a conflict)</p>
 <h3>Why use it</h3>
 <p>On a repo with thousands of files, <code class="i">arklint check</code> may scan every file every run. In CI, that can be slow. With <code class="i">--diff origin/main</code>, only the files touched by the pull request are scanned — which is usually the right scope anyway.</p>
+=======
+- A <code class="i">boundary</code> rule only fires if a <em>changed</em> file has the forbidden import
+- A <code class="i">pattern-ban</code> rule only fires on <em>changed</em> files
+- <code class="i">dependency</code> rules always scan the full dependency file (since any change can introduce a conflict)</p>
+<h3>Why use it</h3>
+<p>On a repo with thousands of files, <code class="i">arklint check</code> scans everything every run. In CI, that can be slow. With <code class="i">--diff origin/main</code>, only the files touched by the pull request are scanned — which is usually the right scope anyway.</p>
+>>>>>>> Stashed changes
 <div class="cb"><div class="cb-h"><span class="l">Terminal</span><span class="r">bash</span></div><pre><span class="c"># In CI: only check what this PR changed</span>
 <span class="dim">arklint check --diff origin/main --strict --github-annotations</span>
 </pre></div>
@@ -1098,7 +1128,11 @@ flowchart LR
 <p>Arklint prompts the AI with your description and the full rule schema. The AI returns a ready-to-use YAML rule block. You can review it and optionally append it to your <code class="i">.arklint.yml</code>.</p>
 <p>The <code class="i">anthropic</code> and <code class="i">openai</code> SDKs are bundled in the prebuilt binary, so <code class="i">arklint learn</code> works out of the box regardless of whether you installed via pip, npm, or .NET. All you need is an API key.</p>
 <h3>pip install — optional extras</h3>
+<<<<<<< Updated upstream
 <p>If you installed via pip and want to use <code class="i">arklint learn</code>, install the AI extra for your provider:</p>
+=======
+<p>If you installed via pip, install the AI extra for your provider:</p>
+>>>>>>> Stashed changes
 <div class="cb"><div class="cb-h"><span class="l">Terminal</span><span class="r">bash</span></div><pre><span class="p">$ </span><span class="cmd">pip install 'arklint[ai-anthropic]'   # Claude (Anthropic)</span>
 <span class="p">$ </span><span class="cmd">pip install 'arklint[ai-openai]'      # GPT-4o-mini (OpenAI)</span>
 </pre></div>
@@ -1186,7 +1220,10 @@ flowchart LR
 <p>Install the hook:</p>
 <div class="cb"><div class="cb-h"><span class="l">Terminal</span><span class="r">bash</span></div><pre><span class="p">$ </span><span class="cmd">pre-commit install</span>
 </pre></div>
+<<<<<<< Updated upstream
 <div class="tip"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>For a faster pre-commit experience on large repos, add <code class="i">args: [--diff, HEAD]</code> to only scan staged files.</div>
+=======
+>>>>>>> Stashed changes
 <h3>GitLab CI</h3>
 <div class="cb"><div class="cb-h"><span class="l">.arklint.yml</span><span class="r">yaml</span></div><pre><span class="k">arklint:</span>
   <span class="k">stage:</span> lint
@@ -1217,7 +1254,11 @@ flowchart LR
 </tr>
 <tr>
 <td><code class="i">1</code></td>
+<<<<<<< Updated upstream
 <td>One or more errors (or warnings, with <code class="i">--strict</code>)</td>
+=======
+<td>One or more errors (or warnings with <code class="i">--strict</code>)</td>
+>>>>>>> Stashed changes
 </tr>
 <tr>
 <td><code class="i">2</code></td>
@@ -1250,7 +1291,11 @@ flowchart LR
     <span class="k">steps:</span>
       - uses: actions/checkout@v4
         <span class="k">with:</span>
+<<<<<<< Updated upstream
           <span class="k">fetch-depth:</span> 0          <span class="c"># needed for diff mode</span>
+=======
+          <span class="k">fetch-depth:</span> 0
+>>>>>>> Stashed changes
 
       - uses: Kaushik13k/ark-lint@main
         <span class="k">with:</span>
@@ -1397,8 +1442,13 @@ flowchart LR
 </tbody>
 </table>
 <h3>Language detection</h3>
+<<<<<<< Updated upstream
 <p>Arklint detects language from file extension automatically. No configuration is needed — rules based on file paths (like <code class="i">source: "routes/**"</code>) match regardless of the file&rsquo;s language.</p>
 <div class="tip"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><strong>Missing a language?</strong> Open an issue or pull request on <a href="https://github.com/Kaushik13k/ark-lint">GitHub</a>. Adding a new parser is straightforward — see <a href="#contributing">Contributing</a>.</div>
+=======
+<p>Arklint detects language from file extension automatically. No configuration needed — rules based on file paths (like <code class="i">source: "routes/**"</code>) match regardless of the file&rsquo;s language.</p>
+<div class="tip"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><strong>Missing a language?</strong> Open an issue or pull request on <a href="https://github.com/Kaushik13k/ark-lint">GitHub</a>. See <a href="#contributing">Contributing</a>.</div>
+>>>>>>> Stashed changes
 </section>
 
 <section class="ds" id="contributing">

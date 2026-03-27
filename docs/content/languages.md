@@ -33,6 +33,12 @@ Arklint reads dependency files to enforce `dependency` rules (e.g. "keep only on
 
 ## Language detection
 
+<<<<<<< Updated upstream
 Arklint detects language from file extension automatically. No configuration is needed — rules based on file paths (like `source: "routes/**"`) match regardless of the file's language.
 
 > **Missing a language?** Open an issue or pull request on [GitHub](https://github.com/Kaushik13k/ark-lint). Adding a new parser is straightforward — see [Contributing](#contributing).
+=======
+Arklint detects language from file extension automatically. No configuration needed — rules based on file paths (like `source: "routes/**"`) match regardless of the file's language.
+
+> **Missing a language?** Open an issue or pull request on [GitHub](https://github.com/Kaushik13k/ark-lint). See [Contributing](#contributing).
+>>>>>>> Stashed changes
