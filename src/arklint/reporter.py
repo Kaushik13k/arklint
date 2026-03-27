@@ -100,6 +100,8 @@ def _render_result(result: CheckResult, scan_root: Path, quiet: bool = False) ->
     if result.rule.description:
         console.print(f"         [dim]{result.rule.description}[/dim]")
 
+    msg_color = "red" if severity == "error" else "yellow"
+
     for v in result.violations:
         try:
             rel_path = v.file.relative_to(scan_root)
@@ -113,7 +115,7 @@ def _render_result(result: CheckResult, scan_root: Path, quiet: bool = False) ->
         else:
             location = f"[cyan]{rel_path}[/cyan]"
 
-        console.print(f"         {location} [dim]→[/dim] {v.message}")
+        console.print(f"         {location} [dim]→[/dim] [{msg_color}]{v.message}[/{msg_color}]")
 
 
 def _render_summary(
