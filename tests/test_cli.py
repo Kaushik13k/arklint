@@ -112,3 +112,62 @@ class TestQuiet:
         cfg, scan_dir = self._make_project("x = 1\n")
         result = runner.invoke(app, ["check", str(scan_dir), "--config", str(cfg)])
         assert "PASS" in result.output
+
+
+# ---------------------------------------------------------------------------
+# arklint check — status line and exit codes
+# ---------------------------------------------------------------------------
+
+class TestCheckStatusLine:
+    def _make_project(self, code: str, severity: str = "warning") -> tuple[Path, Path]:
+        tmp_dir = Path(tempfile.mkdtemp())
+        cfg = tmp_dir / ".arklint.yml"
+        cfg.write_text(textwrap.dedent(f"""
+            version: "1"
+            rules:
+              - id: no-print
+                type: pattern-ban
+                description: No print
+                pattern: 'print\\('
+                severity: {severity}
+        """))
+        (tmp_dir / "main.py").write_text(code)
+        return cfg, tmp_dir
+
+    def test_clean_shows_all_rules_passed(self):
+        cfg, scan_dir = self._make_project("x = 1\n")
+        result = runner.invoke(app, ["check", str(scan_dir), "--config", str(cfg)])
+        assert result.exit_code == 0
+        assert "all rules passed" in result.output
+
+    def test_warning_without_strict_exits_0(self):
+        cfg, scan_dir = self._make_project('print("hi")\n', severity="warning")
+        result = runner.invoke(app, ["check", str(scan_dir), "--config", str(cfg)])
+        assert result.exit_code == 0
+
+    def test_warning_without_strict_shows_warning_message(self):
+        cfg, scan_dir = self._make_project('print("hi")\n', severity="warning")
+        result = runner.invoke(app, ["check", str(scan_dir), "--config", str(cfg)])
+        assert "warnings" in result.output.lower()
+        assert "all rules passed" not in result.output
+
+    def test_warning_with_strict_exits_1(self):
+        cfg, scan_dir = self._make_project('print("hi")\n', severity="warning")
+        result = runner.invoke(app, ["check", str(scan_dir), "--config", str(cfg), "--strict"])
+        assert result.exit_code == 1
+
+    def test_warning_with_strict_shows_strict_message(self):
+        cfg, scan_dir = self._make_project('print("hi")\n', severity="warning")
+        result = runner.invoke(app, ["check", str(scan_dir), "--config", str(cfg), "--strict"])
+        assert "strict" in result.output.lower()
+
+    def test_error_exits_1(self):
+        cfg, scan_dir = self._make_project('print("hi")\n', severity="error")
+        result = runner.invoke(app, ["check", str(scan_dir), "--config", str(cfg)])
+        assert result.exit_code == 1
+
+    def test_error_shows_violations_message(self):
+        cfg, scan_dir = self._make_project('print("hi")\n', severity="error")
+        result = runner.invoke(app, ["check", str(scan_dir), "--config", str(cfg)])
+        assert "violations" in result.output.lower()
+        assert "all rules passed" not in result.output
