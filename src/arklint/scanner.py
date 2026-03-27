@@ -18,6 +18,8 @@ DEFAULT_EXCLUDES = [
     "dist",
     "build",
     ".tox",
+    ".arklint.yml",
+    ".arklint.yaml",
 ]
 
 

@@ -135,6 +135,14 @@ code.i{font-family:var(--mono);font-size:12.5px;background:var(--bg-ci);padding:
 .install-tab-panel.active{display:block}
 .install-note{display:block;margin-top:10px;font-size:12px;color:var(--text-t);font-weight:500}
 
+/* HOW IT WORKS */
+.hiw{display:flex;gap:0;margin:40px 0 48px;position:relative;max-width:520px}
+.hiw::before{content:"";position:absolute;top:19px;left:52px;right:52px;height:1px;background:var(--border);z-index:0}
+.hiw-step{flex:1;display:flex;flex-direction:column;align-items:center;gap:10px;padding:0 8px;text-align:center;position:relative;z-index:1}
+.hiw-num{width:38px;height:38px;border-radius:50%;background:var(--bg);border:2px solid var(--accent-b);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:13px;font-weight:700;color:var(--accent-d)}
+.hiw-title{font-size:12px;font-weight:700;color:var(--text)}
+.hiw-desc{font-size:11.5px;color:var(--text-t);line-height:1.5}
+
 /* RESPONSIVE */
 @media(max-width:900px){.sidebar{display:none}.sidebar.open{display:block;position:fixed;top:56px;left:0;bottom:0;z-index:150;background:#fff;width:260px;box-shadow:4px 0 24px rgba(0,0,0,.08);padding:24px;border-right:1px solid var(--border)}.menu-toggle{display:block}.main{padding:32px 24px 100px}.ci-grid,.mcp-grid{grid-template-columns:1fr}.hero h1{font-size:32px}.footer{padding:20px 24px;flex-direction:column;gap:12px}}
 </style>
@@ -158,7 +166,8 @@ code.i{font-family:var(--mono);font-size:12.5px;background:var(--bg-ci);padding:
 <aside class="sidebar">
   <div class="sidebar-section">
     <div class="sidebar-label">Getting Started</div>
-    <a href="#overview" class="sidebar-link active">Overview</a>
+    <a href="#overview" class="sidebar-link active">Introduction</a>
+    <a href="#overview-section" class="sidebar-link">What is Arklint?</a>
     <a href="#installation" class="sidebar-link">Installation</a>
     <a href="#quickstart" class="sidebar-link">Quick Start</a>
   </div>
@@ -170,9 +179,6 @@ code.i{font-family:var(--mono);font-size:12.5px;background:var(--bg-ci);padding:
     <a href="#rule-file-pattern" class="sidebar-link sidebar-sub">file-pattern</a>
     <a href="#rule-pattern-ban" class="sidebar-link sidebar-sub">pattern-ban</a>
     <a href="#rule-layer-boundary" class="sidebar-link sidebar-sub">layer-boundary</a>
-  </div>
-  <div class="sidebar-section">
-    <div class="sidebar-label">Configuration</div>
     <a href="#packs" class="sidebar-link">Rule Packs</a>
   </div>
   <div class="sidebar-section">
@@ -206,9 +212,9 @@ code.i{font-family:var(--mono);font-size:12.5px;background:var(--bg-ci);padding:
 
 <!-- HERO -->
 <section class="hero" id="overview">
-  <div class="hero-version"><span class="dot"></span> v0.2.0</div>
+  <div class="hero-version"><span class="dot"></span> v0.4.0</div>
   <h1>Arklint</h1>
-  <p class="hero-tagline">The architectural rulebook for your codebase. Define structural rules in YAML and enforce them before bad code — written by AI agents or humans — ever lands.</p>
+  <p class="hero-tagline">Enforce import boundaries, dependency rules, and layer constraints across your codebase. Define your architecture in YAML — Arklint checks it automatically, before violations ever reach main.</p>
   <div class="features">
     <div class="fp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Prevention, not detection</div>
     <div class="fp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>Language-agnostic</div>
@@ -253,12 +259,31 @@ code.i{font-family:var(--mono);font-size:12.5px;background:var(--bg-ci);padding:
   </div>
 </section>
 
+<!-- HOW IT WORKS -->
+<div class="hiw">
+  <div class="hiw-step">
+    <div class="hiw-num">1</div>
+    <div class="hiw-title">Define rules</div>
+    <div class="hiw-desc">Write constraints in <code class="i">.arklint.yml</code></div>
+  </div>
+  <div class="hiw-step">
+    <div class="hiw-num">2</div>
+    <div class="hiw-title">Run the check</div>
+    <div class="hiw-desc">Scans every file against every rule</div>
+  </div>
+  <div class="hiw-step">
+    <div class="hiw-num">3</div>
+    <div class="hiw-title">Enforce in CI</div>
+    <div class="hiw-desc">Block violations before they reach main</div>
+  </div>
+</div>
+
 <!-- DEMO -->
 <div class="cb" style="margin-bottom:48px">
   <div class="cb-h"><span class="l">Terminal</span><span class="r">~/my-project</span></div>
   <pre><span class="p">$ </span><span class="cmd">arklint check</span>
 
-<span class="dim">Arklint v0.2.0 — Scanning 142 files against 5 rules...</span>
+<span class="dim">Arklint v0.4.0 — Scanning 142 files against 5 rules...</span>
 
   <span class="fail">✗ FAIL</span>  <span class="rule">no-direct-db-in-routes</span>
          <span class="dim">routes/users.py → imports 'sqlalchemy' — blocked</span>
@@ -277,22 +302,199 @@ code.i{font-family:var(--mono);font-size:12.5px;background:var(--bg-ci);padding:
 <span class="dim">Results:</span> <span class="fail">2 errors</span><span class="dim">,</span> <span class="warn">1 warning</span><span class="dim">,</span> <span class="pass">2 passed</span></pre>
 </div>
 
+<section class="ds" id="overview-section">
+  <h2>Overview <a href="#overview-section" class="anchor">#</a></h2>
+  <p class="lead">Your codebase has architectural rules. Nobody enforces them. Arklint does.</p>
+<h3>The problem nobody talks about</h3>
+<p>You&rsquo;ve seen this happen. A pull request lands where a route handler imports directly from the database. Or an AI agent generates three files — clean code, wrong layer. Or <code class="i">requirements.txt</code> quietly grows to include both <code class="i">requests</code> <em>and</em> <code class="i">httpx</code> because nobody was watching.</p>
+<p>Code review catches <em>some</em> of this. Linters check syntax and style. But there&rsquo;s nothing — until now — that enforces <em>structural intent</em>: which module can import which, which packages can coexist, which patterns belong in which directories.</p>
+<p>Without enforcement, the architecture degrades. Rules exist only as comments in a wiki nobody reads.</p>
+<h3>What Arklint does</h3>
+<p>You write your architectural rules in a plain YAML file. Arklint checks them against your entire codebase in seconds — and blocks violations in CI before they ever merge.</p>
+<div class="cb"><div class="cb-h"><span class="l">.arklint.yml</span><span class="r">yaml</span></div><pre><span class="k">version:</span> <span class="s">&quot;1&quot;</span>
+
+<span class="k">rules:</span>
+  - id: no-direct-db-in-routes
+    <span class="k">type:</span> boundary
+    <span class="k">description:</span> <span class="s">&quot;Route handlers must not import database drivers directly&quot;</span>
+    <span class="k">source:</span> <span class="s">&quot;routes/**&quot;</span>
+    <span class="k">blocked_imports:</span>
+      - <span class="s">&quot;sqlalchemy&quot;</span>
+      - <span class="s">&quot;psycopg2&quot;</span>
+    <span class="k">severity:</span> error
+
+  - id: single-http-client
+    <span class="k">type:</span> dependency
+    <span class="k">description:</span> <span class="s">&quot;Use exactly one HTTP client library&quot;</span>
+    <span class="k">allow_only_one_of:</span>
+      - <span class="s">&quot;requests&quot;</span>
+      - <span class="s">&quot;httpx&quot;</span>
+    <span class="k">severity:</span> error
+</pre></div>
+<p>Run the check:</p>
+<div class="cb"><div class="cb-h"><span class="l">Terminal</span><span class="r">bash</span></div><pre><span class="p">$ </span><span class="cmd">arklint check</span>
+
+<span class="fail">  ✗ FAIL  no-direct-db-in-routes</span>
+<span class="dim">         routes/users.py → imports 'sqlalchemy' — blocked</span>
+<span class="dim">         routes/orders.py → imports 'psycopg2' — blocked</span>
+
+<span class="fail">  ✗ FAIL  single-http-client</span>
+<span class="dim">         conflicting packages detected — keep one of: requests, httpx</span>
+
+<span class="pass">  ✓ PASS  models-in-models-dir</span>
+<span class="pass">  ✓ PASS  layered-architecture</span>
+
+<span class="dim">Results: 2 errors, 2 passed</span>
+</pre></div>
+<p>Violations are errors. Errors fail the pipeline. The architecture stays clean.</p>
+<h3>What it checks</h3>
+<p>Arklint ships with five rule types covering the most common architectural violations:</p>
+<table class="ct">
+<thead>
+<tr>
+<th>Rule type</th>
+<th>What it enforces</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="i">boundary</code></td>
+<td>Which directories can import which packages</td>
+</tr>
+<tr>
+<td><code class="i">dependency</code></td>
+<td>Which libraries can coexist in your dependency file</td>
+</tr>
+<tr>
+<td><code class="i">file-pattern</code></td>
+<td>Where specific code patterns are allowed to live</td>
+</tr>
+<tr>
+<td><code class="i">pattern-ban</code></td>
+<td>Regex patterns that must never appear in the codebase</td>
+</tr>
+<tr>
+<td><code class="i">layer-boundary</code></td>
+<td>The allowed import direction between architectural layers</td>
+</tr>
+</tbody>
+</table>
+<h3>Where it runs</h3>
+<p><strong>Locally</strong> — <code class="i">arklint check</code> while you build; <code class="i">arklint watch</code> for live feedback on every save.</p>
+<p><strong>Pre-commit</strong> — block violations before they&rsquo;re committed.</p>
+<p><strong>CI</strong> — <code class="i">arklint check --strict</code> fails the pipeline. <code class="i">--diff origin/main</code> makes it fast on large repos by scanning only changed files.</p>
+<p><strong>Inside AI coding tools</strong> — the MCP server lets Claude Code, Cursor, and Copilot check code <em>before writing it</em>. The <code class="i">export</code> command writes your rules into <code class="i">.cursorrules</code> or <code class="i">CLAUDE.md</code> so AI agents understand your architecture natively.</p>
+<h3>Core concepts</h3>
+<table class="ct">
+<thead>
+<tr>
+<th>Concept</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Rule</strong></td>
+<td>A single architectural constraint — one <code class="i">type</code>, one <code class="i">id</code>, one <code class="i">severity</code></td>
+</tr>
+<tr>
+<td><strong><code class="i">.arklint.yml</code></strong></td>
+<td>The config file where all your rules live</td>
+</tr>
+<tr>
+<td><strong>Pack</strong></td>
+<td>A shareable bundle of rules for a framework (e.g. <code class="i">arklint/fastapi</code>)</td>
+</tr>
+<tr>
+<td><strong>Check</strong></td>
+<td><code class="i">arklint check</code> — scans every file against every rule</td>
+</tr>
+<tr>
+<td><strong>MCP server</strong></td>
+<td>Exposes your rules to AI agents via the Model Context Protocol</td>
+</tr>
+</tbody>
+</table>
+<h3>60 seconds to first check</h3>
+<div class="cb"><div class="cb-h"><span class="l">Terminal</span><span class="r">bash</span></div><pre><span class="p">$ </span><span class="cmd">pip install arklint</span>
+<span class="p">$ </span><span class="cmd">arklint init</span>
+<span class="p">$ </span><span class="cmd">arklint check</span>
+</pre></div>
+</section>
+
 <section class="ds" id="installation">
   <h2>Installation <a href="#installation" class="anchor">#</a></h2>
-  <p class="lead">Arklint is available on <strong>PyPI</strong>, <strong>npm</strong>, and <strong>NuGet</strong>. All three install methods run the same binary.</p>
+  <p class="lead">Arklint is available on <strong>PyPI</strong>, <strong>npm</strong>, and <strong>NuGet</strong>.</p>
+<h3>Which method should I use?</h3>
+<table class="ct">
+<thead>
+<tr>
+<th>Feature</th>
+<th style="text-align: center;">pip (PyPI)</th>
+<th style="text-align: center;">npm</th>
+<th style="text-align: center;">.NET (NuGet)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="i">arklint check</code></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td><code class="i">arklint watch</code></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td><code class="i">arklint diff</code></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td><code class="i">arklint visualize</code></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td><code class="i">arklint learn</code></td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td><code class="i">arklint mcp</code></td>
+<td style="text-align: center;">✓ (with <code class="i">[mcp]</code> extra)</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Python required</td>
+<td style="text-align: center;">Yes (3.10+)</td>
+<td style="text-align: center;">No</td>
+<td style="text-align: center;">No</td>
+</tr>
+</tbody>
+</table>
+<p>All three methods run the same binary. Use <strong>npm or .NET</strong> if you are not in a Python project. Use <strong>pip</strong> if you want the MCP server extra or need to contribute.</p>
 <h3>Python (PyPI)</h3>
-<p>The core CLI. Requires Python 3.10+. Includes all rule types, watch mode, diff mode, and JSON output.</p>
+<p>Requires Python 3.10+.</p>
 <div class="cb"><div class="cb-h"><span class="l">Terminal</span><span class="r">bash</span></div><pre><span class="p">$ </span><span class="cmd">pip install arklint</span>
 </pre></div>
-<p>For MCP server support (AI agent integration), install with the optional extra:</p>
+<p>For MCP server support (AI agent integration):</p>
 <div class="cb"><div class="cb-h"><span class="l">Terminal</span><span class="r">bash</span></div><pre><span class="p">$ </span><span class="cmd">pip install 'arklint[mcp]'</span>
 </pre></div>
-<p>For AI-powered rule generation with <code class="i">arklint learn</code>:</p>
+<p>For AI-powered rule generation with <code class="i">arklint learn</code> (already bundled in npm/.NET, only needed here):</p>
 <div class="cb"><div class="cb-h"><span class="l">Terminal</span><span class="r">bash</span></div><pre><span class="p">$ </span><span class="cmd">pip install 'arklint[ai-anthropic]'   # Claude (Anthropic)</span>
 <span class="p">$ </span><span class="cmd">pip install 'arklint[ai-openai]'      # GPT-4o-mini (OpenAI)</span>
 </pre></div>
+<div class="tip"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><strong>Note:</strong> The pip extras are named <code class="i">ai-anthropic</code> and <code class="i">ai-openai</code> — with the <code class="i">ai-</code> prefix. <code class="i">pip install arklint[anthropic]</code> will fail. The <code class="i">--provider</code> flag uses just <code class="i">anthropic</code> / <code class="i">openai</code> (no prefix) — a different naming from the pip extras.</div>
 <h3>Node.js (npm)</h3>
-<p>A thin wrapper that auto-downloads the platform-specific prebuilt binary from GitHub Releases on first run. <strong>No Python needed</strong> on the machine.</p>
+<p>A thin wrapper that auto-downloads the platform-specific prebuilt binary on first run. <strong>No Python required.</strong></p>
 <div class="cb"><div class="cb-h"><span class="l">Terminal</span><span class="r">bash</span></div><pre><span class="c"># Run directly without installing</span>
 <span class="p">$ </span><span class="cmd">npx arklint check</span>
 
@@ -302,7 +504,7 @@ code.i{font-family:var(--mono);font-size:12.5px;background:var(--bg-ci);padding:
 </pre></div>
 <p>Supports Linux x64, macOS ARM64 (Apple Silicon), and Windows x64.</p>
 <h3>.NET (NuGet)</h3>
-<p>A .NET global tool wrapper. Also auto-downloads the prebuilt binary and caches it at <code class="i">~/.arklint/bin/</code>. Requires .NET 8.0+.</p>
+<p>A .NET global tool wrapper. Auto-downloads the prebuilt binary and caches it at <code class="i">~/.arklint/bin/</code>. Requires .NET 8.0+.</p>
 <div class="cb"><div class="cb-h"><span class="l">Terminal</span><span class="r">bash</span></div><pre><span class="p">$ </span><span class="cmd">dotnet tool install -g arklint</span>
 <span class="p">$ </span><span class="cmd">arklint check</span>
 </pre></div>
@@ -319,24 +521,24 @@ code.i{font-family:var(--mono);font-size:12.5px;background:var(--bg-ci);padding:
 </pre></div>
 <h3>2. Edit your rules</h3>
 <p>Open <code class="i">.arklint.yml</code> and tailor the rules to your architecture — import boundaries, banned patterns, layered dependencies — all in readable YAML.</p>
-<div class="cb"><div class="cb-h"><span class="l">.arklint.yml</span><span class="r">yaml</span></div><pre><span class=<span class="s">"k"</span>>version:</span> <span class="s">&quot;1&quot;</span>
+<div class="cb"><div class="cb-h"><span class="l">.arklint.yml</span><span class="r">yaml</span></div><pre><span class="k">version:</span> <span class="s">&quot;1&quot;</span>
 
-<span class=<span class="s">"k"</span>>rules:</span>
+<span class="k">rules:</span>
   - id: no-direct-db-in-routes
-    <span class=<span class="s">"k"</span>>type:</span> boundary
-    <span class=<span class="s">"k"</span>>description:</span> <span class="s">&quot;API routes must not import database modules&quot;</span>
-    <span class=<span class="s">"k"</span>>source:</span> <span class="s">&quot;routes/**&quot;</span>
-    <span class=<span class="s">"k"</span>>blocked_imports:</span>
+    <span class="k">type:</span> boundary
+    <span class="k">description:</span> <span class="s">&quot;API routes must not import database modules&quot;</span>
+    <span class="k">source:</span> <span class="s">&quot;routes/**&quot;</span>
+    <span class="k">blocked_imports:</span>
       - <span class="s">&quot;sqlalchemy&quot;</span>
       - <span class="s">&quot;psycopg2&quot;</span>
-    <span class=<span class="s">"k"</span>>severity:</span> error
+    <span class="k">severity:</span> error
 
   - id: no-print-statements
-    <span class=<span class="s">"k"</span>>type:</span> pattern-ban
-    <span class=<span class="s">"k"</span>>pattern:</span> 'print\('
-    <span class=<span class="s">"k"</span>>exclude:</span>
+    <span class="k">type:</span> pattern-ban
+    <span class="k">pattern:</span> 'print\('
+    <span class="k">exclude:</span>
       - <span class="s">&quot;tests/**&quot;</span>
-    <span class=<span class="s">"k"</span>>severity:</span> warning
+    <span class="k">severity:</span> warning
 </pre></div>
 <h3>3. Run the check</h3>
 <p>Scan your codebase. Add flags as needed:</p>
@@ -360,52 +562,52 @@ code.i{font-family:var(--mono);font-size:12.5px;background:var(--bg-ci);padding:
   <p class="lead">Arklint ships with five rule types. Each targets a specific class of architectural violation. All are language-agnostic and configured in `.arklint.yml`.</p>
   <div class="rc-list">
     <div class="rc" id="rule-boundary"><div class="rc-head"><span class="rb">boundary</span><div class="ri"><h4>Import Restrictions</h4><p>Block files in a source directory from importing specific packages. Keep API routes away from raw database drivers.</p></div></div><div class="cb"><div class="cb-h"><span class="l">.arklint.yml</span><span class="r">yaml</span></div><pre>- id: no-direct-db-in-routes
-  <span class=<span class="s">"k"</span>>type:</span> boundary
-  <span class=<span class="s">"k"</span>>source:</span> <span class="s">&quot;routes/**&quot;</span>
-  <span class=<span class="s">"k"</span>>blocked_imports:</span>
+  <span class="k">type:</span> boundary
+  <span class="k">source:</span> <span class="s">&quot;routes/**&quot;</span>
+  <span class="k">blocked_imports:</span>
     - <span class="s">&quot;sqlalchemy&quot;</span>
     - <span class="s">&quot;psycopg2&quot;</span>
     - <span class="s">&quot;pymongo&quot;</span>
-  <span class=<span class="s">"k"</span>>severity:</span> error
+  <span class="k">severity:</span> error
 </pre></div></div>
     <div class="rc" id="rule-dependency"><div class="rc-head"><span class="rb">dependency</span><div class="ri"><h4>Package Conflicts</h4><p>Detect when multiple libraries serving the same purpose exist in your dependency file.</p></div></div><div class="cb"><div class="cb-h"><span class="l">.arklint.yml</span><span class="r">yaml</span></div><pre>- id: single-http-client
-  <span class=<span class="s">"k"</span>>type:</span> dependency
-  <span class=<span class="s">"k"</span>>allow_only_one_of:</span>
+  <span class="k">type:</span> dependency
+  <span class="k">allow_only_one_of:</span>
     - <span class="s">&quot;requests&quot;</span>
     - <span class="s">&quot;httpx&quot;</span>
     - <span class="s">&quot;aiohttp&quot;</span>
-  <span class=<span class="s">"k"</span>>severity:</span> error
+  <span class="k">severity:</span> error
 </pre></div></div>
     <div class="rc" id="rule-file-pattern"><div class="rc-head"><span class="rb">file-pattern</span><div class="ri"><h4>Code Placement</h4><p>Ensure certain code patterns only exist in the right directories.</p></div></div><div class="cb"><div class="cb-h"><span class="l">.arklint.yml</span><span class="r">yaml</span></div><pre>- id: models-in-models-dir
-  <span class=<span class="s">"k"</span>>type:</span> file-pattern
-  <span class=<span class="s">"k"</span>>pattern:</span> 'class\s+\w*Model'
-  <span class=<span class="s">"k"</span>>allowed_in:</span>
+  <span class="k">type:</span> file-pattern
+  <span class="k">pattern:</span> 'class\s+\w*Model'
+  <span class="k">allowed_in:</span>
     - <span class="s">&quot;models/**&quot;</span>
     - <span class="s">&quot;schemas/**&quot;</span>
-  <span class=<span class="s">"k"</span>>severity:</span> warning
+  <span class="k">severity:</span> warning
 </pre></div></div>
     <div class="rc" id="rule-pattern-ban"><div class="rc-head"><span class="rb">pattern-ban</span><div class="ri"><h4>Banned Patterns</h4><p>Ban any regex pattern across the codebase with optional directory exclusions.</p></div></div><div class="cb"><div class="cb-h"><span class="l">.arklint.yml</span><span class="r">yaml</span></div><pre>- id: no-print-statements
-  <span class=<span class="s">"k"</span>>type:</span> pattern-ban
-  <span class=<span class="s">"k"</span>>pattern:</span> '(?&lt;!\.)print\('
-  <span class=<span class="s">"k"</span>>exclude:</span>
+  <span class="k">type:</span> pattern-ban
+  <span class="k">pattern:</span> '(?&lt;!\.)print\('
+  <span class="k">exclude:</span>
     - <span class="s">&quot;tests/**&quot;</span>
     - <span class="s">&quot;scripts/**&quot;</span>
-  <span class=<span class="s">"k"</span>>severity:</span> warning
+  <span class="k">severity:</span> warning
 </pre></div></div>
     <div class="rc" id="rule-layer-boundary"><div class="rc-head"><span class="rb">layer-boundary</span><div class="ri"><h4>Layered Architecture</h4><p>Define layers and control which ones can import from which. Enforce strict dependency direction.</p></div></div><div class="cb"><div class="cb-h"><span class="l">.arklint.yml</span><span class="r">yaml</span></div><pre>- id: layered-architecture
-  <span class=<span class="s">"k"</span>>type:</span> layer-boundary
-  <span class=<span class="s">"k"</span>>layers:</span>
+  <span class="k">type:</span> layer-boundary
+  <span class="k">layers:</span>
     - name: routes
-      <span class=<span class="s">"k"</span>>path:</span> <span class="s">&quot;routes/**&quot;</span>
+      <span class="k">path:</span> <span class="s">&quot;routes/**&quot;</span>
     - name: services
-      <span class=<span class="s">"k"</span>>path:</span> <span class="s">&quot;services/**&quot;</span>
+      <span class="k">path:</span> <span class="s">&quot;services/**&quot;</span>
     - name: repositories
-      <span class=<span class="s">"k"</span>>path:</span> <span class="s">&quot;repositories/**&quot;</span>
-  <span class=<span class="s">"k"</span>>allowed_dependencies:</span>
-    <span class=<span class="s">"k"</span>>routes:</span> [services]
-    <span class=<span class="s">"k"</span>>services:</span> [repositories]
-    <span class=<span class="s">"k"</span>>repositories:</span> []
-  <span class=<span class="s">"k"</span>>severity:</span> error
+      <span class="k">path:</span> <span class="s">&quot;repositories/**&quot;</span>
+  <span class="k">allowed_dependencies:</span>
+    <span class="k">routes:</span> [services]
+    <span class="k">services:</span> [repositories]
+    <span class="k">repositories:</span> []
+  <span class="k">severity:</span> error
 </pre></div></div>
   </div>
 </section>
@@ -421,7 +623,7 @@ code.i{font-family:var(--mono);font-size:12.5px;background:var(--bg-ci);padding:
 <h3>Adding a pack</h3>
 <div class="cb"><div class="cb-h"><span class="l">Terminal</span><span class="r">bash</span></div><pre><span class="p">$ </span><span class="cmd">arklint add arklint/fastapi</span>
 <span class="dim">Fetching pack 'arklint/fastapi'…</span>
-<span class="dim">✓ Added arklint/fastapi (4 rules) to .arklint.yml</span>
+<span class="pass">✓ Added arklint/fastapi (4 rules) to .arklint.yml</span>
 <span class="dim">  Run arklint validate to confirm.</span>
 </pre></div>
 <p>This appends the pack to the <code class="i">extends</code> list in your <code class="i">.arklint.yml</code>. Your own rules always take precedence — if you define a rule with the same <code class="i">id</code> as a pack rule, yours wins.</p>
@@ -464,24 +666,24 @@ code.i{font-family:var(--mono);font-size:12.5px;background:var(--bg-ci);padding:
 </table>
 <h3>Using extends manually</h3>
 <div class="cb"><div class="cb-h"><span class="l">.arklint.yml</span><span class="r">yaml</span></div><pre><span class="c"># .arklint.yml</span>
-<span class=<span class="s">"k"</span>>version:</span> <span class="s">&quot;1&quot;</span>
-<span class=<span class="s">"k"</span>>extends:</span>
+<span class="k">version:</span> <span class="s">&quot;1&quot;</span>
+<span class="k">extends:</span>
   - arklint/fastapi
   - arklint/clean-arch
   - ./local-packs/my-company.yml   <span class="c"># local file packs also work</span>
 
-<span class=<span class="s">"k"</span>>rules:</span>
+<span class="k">rules:</span>
   <span class="c"># project-specific rules — these override pack rules with the same id</span>
   - id: fastapi/no-db-in-routes
-    <span class=<span class="s">"k"</span>>type:</span> boundary
-    <span class=<span class="s">"k"</span>>description:</span> <span class="s">&quot;Customised version of the pack rule&quot;</span>
-    <span class=<span class="s">"k"</span>>source:</span> <span class="s">&quot;api/**&quot;</span>
-    <span class=<span class="s">"k"</span>>blocked_imports:</span> [<span class="s">&quot;sqlalchemy&quot;</span>, <span class="s">&quot;psycopg2&quot;</span>, <span class="s">&quot;motor&quot;</span>]
-    <span class=<span class="s">"k"</span>>severity:</span> error
+    <span class="k">type:</span> boundary
+    <span class="k">description:</span> <span class="s">&quot;Customised version of the pack rule&quot;</span>
+    <span class="k">source:</span> <span class="s">&quot;api/**&quot;</span>
+    <span class="k">blocked_imports:</span> [<span class="s">&quot;sqlalchemy&quot;</span>, <span class="s">&quot;psycopg2&quot;</span>, <span class="s">&quot;motor&quot;</span>]
+    <span class="k">severity:</span> error
 </pre></div>
 <h3>Local packs</h3>
 <p>Point <code class="i">extends</code> at a relative path to share rules across a monorepo:</p>
-<div class="cb"><div class="cb-h"><span class="l">.arklint.yml</span><span class="r">yaml</span></div><pre><span class=<span class="s">"k"</span>>extends:</span>
+<div class="cb"><div class="cb-h"><span class="l">.arklint.yml</span><span class="r">yaml</span></div><pre><span class="k">extends:</span>
   - ../../shared/arklint-rules.yml
 </pre></div>
 <p>The referenced file must have the same structure as a named pack — a <code class="i">rules:</code> list at the top level.</p>
@@ -606,20 +808,107 @@ code.i{font-family:var(--mono);font-size:12.5px;background:var(--bg-ci);padding:
 
 <section class="ds" id="watch">
   <h2>Watch Mode <a href="#watch" class="anchor">#</a></h2>
-  <p class="lead">Get instant feedback as you code. Arklint re-runs checks on every file save.</p>
+  <p class="lead">Re-run architecture checks automatically on every file save. Get instant feedback without switching to a terminal.</p>
 <div class="cb"><div class="cb-h"><span class="l">Terminal</span><span class="r">bash</span></div><pre><span class="p">$ </span><span class="cmd">arklint watch</span>
-<span class="p">$ </span><span class="cmd">arklint watch ./src --strict</span>
+<span class="p">$ </span><span class="cmd">arklint watch ./src</span>
+<span class="p">$ </span><span class="cmd">arklint watch --strict</span>
 </pre></div>
-<p>Watch mode uses <code class="i">watchdog</code> to monitor filesystem events. It automatically ignores hidden directories, <code class="i">__pycache__</code>, <code class="i">dist</code>, and <code class="i">build</code> folders. Press <strong>Ctrl+C</strong> to stop.</p>
+<h3>How it works</h3>
+<p>Watch mode uses <code class="i">watchdog</code> to monitor filesystem events in your project directory. On every file change, Arklint re-runs all checks and prints the updated results.</p>
+<p><strong>What triggers a re-run:</strong>
+- Any file save or creation in the watched directory tree
+- Changes to <code class="i">.arklint.yml</code> itself</p>
+<p><strong>What is automatically ignored:</strong>
+- Hidden directories (<code class="i">.git</code>, <code class="i">.venv</code>, etc.)
+- <code class="i">__pycache__</code>, <code class="i">dist</code>, <code class="i">build</code>, <code class="i">node_modules</code></p>
+<p>Press <strong>Ctrl+C</strong> to stop.</p>
+<h3>Options</h3>
+<table class="ct">
+<thead>
+<tr>
+<th>Flag</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="i">&lt;path&gt;</code></td>
+<td>Directory to watch. Defaults to current directory</td>
+</tr>
+<tr>
+<td><code class="i">--strict</code></td>
+<td>Treat warnings as errors</td>
+</tr>
+<tr>
+<td><code class="i">-c / --config &lt;path&gt;</code></td>
+<td>Use a config file from a custom path</td>
+</tr>
+</tbody>
+</table>
+<h3>Typical usage</h3>
+<p>Run it once when you start coding and leave it in the background. Any violation you introduce shows up immediately.</p>
+<div class="cb"><div class="cb-h"><span class="l">Terminal</span><span class="r">bash</span></div><pre><span class="p">$ </span><span class="cmd">arklint watch ./src --strict</span>
+<span class="dim">Watching ./src for changes…  (Ctrl+C to stop)</span>
+
+<span class="dim">[12:34:01] Change detected — re-running checks…</span>
+
+<span class="fail">  ✗ FAIL  no-direct-db-in-routes</span>
+<span class="dim">         routes/orders.py → imports 'psycopg2' — blocked</span>
+
+<span class="dim">[12:34:09] Change detected — re-running checks…</span>
+
+<span class="pass">  ✓ PASS  no-direct-db-in-routes</span>
+<span class="pass">  ✓ PASS  no-print-statements</span>
+<span class="pass">  ✓ PASS  layered-architecture</span>
+</pre></div>
 </section>
 
 <section class="ds" id="diff">
   <h2>Diff Mode <a href="#diff" class="anchor">#</a></h2>
-  <p class="lead">Only scan files that changed — perfect for large codebases and CI on pull requests.</p>
-<div class="cb"><div class="cb-h"><span class="l">Terminal</span><span class="r">bash</span></div><pre><span class="p">$ </span><span class="cmd">arklint check --diff HEAD            # staged + unstaged changes</span>
-<span class="p">$ </span><span class="cmd">arklint check --diff origin/main     # changes vs main branch</span>
+  <p class="lead">Scan only the files that changed — not the entire codebase. Keeps CI fast on large repositories and makes PR checks precise.</p>
+<div class="cb"><div class="cb-h"><span class="l">Terminal</span><span class="r">bash</span></div><pre><span class="p">$ </span><span class="cmd">arklint check --diff HEAD             # staged + unstaged changes vs HEAD</span>
+<span class="p">$ </span><span class="cmd">arklint check --diff origin/main      # files changed on your branch vs main</span>
+<span class="p">$ </span><span class="cmd">arklint check --diff main --strict    # fail on warnings too</span>
 </pre></div>
-<p>Diff mode runs <code class="i">git diff --name-only</code> under the hood, including both staged and unstaged changes. Only the changed files are scanned against your rules.</p>
+<h3>How it works</h3>
+<p>Diff mode runs <code class="i">git diff --name-only &lt;ref&gt;</code> under the hood to get the list of changed files, then restricts scanning to only those files. All rules still apply — only the file set is narrowed.</p>
+<p>This means:
+- A <code class="i">boundary</code> rule only fires if a <em>changed</em> file has the forbidden import
+- A <code class="i">pattern-ban</code> rule only fires on <em>changed</em> files
+- <code class="i">dependency</code> rules always scan the full dependency file (since any change can introduce a conflict)</p>
+<h3>Why use it</h3>
+<p>On a repo with thousands of files, <code class="i">arklint check</code> scans everything every run. In CI, that can be slow. With <code class="i">--diff origin/main</code>, only the files touched by the pull request are scanned — which is usually the right scope anyway.</p>
+<div class="cb"><div class="cb-h"><span class="l">Terminal</span><span class="r">bash</span></div><pre><span class="c"># In CI: only check what this PR changed</span>
+<span class="dim">arklint check --diff origin/main --strict --github-annotations</span>
+</pre></div>
+<h3>Options</h3>
+<table class="ct">
+<thead>
+<tr>
+<th>Flag</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="i">--diff &lt;ref&gt;</code></td>
+<td>Git ref to diff against (<code class="i">HEAD</code>, <code class="i">origin/main</code>, a commit SHA, etc.)</td>
+</tr>
+<tr>
+<td><code class="i">--strict</code></td>
+<td>Treat warnings as errors</td>
+</tr>
+<tr>
+<td><code class="i">--json</code></td>
+<td>Machine-readable JSON output</td>
+</tr>
+<tr>
+<td><code class="i">--github-annotations</code></td>
+<td>Emit inline PR annotations (for use inside GitHub Actions)</td>
+</tr>
+</tbody>
+</table>
+<div class="tip"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>Diff mode requires a git repository. The <code class="i">--diff</code> flag is ignored if no <code class="i">.git</code> directory is found.</div>
 </section>
 
 <section class="ds" id="visualize">
@@ -647,7 +936,7 @@ code.i{font-family:var(--mono);font-size:12.5px;background:var(--bg-ci);padding:
 <p>Solid arrows (<code class="i">--&gt;</code>) are <strong>allowed</strong> dependencies. Dashed arrows (<code class="i">-. blocked .-&gt;</code>) are <strong>blocked</strong> ones.</p>
 <h3>Write to a file</h3>
 <div class="cb"><div class="cb-h"><span class="l">Terminal</span><span class="r">bash</span></div><pre><span class="p">$ </span><span class="cmd">arklint visualize -o docs/architecture.md</span>
-<span class="dim">✓ Diagram written to docs/architecture.md</span>
+<span class="pass">✓ Diagram written to docs/architecture.md</span>
 </pre></div>
 <p>You can then embed it in a Markdown page:</p>
 <div class="cb"><div class="cb-h"><span class="l">Code</span><span class="r">markdown</span></div><pre>```mermaid
@@ -806,11 +1095,13 @@ flowchart LR
 <span class="p">$ </span><span class="cmd">arklint learn --describe &quot;no raw SQL queries in route handlers&quot; --provider openai</span>
 </pre></div>
 <p>Arklint prompts the AI with your description and the full rule schema. The AI returns a ready-to-use YAML rule block. You can review it and optionally append it to your <code class="i">.arklint.yml</code>.</p>
-<h3>Installation</h3>
-<p>Install the optional AI dependency for your preferred provider:</p>
+<p>The <code class="i">anthropic</code> and <code class="i">openai</code> SDKs are bundled in the prebuilt binary, so <code class="i">arklint learn</code> works out of the box regardless of whether you installed via pip, npm, or .NET. All you need is an API key.</p>
+<h3>pip install — optional extras</h3>
+<p>If you installed via pip, install the AI extra for your provider:</p>
 <div class="cb"><div class="cb-h"><span class="l">Terminal</span><span class="r">bash</span></div><pre><span class="p">$ </span><span class="cmd">pip install 'arklint[ai-anthropic]'   # Claude (Anthropic)</span>
 <span class="p">$ </span><span class="cmd">pip install 'arklint[ai-openai]'      # GPT-4o-mini (OpenAI)</span>
 </pre></div>
+<div class="tip"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><strong>Note:</strong> The pip extras are named <code class="i">ai-anthropic</code> and <code class="i">ai-openai</code> — with the <code class="i">ai-</code> prefix. <code class="i">pip install arklint[anthropic]</code> will fail. The <code class="i">--provider</code> flag uses just <code class="i">anthropic</code> or <code class="i">openai</code> (no prefix) — a different naming from the pip extras.</div>
 <h3>Options</h3>
 <table class="ct">
 <thead>
@@ -858,7 +1149,7 @@ flowchart LR
 <span class="dim">  severity: error</span>
 
 <span class="dim">Append this rule to .arklint.yml? [y/N]: y</span>
-<span class="dim">✓ Rule appended to /my-project/.arklint.yml</span>
+<span class="pass">✓ Rule appended to /my-project/.arklint.yml</span>
 <span class="dim">  Run arklint validate to confirm the config is valid.</span>
 </pre></div>
 <div class="tip"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>Your API key is never stored by Arklint. It is read from the environment variable or <code class="i">--api-key</code> flag and passed directly to the provider&rsquo;s SDK at runtime.</div>
@@ -866,33 +1157,105 @@ flowchart LR
 
 <section class="ds" id="ci">
   <h2>CI / Pre-commit <a href="#ci" class="anchor">#</a></h2>
-  <p class="lead">Enforce rules automatically on every push or commit.</p>
+  <p class="lead">Block architectural violations automatically on every push or commit.</p>
 <h3>GitHub Actions</h3>
-<div class="cb"><div class="cb-h"><span class="l">.arklint.yml</span><span class="r">yaml</span></div><pre>- name: Arklint
-  <span class=<span class="s">"k"</span>>run:</span> |
+<p>The simplest setup — add Arklint to any existing workflow:</p>
+<div class="cb"><div class="cb-h"><span class="l">.arklint.yml</span><span class="r">yaml</span></div><pre>- name: Run Arklint
+  <span class="k">run:</span> |
     pip install arklint
     arklint check --strict
 </pre></div>
-<h3>pre-commit hook</h3>
-<div class="cb"><div class="cb-h"><span class="l">.arklint.yml</span><span class="r">yaml</span></div><pre>- repo: local
-  <span class=<span class="s">"k"</span>>hooks:</span>
-    - id: arklint
-      <span class=<span class="s">"k"</span>>name:</span> arklint
-      <span class=<span class="s">"k"</span>>entry:</span> arklint check
-      <span class=<span class="s">"k"</span>>language:</span> python
-      <span class=<span class="s">"k"</span>>pass_filenames:</span> false
+<p>For large repos, use diff mode to only scan changed files:</p>
+<div class="cb"><div class="cb-h"><span class="l">.arklint.yml</span><span class="r">yaml</span></div><pre>- name: Run Arklint (diff)
+  <span class="k">run:</span> |
+    pip install arklint
+    arklint check --diff origin/main --strict --github-annotations
 </pre></div>
+<p>The <code class="i">--github-annotations</code> flag emits inline PR annotations so violations appear directly on the changed lines in the pull request.</p>
+<h3>pre-commit hook</h3>
+<p>Add to your <code class="i">.pre-commit-config.yaml</code>:</p>
+<div class="cb"><div class="cb-h"><span class="l">.arklint.yml</span><span class="r">yaml</span></div><pre>- repo: local
+  <span class="k">hooks:</span>
+    - id: arklint
+      <span class="k">name:</span> Arklint
+      <span class="k">entry:</span> arklint check
+      <span class="k">language:</span> python
+      <span class="k">pass_filenames:</span> false
+</pre></div>
+<p>Install the hook:</p>
+<div class="cb"><div class="cb-h"><span class="l">Terminal</span><span class="r">bash</span></div><pre><span class="p">$ </span><span class="cmd">pre-commit install</span>
+</pre></div>
+<h3>GitLab CI</h3>
+<div class="cb"><div class="cb-h"><span class="l">.arklint.yml</span><span class="r">yaml</span></div><pre><span class="k">arklint:</span>
+  <span class="k">stage:</span> lint
+  <span class="k">image:</span> python:3.11-slim
+  <span class="k">script:</span>
+    - pip install arklint
+    - arklint check --strict
+</pre></div>
+<h3>CircleCI</h3>
+<div class="cb"><div class="cb-h"><span class="l">.arklint.yml</span><span class="r">yaml</span></div><pre>- run:
+    <span class="k">name:</span> Arklint
+    <span class="k">command:</span> |
+      pip install arklint
+      arklint check --strict
+</pre></div>
+<h3>Exit codes</h3>
+<table class="ct">
+<thead>
+<tr>
+<th>Code</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="i">0</code></td>
+<td>All checks passed</td>
+</tr>
+<tr>
+<td><code class="i">1</code></td>
+<td>One or more errors (or warnings with <code class="i">--strict</code>)</td>
+</tr>
+<tr>
+<td><code class="i">2</code></td>
+<td>Config file invalid or not found</td>
+</tr>
+</tbody>
+</table>
+<p>All CI systems treat a non-zero exit code as a pipeline failure.</p>
 </section>
 
 <section class="ds" id="action">
   <h2>GitHub Action <a href="#action" class="anchor">#</a></h2>
-  <p class="lead">Use Arklint as a first-class GitHub Action with built-in diff mode, version pinning, and strict mode.</p>
+  <p class="lead">Use Arklint as a first-class GitHub Action with built-in diff mode, inline PR annotations, version pinning, and strict mode.</p>
 <div class="cb"><div class="cb-h"><span class="l">.arklint.yml</span><span class="r">yaml</span></div><pre>- uses: Kaushik13k/ark-lint@main
-  <span class=<span class="s">"k"</span>>with:</span>
-    <span class=<span class="s">"k"</span>>strict:</span> <span class="s">&quot;true&quot;</span>
-    <span class=<span class="s">"k"</span>>diff:</span> <span class="s">&quot;origin/main&quot;</span>
-    <span class=<span class="s">"k"</span>>version:</span> <span class="s">&quot;0.2.0&quot;</span>
+  <span class="k">with:</span>
+    <span class="k">strict:</span> <span class="s">&quot;true&quot;</span>
+    <span class="k">diff:</span> <span class="s">&quot;origin/main&quot;</span>
 </pre></div>
+<h3>Full example</h3>
+<div class="cb"><div class="cb-h"><span class="l">.arklint.yml</span><span class="r">yaml</span></div><pre><span class="k">name:</span> Arklint
+
+<span class="k">on:</span>
+  <span class="k">pull_request:</span>
+  <span class="k">push:</span>
+    <span class="k">branches:</span> [main]
+
+<span class="k">jobs:</span>
+  <span class="k">arklint:</span>
+    <span class="k">runs-on:</span> ubuntu-latest
+    <span class="k">steps:</span>
+      - uses: actions/checkout@v4
+        <span class="k">with:</span>
+          <span class="k">fetch-depth:</span> 0
+
+      - uses: Kaushik13k/ark-lint@main
+        <span class="k">with:</span>
+          <span class="k">strict:</span> <span class="s">&quot;true&quot;</span>
+          <span class="k">diff:</span> <span class="s">&quot;origin/main&quot;</span>
+</pre></div>
+<div class="tip"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>Set <code class="i">fetch-depth: 0</code> in <code class="i">actions/checkout</code> so the full git history is available for diff mode. Without it, <code class="i">origin/main</code> may not be resolvable.</div>
 <h3>Inputs</h3>
 <table class="ct">
 <thead>
@@ -905,18 +1268,18 @@ flowchart LR
 <tbody>
 <tr>
 <td><code class="i">version</code></td>
-<td>Arklint version to install. Defaults to latest.</td>
-<td>latest</td>
+<td>Arklint version to install. Pin for reproducible builds.</td>
+<td><code class="i">latest</code></td>
 </tr>
 <tr>
 <td><code class="i">strict</code></td>
-<td>Treat warnings as errors.</td>
-<td><code class="i">false</code></td>
+<td>Treat warnings as errors (<code class="i">"true"</code> / <code class="i">"false"</code>)</td>
+<td><code class="i">"false"</code></td>
 </tr>
 <tr>
 <td><code class="i">diff</code></td>
-<td>Only scan files changed vs this ref.</td>
-<td>(empty = all files)</td>
+<td>Only scan files changed vs this ref (e.g. <code class="i">origin/main</code>)</td>
+<td>(all files)</td>
 </tr>
 <tr>
 <td><code class="i">config</code></td>
@@ -925,20 +1288,115 @@ flowchart LR
 </tr>
 <tr>
 <td><code class="i">working-directory</code></td>
-<td>Directory to run arklint in.</td>
+<td>Directory to run arklint in, for monorepos</td>
 <td><code class="i">.</code></td>
 </tr>
 </tbody>
 </table>
+<h3>Inline PR annotations</h3>
+<p>When <code class="i">diff</code> mode is enabled, the action automatically passes <code class="i">--github-annotations</code> to emit inline annotations on the pull request. Violations appear directly on the changed lines — no need to scroll through logs.</p>
 </section>
 
 <section class="ds" id="languages">
   <h2>Language Support <a href="#languages" class="anchor">#</a></h2>
-  <p class="lead">Import extraction and dependency parsing across popular languages and package managers.</p>
-<h3>Import Extraction</h3>
-<p>Python, JavaScript, TypeScript, Go, Ruby, Rust, Java, C#, PHP</p>
-<h3>Dependency Files</h3>
-<p>requirements.txt, package.json, pyproject.toml, go.mod, Cargo.toml, Gemfile</p>
+  <p class="lead">Arklint is language-agnostic. Import extraction and dependency file parsing are built in for the most common languages and package managers — no plugins or configuration needed.</p>
+<h3>Import extraction</h3>
+<p>Arklint reads import statements from source files to enforce <code class="i">boundary</code> and <code class="i">layer-boundary</code> rules.</p>
+<table class="ct">
+<thead>
+<tr>
+<th>Language</th>
+<th>File extensions</th>
+<th>Import syntax detected</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Python</td>
+<td><code class="i">.py</code></td>
+<td><code class="i">import x</code>, <code class="i">from x import y</code></td>
+</tr>
+<tr>
+<td>JavaScript</td>
+<td><code class="i">.js</code>, <code class="i">.mjs</code>, <code class="i">.cjs</code></td>
+<td><code class="i">import</code>, <code class="i">require()</code></td>
+</tr>
+<tr>
+<td>TypeScript</td>
+<td><code class="i">.ts</code>, <code class="i">.tsx</code></td>
+<td><code class="i">import</code>, <code class="i">require()</code></td>
+</tr>
+<tr>
+<td>Go</td>
+<td><code class="i">.go</code></td>
+<td><code class="i">import "pkg"</code>, <code class="i">import ( ... )</code></td>
+</tr>
+<tr>
+<td>Ruby</td>
+<td><code class="i">.rb</code></td>
+<td><code class="i">require</code>, <code class="i">require_relative</code></td>
+</tr>
+<tr>
+<td>Rust</td>
+<td><code class="i">.rs</code></td>
+<td><code class="i">use crate::</code>, <code class="i">extern crate</code></td>
+</tr>
+<tr>
+<td>Java</td>
+<td><code class="i">.java</code></td>
+<td><code class="i">import com.example.Class</code></td>
+</tr>
+<tr>
+<td>C#</td>
+<td><code class="i">.cs</code></td>
+<td><code class="i">using Namespace</code></td>
+</tr>
+<tr>
+<td>PHP</td>
+<td><code class="i">.php</code></td>
+<td><code class="i">use</code>, <code class="i">require</code>, <code class="i">include</code></td>
+</tr>
+</tbody>
+</table>
+<h3>Dependency file parsing</h3>
+<p>Arklint reads dependency files to enforce <code class="i">dependency</code> rules (e.g. &ldquo;keep only one HTTP client&rdquo;).</p>
+<table class="ct">
+<thead>
+<tr>
+<th>Package manager</th>
+<th>File</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Python (pip)</td>
+<td><code class="i">requirements.txt</code></td>
+</tr>
+<tr>
+<td>Python (modern)</td>
+<td><code class="i">pyproject.toml</code></td>
+</tr>
+<tr>
+<td>Node.js</td>
+<td><code class="i">package.json</code></td>
+</tr>
+<tr>
+<td>Go</td>
+<td><code class="i">go.mod</code></td>
+</tr>
+<tr>
+<td>Rust</td>
+<td><code class="i">Cargo.toml</code></td>
+</tr>
+<tr>
+<td>Ruby</td>
+<td><code class="i">Gemfile</code></td>
+</tr>
+</tbody>
+</table>
+<h3>Language detection</h3>
+<p>Arklint detects language from file extension automatically. No configuration needed — rules based on file paths (like <code class="i">source: "routes/**"</code>) match regardless of the file&rsquo;s language.</p>
+<div class="tip"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><strong>Missing a language?</strong> Open an issue or pull request on <a href="https://github.com/Kaushik13k/ark-lint">GitHub</a>. See <a href="#contributing">Contributing</a>.</div>
 </section>
 
 <section class="ds" id="contributing">

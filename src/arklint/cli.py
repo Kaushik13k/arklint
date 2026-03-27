@@ -131,8 +131,16 @@ def check(
     if github_annotations:
         emit_github_annotations(results, scan_root)
 
-    if errors > 0 or (strict and warnings > 0):
+    if errors > 0:
+        console.print("[bold red]✗ violations found[/bold red]")
         raise typer.Exit(1)
+    elif strict and warnings > 0:
+        console.print("[bold red]✗ warnings treated as errors (--strict)[/bold red]")
+        raise typer.Exit(1)
+    elif warnings > 0:
+        console.print("[bold yellow]⚠ warnings found — run with --strict to fail on warnings[/bold yellow]")
+    else:
+        console.print("[bold green]✓ all rules passed[/bold green]")
 
 
 # ---------------------------------------------------------------------------
@@ -178,8 +186,12 @@ def watch(
         print_header(__version__, len(files), len(cfg.rules))
         results = run_rules(cfg, files, scan_root=scan_root)
         errors, warnings = print_report(results, scan_root)
-        if errors > 0 or (strict and warnings > 0):
+        if errors > 0:
             console.print("[bold red]✗ violations found[/bold red]")
+        elif strict and warnings > 0:
+            console.print("[bold red]✗ warnings treated as errors (--strict)[/bold red]")
+        elif warnings > 0:
+            console.print("[bold yellow]⚠ warnings — run with --strict to treat as errors[/bold yellow]")
         else:
             console.print("[bold green]✓ all rules passed[/bold green]")
 

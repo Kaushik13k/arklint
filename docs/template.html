@@ -135,6 +135,14 @@ code.i{font-family:var(--mono);font-size:12.5px;background:var(--bg-ci);padding:
 .install-tab-panel.active{display:block}
 .install-note{display:block;margin-top:10px;font-size:12px;color:var(--text-t);font-weight:500}
 
+/* HOW IT WORKS */
+.hiw{display:flex;gap:0;margin:40px 0 48px;position:relative;max-width:520px}
+.hiw::before{content:"";position:absolute;top:19px;left:52px;right:52px;height:1px;background:var(--border);z-index:0}
+.hiw-step{flex:1;display:flex;flex-direction:column;align-items:center;gap:10px;padding:0 8px;text-align:center;position:relative;z-index:1}
+.hiw-num{width:38px;height:38px;border-radius:50%;background:var(--bg);border:2px solid var(--accent-b);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:13px;font-weight:700;color:var(--accent-d)}
+.hiw-title{font-size:12px;font-weight:700;color:var(--text)}
+.hiw-desc{font-size:11.5px;color:var(--text-t);line-height:1.5}
+
 /* RESPONSIVE */
 @media(max-width:900px){.sidebar{display:none}.sidebar.open{display:block;position:fixed;top:56px;left:0;bottom:0;z-index:150;background:#fff;width:260px;box-shadow:4px 0 24px rgba(0,0,0,.08);padding:24px;border-right:1px solid var(--border)}.menu-toggle{display:block}.main{padding:32px 24px 100px}.ci-grid,.mcp-grid{grid-template-columns:1fr}.hero h1{font-size:32px}.footer{padding:20px 24px;flex-direction:column;gap:12px}}
 </style>
@@ -158,7 +166,8 @@ code.i{font-family:var(--mono);font-size:12.5px;background:var(--bg-ci);padding:
 <aside class="sidebar">
   <div class="sidebar-section">
     <div class="sidebar-label">Getting Started</div>
-    <a href="#overview" class="sidebar-link active">Overview</a>
+    <a href="#overview" class="sidebar-link active">Introduction</a>
+    <a href="#overview-section" class="sidebar-link">What is Arklint?</a>
     <a href="#installation" class="sidebar-link">Installation</a>
     <a href="#quickstart" class="sidebar-link">Quick Start</a>
   </div>
@@ -170,9 +179,6 @@ code.i{font-family:var(--mono);font-size:12.5px;background:var(--bg-ci);padding:
     <a href="#rule-file-pattern" class="sidebar-link sidebar-sub">file-pattern</a>
     <a href="#rule-pattern-ban" class="sidebar-link sidebar-sub">pattern-ban</a>
     <a href="#rule-layer-boundary" class="sidebar-link sidebar-sub">layer-boundary</a>
-  </div>
-  <div class="sidebar-section">
-    <div class="sidebar-label">Configuration</div>
     <a href="#packs" class="sidebar-link">Rule Packs</a>
   </div>
   <div class="sidebar-section">
@@ -206,9 +212,9 @@ code.i{font-family:var(--mono);font-size:12.5px;background:var(--bg-ci);padding:
 
 <!-- HERO -->
 <section class="hero" id="overview">
-  <div class="hero-version"><span class="dot"></span> v0.2.0</div>
+  <div class="hero-version"><span class="dot"></span> v0.4.0</div>
   <h1>Arklint</h1>
-  <p class="hero-tagline">The architectural rulebook for your codebase. Define structural rules in YAML and enforce them before bad code — written by AI agents or humans — ever lands.</p>
+  <p class="hero-tagline">Enforce import boundaries, dependency rules, and layer constraints across your codebase. Define your architecture in YAML — Arklint checks it automatically, before violations ever reach main.</p>
   <div class="features">
     <div class="fp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Prevention, not detection</div>
     <div class="fp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>Language-agnostic</div>
@@ -253,12 +259,31 @@ code.i{font-family:var(--mono);font-size:12.5px;background:var(--bg-ci);padding:
   </div>
 </section>
 
+<!-- HOW IT WORKS -->
+<div class="hiw">
+  <div class="hiw-step">
+    <div class="hiw-num">1</div>
+    <div class="hiw-title">Define rules</div>
+    <div class="hiw-desc">Write constraints in <code class="i">.arklint.yml</code></div>
+  </div>
+  <div class="hiw-step">
+    <div class="hiw-num">2</div>
+    <div class="hiw-title">Run the check</div>
+    <div class="hiw-desc">Scans every file against every rule</div>
+  </div>
+  <div class="hiw-step">
+    <div class="hiw-num">3</div>
+    <div class="hiw-title">Enforce in CI</div>
+    <div class="hiw-desc">Block violations before they reach main</div>
+  </div>
+</div>
+
 <!-- DEMO -->
 <div class="cb" style="margin-bottom:48px">
   <div class="cb-h"><span class="l">Terminal</span><span class="r">~/my-project</span></div>
   <pre><span class="p">$ </span><span class="cmd">arklint check</span>
 
-<span class="dim">Arklint v0.2.0 — Scanning 142 files against 5 rules...</span>
+<span class="dim">Arklint v0.4.0 — Scanning 142 files against 5 rules...</span>
 
   <span class="fail">✗ FAIL</span>  <span class="rule">no-direct-db-in-routes</span>
          <span class="dim">routes/users.py → imports 'sqlalchemy' — blocked</span>

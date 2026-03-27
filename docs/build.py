@@ -42,9 +42,11 @@ def style_code_blocks(html_str: str) -> str:
         label = label_map.get(lang, "Code")
 
         if lang == "yaml":
-            raw = re.sub(r'^(\s*)([\w-]+)(:)', r'\1<span class="k">\2\3</span>', raw, flags=re.MULTILINE)
-            raw = re.sub(r'(&quot;[^&]*?&quot;|"[^"]*?")', r'<span class="s">\1</span>', raw)
+            # Strings first — before key regex adds class="k" HTML attributes
+            # (otherwise the string regex would match the "k" in class="k")
+            raw = re.sub(r'(&quot;[^&]*?&quot;)', r'<span class="s">\1</span>', raw)
             raw = re.sub(r"('(?:[^'\\\\]|\\\\.)*')", r'<span class="s">\1</span>', raw)
+            raw = re.sub(r'^(\s*)([\w-]+)(:)', r'\1<span class="k">\2\3</span>', raw, flags=re.MULTILINE)
             raw = re.sub(r'(#.*)$', r'<span class="c">\1</span>', raw, flags=re.MULTILINE)
 
         if lang == "bash":
@@ -59,6 +61,12 @@ def style_code_blocks(html_str: str) -> str:
                     out.append(f'<span class="c">{line}</span>')
                 elif stripped == "":
                     out.append("")
+                elif stripped.startswith("✗"):
+                    out.append(f'<span class="fail">{line}</span>')
+                elif stripped.startswith("⚠"):
+                    out.append(f'<span class="warn">{line}</span>')
+                elif stripped.startswith("✓"):
+                    out.append(f'<span class="pass">{line}</span>')
                 else:
                     out.append(f'<span class="dim">{line}</span>')
             raw = "\n".join(out)
@@ -219,6 +227,7 @@ def convert_rules_section(md_text: str) -> str:
 
 
 SECTIONS = [
+    ("overview.md", "overview-section", False),
     ("installation.md", "installation", False),
     ("quickstart.md", "quickstart", False),
     ("rules.md", "rules", True),
