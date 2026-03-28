@@ -7,6 +7,7 @@
 
 <p align="center"><em>The architectural rulebook for your codebase. Prevention, not detection.</em></p>
 
+[![Docs](https://img.shields.io/badge/docs-arklint.elevane.org-0ea5e9)](https://arklint.elevane.org)
 [![PyPI version](https://badge.fury.io/py/arklint.svg)](https://pypi.org/project/arklint/)
 [![npm version](https://badge.fury.io/js/arklint.svg)](https://www.npmjs.com/package/arklint)
 [![NuGet version](https://badge.fury.io/nu/arklint.svg)](https://www.nuget.org/packages/arklint/)

@@ -2,6 +2,7 @@
 
 > The architectural rulebook for your codebase. Prevention, not detection.
 
+[![Docs](https://img.shields.io/badge/docs-arklint.elevane.org-0ea5e9)](https://arklint.elevane.org)
 [![npm version](https://badge.fury.io/js/arklint.svg)](https://www.npmjs.com/package/arklint)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/Kaushik13k/arklint/blob/main/LICENSE)
 
