@@ -13,7 +13,7 @@
 
 ---
 
-Arklint enforces **architectural rules** before bad code ever lands - whether written by AI agents or humans. It's language-agnostic, runs locally with zero cloud dependency, and takes 60 seconds to set up.
+Arklint enforces **architectural rules** before bad code ever lands - whether written by AI agents or humans. It's language-agnostic, runs locally with zero cloud dependency, and requires no external services.
 
 ```
 $ arklint check

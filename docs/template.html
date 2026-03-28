@@ -4,14 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Arklint</title>
-<meta name="description" content="Enforce architectural rules across your codebase. Language-agnostic, zero cloud dependency, 60 seconds to set up.">
+<meta name="description" content="Enforce architectural rules across your codebase. Language-agnostic, zero cloud dependency, no configuration required.">
 <meta name="theme-color" content="#059669">
 <link rel="icon" type="image/svg+xml" href="favicon.svg?v=5">
 <link rel="apple-touch-icon" href="apple-touch-icon.svg?v=3">
 <link rel="manifest" href="manifest.json">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Arklint - The Architectural Rulebook for Your Codebase">
-<meta property="og:description" content="Enforce architectural rules across your codebase. Language-agnostic, zero cloud dependency, 60 seconds to set up.">
+<meta property="og:description" content="Enforce architectural rules across your codebase. Language-agnostic, zero cloud dependency, no configuration required.">
 <meta property="og:image" content="og-image.svg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Arklint">
@@ -93,16 +93,19 @@ code.i{font-family:var(--mono);font-size:12.5px;background:var(--bg-ci);padding:
 .rc-head{padding:18px 20px 14px;display:flex;align-items:flex-start;gap:12px}
 .rb{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--accent-d);background:var(--accent-l);border:1px solid var(--accent-b);padding:3px 8px;border-radius:4px;letter-spacing:.5px;text-transform:uppercase;white-space:nowrap;margin-top:2px}
 .rc-head .ri{flex:1}
-.rc-head h4{font-size:15px;font-weight:700;margin-bottom:4px}
-.rc-head p{font-size:13px;color:var(--text-s);line-height:1.55;margin:0}
+.rc-head h4{font-size:15px;font-weight:700;margin:0}
+.rc-body{padding:0 20px 20px;border-top:1px solid var(--border-l)}
+.rc-body>p:first-child{font-size:13px;color:var(--text-s);line-height:1.6;margin:14px 0 12px}
 .rc .cb{border-radius:0;margin:0}
 
 /* TABLE */
-.ct{width:100%;border-collapse:collapse;font-size:14px;margin-bottom:24px}
-.ct th{text-align:left;font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--text-t);padding:0 0 10px;border-bottom:2px solid var(--border)}
-.ct td{padding:12px 16px 12px 0;border-bottom:1px solid var(--border-l);vertical-align:top}
-.ct td:first-child{font-family:var(--mono);font-size:12.5px;color:var(--accent-d);font-weight:600;white-space:nowrap;width:44%}
-.ct td:last-child{color:var(--text-s)}
+.ct{width:100%;border-collapse:collapse;font-size:13.5px;margin-bottom:24px}
+.ct th{text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--text-t);padding:0 24px 8px 0;border-bottom:1.5px solid var(--border)}
+.ct th:last-child{padding-right:0}
+.ct td{padding:9px 24px 9px 0;border-bottom:1px solid var(--border-l);vertical-align:middle;line-height:1.55}
+.ct td:first-child{font-family:var(--mono);font-size:12px;color:var(--accent-d);font-weight:700;white-space:nowrap;padding-left:0;width:1%}
+.ct td:nth-child(2){white-space:nowrap;font-size:13px;color:var(--text-s)}
+.ct td:last-child{color:var(--text-s);padding-right:0}
 .ct tr:last-child td{border-bottom:none}
 
 /* TIP */
@@ -233,7 +236,7 @@ code.i{font-family:var(--mono);font-size:12.5px;background:var(--bg-ci);padding:
     <div class="fp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Prevention, not detection</div>
     <div class="fp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>Language-agnostic</div>
     <div class="fp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>100% local</div>
-    <div class="fp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>60-second setup</div>
+    <div class="fp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Quick setup</div>
     <div class="fp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.66 0 3-4.03 3-9s-1.34-9-3-9m0 18c-1.66 0-3-4.03-3-9s1.34-9 3-9"/></svg>MCP server for AI agents</div>
   </div>
   <!-- Multi-ecosystem install tabs -->

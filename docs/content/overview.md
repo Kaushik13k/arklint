@@ -88,7 +88,7 @@ Arklint ships with five rule types covering the most common architectural violat
 | **Check** | `arklint check` - scans every file against every rule |
 | **MCP server** | Exposes your rules to AI agents via the Model Context Protocol |
 
-## 60 seconds to first check
+## Get started
 
 **Python**
 ```bash

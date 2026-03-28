@@ -211,15 +211,18 @@ def convert_rules_section(md_text: str) -> str:
         code_md = "\n".join(code_lines).strip()
 
         desc_html = md_to_html(desc) if desc else ""
+        desc_html = style_tables(desc_html)
         desc_text = re.sub(r'</?p>', '', desc_html).strip()
 
         code_html = md_to_html(code_md) if code_md else ""
         code_html = style_code_blocks(code_html)
 
+        body_section = f'<div class="rc-body">{desc_html}</div>' if desc_html else ""
         card = (
             f'    <div class="rc" id="{card_id}">'
             f'<div class="rc-head"><span class="rb">{rule_type}</span>'
-            f'<div class="ri"><h4>{rule_name}</h4><p>{desc_text}</p></div></div>'
+            f'<div class="ri"><h4>{rule_name}</h4></div></div>'
+            f'{body_section}'
             f'{code_html}</div>'
         )
         cards_html.append(card)

@@ -4,14 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Arklint</title>
-<meta name="description" content="Enforce architectural rules across your codebase. Language-agnostic, zero cloud dependency, 60 seconds to set up.">
+<meta name="description" content="Enforce architectural rules across your codebase. Language-agnostic, zero cloud dependency, no configuration required.">
 <meta name="theme-color" content="#059669">
 <link rel="icon" type="image/svg+xml" href="favicon.svg?v=5">
 <link rel="apple-touch-icon" href="apple-touch-icon.svg?v=3">
 <link rel="manifest" href="manifest.json">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Arklint - The Architectural Rulebook for Your Codebase">
-<meta property="og:description" content="Enforce architectural rules across your codebase. Language-agnostic, zero cloud dependency, 60 seconds to set up.">
+<meta property="og:description" content="Enforce architectural rules across your codebase. Language-agnostic, zero cloud dependency, no configuration required.">
 <meta property="og:image" content="og-image.svg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Arklint">
@@ -93,16 +93,19 @@ code.i{font-family:var(--mono);font-size:12.5px;background:var(--bg-ci);padding:
 .rc-head{padding:18px 20px 14px;display:flex;align-items:flex-start;gap:12px}
 .rb{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--accent-d);background:var(--accent-l);border:1px solid var(--accent-b);padding:3px 8px;border-radius:4px;letter-spacing:.5px;text-transform:uppercase;white-space:nowrap;margin-top:2px}
 .rc-head .ri{flex:1}
-.rc-head h4{font-size:15px;font-weight:700;margin-bottom:4px}
-.rc-head p{font-size:13px;color:var(--text-s);line-height:1.55;margin:0}
+.rc-head h4{font-size:15px;font-weight:700;margin:0}
+.rc-body{padding:0 20px 20px;border-top:1px solid var(--border-l)}
+.rc-body>p:first-child{font-size:13px;color:var(--text-s);line-height:1.6;margin:14px 0 12px}
 .rc .cb{border-radius:0;margin:0}
 
 /* TABLE */
-.ct{width:100%;border-collapse:collapse;font-size:14px;margin-bottom:24px}
-.ct th{text-align:left;font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--text-t);padding:0 0 10px;border-bottom:2px solid var(--border)}
-.ct td{padding:12px 16px 12px 0;border-bottom:1px solid var(--border-l);vertical-align:top}
-.ct td:first-child{font-family:var(--mono);font-size:12.5px;color:var(--accent-d);font-weight:600;white-space:nowrap;width:44%}
-.ct td:last-child{color:var(--text-s)}
+.ct{width:100%;border-collapse:collapse;font-size:13.5px;margin-bottom:24px}
+.ct th{text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--text-t);padding:0 24px 8px 0;border-bottom:1.5px solid var(--border)}
+.ct th:last-child{padding-right:0}
+.ct td{padding:9px 24px 9px 0;border-bottom:1px solid var(--border-l);vertical-align:middle;line-height:1.55}
+.ct td:first-child{font-family:var(--mono);font-size:12px;color:var(--accent-d);font-weight:700;white-space:nowrap;padding-left:0;width:1%}
+.ct td:nth-child(2){white-space:nowrap;font-size:13px;color:var(--text-s)}
+.ct td:last-child{color:var(--text-s);padding-right:0}
 .ct tr:last-child td{border-bottom:none}
 
 /* TIP */
@@ -233,7 +236,7 @@ code.i{font-family:var(--mono);font-size:12.5px;background:var(--bg-ci);padding:
     <div class="fp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Prevention, not detection</div>
     <div class="fp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>Language-agnostic</div>
     <div class="fp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>100% local</div>
-    <div class="fp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>60-second setup</div>
+    <div class="fp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Quick setup</div>
     <div class="fp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.66 0 3-4.03 3-9s-1.34-9-3-9m0 18c-1.66 0-3-4.03-3-9s1.34-9 3-9"/></svg>MCP server for AI agents</div>
   </div>
   <!-- Multi-ecosystem install tabs -->
@@ -429,7 +432,7 @@ code.i{font-family:var(--mono);font-size:12.5px;background:var(--bg-ci);padding:
 </tr>
 </tbody>
 </table>
-<h3>60 seconds to first check</h3>
+<h3>Get started</h3>
 <p><strong>Python</strong></p>
 <div class="cb"><div class="cb-h"><span class="l">Terminal</span><span class="r">bash</span></div><pre><span class="p">$ </span><span class="cmd">pip install arklint</span>
 <span class="p">$ </span><span class="cmd">arklint init</span>
@@ -586,8 +589,8 @@ code.i{font-family:var(--mono);font-size:12.5px;background:var(--bg-ci);padding:
   <h2>Rule Types <a href="#rules" class="anchor">#</a></h2>
   <p class="lead">Arklint ships with five rule types. Each targets a specific class of architectural violation. All are language-agnostic and configured in `.arklint.yml`.</p>
   <div class="rc-list">
-    <div class="rc" id="rule-Common fields"><div class="rc-head"><span class="rb">Common fields</span><div class="ri"><h4>Common fields</h4><p>Every rule shares these fields:
-<table>
+    <div class="rc" id="rule-Common fields"><div class="rc-head"><span class="rb">Common fields</span><div class="ri"><h4>Common fields</h4></div></div><div class="rc-body"><p>Every rule shares these fields:</p>
+<table class="ct">
 <thead>
 <tr>
 <th>Field</th>
@@ -622,8 +625,8 @@ code.i{font-family:var(--mono);font-size:12.5px;background:var(--bg-ci);padding:
 <td>List of glob patterns to skip. Supported by <code>boundary</code>, <code>file-pattern</code>, and <code>pattern-ban</code></td>
 </tr>
 </tbody>
-</table></p></div></div></div>
-    <div class="rc" id="rule-boundary"><div class="rc-head"><span class="rb">boundary</span><div class="ri"><h4>Import Restrictions</h4><p>Block files in a source directory from importing specific packages. Keep API routes away from raw database drivers.</p></div></div><div class="cb"><div class="cb-h"><span class="l">.arklint.yml</span><span class="r">yaml</span></div><pre>- id: no-direct-db-in-routes
+</table></div></div>
+    <div class="rc" id="rule-boundary"><div class="rc-head"><span class="rb">boundary</span><div class="ri"><h4>Import Restrictions</h4></div></div><div class="rc-body"><p>Block files in a source directory from importing specific packages. Keep API routes away from raw database drivers.</p></div><div class="cb"><div class="cb-h"><span class="l">.arklint.yml</span><span class="r">yaml</span></div><pre>- id: no-direct-db-in-routes
   <span class="k">type:</span> boundary
   <span class="k">description:</span> <span class="s">&quot;Route handlers must not import database drivers directly&quot;</span>
   <span class="k">source:</span> <span class="s">&quot;routes/**&quot;</span>
@@ -633,7 +636,7 @@ code.i{font-family:var(--mono);font-size:12.5px;background:var(--bg-ci);padding:
     - <span class="s">&quot;pymongo&quot;</span>
   <span class="k">severity:</span> error
 </pre></div></div>
-    <div class="rc" id="rule-dependency"><div class="rc-head"><span class="rb">dependency</span><div class="ri"><h4>Package Conflicts</h4><p>Detect when multiple libraries serving the same purpose exist in your dependency file.</p></div></div><div class="cb"><div class="cb-h"><span class="l">.arklint.yml</span><span class="r">yaml</span></div><pre>- id: single-http-client
+    <div class="rc" id="rule-dependency"><div class="rc-head"><span class="rb">dependency</span><div class="ri"><h4>Package Conflicts</h4></div></div><div class="rc-body"><p>Detect when multiple libraries serving the same purpose exist in your dependency file.</p></div><div class="cb"><div class="cb-h"><span class="l">.arklint.yml</span><span class="r">yaml</span></div><pre>- id: single-http-client
   <span class="k">type:</span> dependency
   <span class="k">description:</span> <span class="s">&quot;Use exactly one HTTP client library&quot;</span>
   <span class="k">allow_only_one_of:</span>
@@ -642,7 +645,7 @@ code.i{font-family:var(--mono);font-size:12.5px;background:var(--bg-ci);padding:
     - <span class="s">&quot;aiohttp&quot;</span>
   <span class="k">severity:</span> error
 </pre></div></div>
-    <div class="rc" id="rule-file-pattern"><div class="rc-head"><span class="rb">file-pattern</span><div class="ri"><h4>Code Placement</h4><p>Ensure certain code patterns only exist in the right directories.</p></div></div><div class="cb"><div class="cb-h"><span class="l">.arklint.yml</span><span class="r">yaml</span></div><pre>- id: models-in-models-dir
+    <div class="rc" id="rule-file-pattern"><div class="rc-head"><span class="rb">file-pattern</span><div class="ri"><h4>Code Placement</h4></div></div><div class="rc-body"><p>Ensure certain code patterns only exist in the right directories.</p></div><div class="cb"><div class="cb-h"><span class="l">.arklint.yml</span><span class="r">yaml</span></div><pre>- id: models-in-models-dir
   <span class="k">type:</span> file-pattern
   <span class="k">description:</span> <span class="s">&quot;Model classes must live in models/ or schemas/&quot;</span>
   <span class="k">pattern:</span> 'class\s+\w*Model'
@@ -651,7 +654,7 @@ code.i{font-family:var(--mono);font-size:12.5px;background:var(--bg-ci);padding:
     - <span class="s">&quot;schemas/**&quot;</span>
   <span class="k">severity:</span> warning
 </pre></div></div>
-    <div class="rc" id="rule-pattern-ban"><div class="rc-head"><span class="rb">pattern-ban</span><div class="ri"><h4>Banned Patterns</h4><p>Ban any regex pattern across the codebase with optional directory exclusions.</p></div></div><div class="cb"><div class="cb-h"><span class="l">.arklint.yml</span><span class="r">yaml</span></div><pre>- id: no-print-statements
+    <div class="rc" id="rule-pattern-ban"><div class="rc-head"><span class="rb">pattern-ban</span><div class="ri"><h4>Banned Patterns</h4></div></div><div class="rc-body"><p>Ban any regex pattern across the codebase with optional directory exclusions.</p></div><div class="cb"><div class="cb-h"><span class="l">.arklint.yml</span><span class="r">yaml</span></div><pre>- id: no-print-statements
   <span class="k">type:</span> pattern-ban
   <span class="k">description:</span> <span class="s">&quot;Use a logger instead of print statements&quot;</span>
   <span class="k">pattern:</span> '(?&lt;!\.)print\('
@@ -660,7 +663,7 @@ code.i{font-family:var(--mono);font-size:12.5px;background:var(--bg-ci);padding:
     - <span class="s">&quot;scripts/**&quot;</span>
   <span class="k">severity:</span> warning
 </pre></div></div>
-    <div class="rc" id="rule-layer-boundary"><div class="rc-head"><span class="rb">layer-boundary</span><div class="ri"><h4>Layered Architecture</h4><p>Define layers and control which ones can import from which. Enforce strict dependency direction.</p></div></div><div class="cb"><div class="cb-h"><span class="l">.arklint.yml</span><span class="r">yaml</span></div><pre>- id: layered-architecture
+    <div class="rc" id="rule-layer-boundary"><div class="rc-head"><span class="rb">layer-boundary</span><div class="ri"><h4>Layered Architecture</h4></div></div><div class="rc-body"><p>Define layers and control which ones can import from which. Enforce strict dependency direction.</p></div><div class="cb"><div class="cb-h"><span class="l">.arklint.yml</span><span class="r">yaml</span></div><pre>- id: layered-architecture
   <span class="k">type:</span> layer-boundary
   <span class="k">description:</span> <span class="s">&quot;Enforce routes → services → repositories dependency direction&quot;</span>
   <span class="k">layers:</span>
