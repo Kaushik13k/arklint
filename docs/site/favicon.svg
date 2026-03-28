@@ -1,22 +1,29 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
-  <defs>
-    <clipPath id="lh-fv"><rect x="0" y="0" width="32" height="64"/></clipPath>
-    <clipPath id="rh-fv"><rect x="32" y="0" width="32" height="64"/></clipPath>
-    <mask id="km-fv">
-      <polygon points="12,11 52,11 52,30 32,54 12,30" fill="white"/>
-    </mask>
-  </defs>
   <rect width="64" height="64" rx="13" fill="#0f172a"/>
-  <g mask="url(#km-fv)" clip-path="url(#lh-fv)">
-    <rect x="0" y="11" width="64" height="10" fill="#ffffff"/>
-    <rect x="0" y="21" width="64" height="17" fill="#34d399"/>
-    <rect x="0" y="38" width="64" height="20" fill="#fbbf24"/>
-  </g>
-  <line x1="12" y1="21" x2="32" y2="21" stroke="#0f172a" stroke-width="1.5" opacity="0.35"/>
-  <line x1="12" y1="38" x2="32" y2="38" stroke="#0f172a" stroke-width="1.5" opacity="0.35"/>
+
+  <!--
+    Keystone: 12,11 → 52,11 → 52,30 → 32,54 → 12,30
+    Left wall vertical: x=12 from y=11 to y=30
+    Bottom-left diagonal: (12,30) → (32,54)
+
+    Zone splits at y=21 (white/green) and y=38 (green/amber).
+    At y=38 on the diagonal (12,30)→(32,54):
+      t = (38-30)/(54-30) = 8/24 = 1/3
+      x = 12 + 1/3 × 20 ≈ 19
+
+    Left half only — right half shows bg through keystone (outline-only effect).
+  -->
+
+  <!-- Zone 1: white — clean rectangle top of left half -->
+  <polygon points="12,11 32,11 32,21 12,21" fill="#ffffff"/>
+
+  <!-- Zone 2: green — follows left wall down to (12,30), then diagonal to (19,38) -->
+  <polygon points="12,21 32,21 32,38 19,38 12,30" fill="#34d399"/>
+
+  <!-- Zone 3: amber — triangle to keystone tip -->
+  <polygon points="19,38 32,38 32,54" fill="#fbbf24"/>
+
+  <!-- Full keystone outline on top — unifies shape, gives right half its border -->
   <polygon points="12,11 52,11 52,30 32,54 12,30"
-           fill="none" stroke="white" stroke-width="3.5" stroke-linejoin="round"
-           clip-path="url(#rh-fv)" opacity="0.6"/>
-  <polygon points="12,11 52,11 52,30 32,54 12,30"
-           fill="none" stroke="white" stroke-width="1.5" stroke-linejoin="round" opacity="0.15"/>
+           fill="none" stroke="white" stroke-width="3.5" stroke-linejoin="round"/>
 </svg>
