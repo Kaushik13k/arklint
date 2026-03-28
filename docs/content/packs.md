@@ -15,7 +15,7 @@ $ arklint search clean
 ```bash
 $ arklint add arklint/fastapi
 Fetching pack 'arklint/fastapi'…
-✓ Added arklint/fastapi (4 rules) to .arklint.yml
+✓ Added arklint/fastapi (6 rules) to .arklint.yml
   Run arklint validate to confirm.
 ```
 
@@ -23,13 +23,30 @@ This appends the pack to the `extends` list in your `.arklint.yml`. Your own rul
 
 ## Official packs
 
+### Framework packs
+
 | Pack | Rules | Description |
 |------|-------|-------------|
-| `arklint/fastapi` | 4 | FastAPI service/route/schema separation, single HTTP client |
-| `arklint/django` | 4 | Django model/view/serializer placement, no raw SQL in views |
-| `arklint/nextjs` | 3 | Next.js server/client boundary, no DB in server actions |
-| `arklint/express` | 3 | Express route/service separation, no console.log in prod |
-| `arklint/clean-arch` | 2 | Clean architecture layer ordering, no framework in entities |
+| `arklint/fastapi` | 6 | FastAPI routers/services/schemas, settings placement, layered architecture |
+| `arklint/django` | 6 | Django model/view/serializer placement, Celery tasks, signals, no raw SQL |
+| `arklint/flask` | 6 | Flask blueprints, service layer, config management, no debug in prod |
+| `arklint/nextjs` | 5 | Next.js server/client boundary, API routes, no process.env in components |
+| `arklint/express` | 5 | Express route/controller/service separation, middleware placement |
+| `arklint/nestjs` | 6 | NestJS controller/service/repository separation, DI patterns, single ORM |
+| `arklint/spring` | 6 | Spring Boot layer separation, constructor injection, DTO placement |
+
+### Architecture packs
+
+| Pack | Rules | Description |
+|------|-------|-------------|
+| `arklint/clean-arch` | 3 | Clean architecture layer ordering, no framework in entities or use cases |
+
+### General packs
+
+| Pack | Rules | Description |
+|------|-------|-------------|
+| `arklint/security` | 8 | Bans eval, shell injection, unsafe deserialization, innerHTML, SQL string concat |
+| `arklint/code-hygiene` | 5 | Bans TODO comments, debug breakpoints, sleep in tests, scattered test files |
 
 ## Using extends manually
 

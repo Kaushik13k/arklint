@@ -3,24 +3,25 @@
 These tests call the tool functions directly via the server object
 without starting a real MCP process - no mcp package required at test time.
 """
+
 from __future__ import annotations
-from arklint.mcp_server import create_server
 
 import json
 import tempfile
 import textwrap
 from pathlib import Path
-from unittest.mock import patch
 
 import pytest
 
-mcp = pytest.importorskip(
-    "mcp", reason="mcp package not installed; skipping MCP server tests")
+from arklint.mcp_server import create_server
+
+mcp = pytest.importorskip("mcp", reason="mcp package not installed; skipping MCP server tests")
 
 
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+
 
 def _write_config(content: str) -> Path:
     tmp = tempfile.NamedTemporaryFile(suffix=".yml", delete=False, mode="w")
@@ -66,6 +67,7 @@ def _tool(server, name):
 # list_rules
 # ---------------------------------------------------------------------------
 
+
 class TestListRules:
     def test_returns_all_rules(self):
         cfg_path = _write_config(SIMPLE_CONFIG)
@@ -108,6 +110,7 @@ class TestListRules:
 # get_rule_details
 # ---------------------------------------------------------------------------
 
+
 class TestGetRuleDetails:
     def test_existing_rule(self):
         cfg_path = _write_config(SIMPLE_CONFIG)
@@ -129,6 +132,7 @@ class TestGetRuleDetails:
 # ---------------------------------------------------------------------------
 # check_file
 # ---------------------------------------------------------------------------
+
 
 class TestCheckFile:
     def test_clean_file_passes(self):
@@ -172,6 +176,7 @@ class TestCheckFile:
 # check_snippet
 # ---------------------------------------------------------------------------
 
+
 class TestCheckSnippet:
     def test_clean_snippet_passes(self):
         cfg_path = _write_config(SIMPLE_CONFIG)
@@ -199,7 +204,7 @@ class TestCheckSnippet:
     def test_temp_file_cleaned_up(self):
         """No temp files should remain after check_snippet."""
         import glob
-        import os
+
         cfg_path = _write_config(SIMPLE_CONFIG)
         server = create_server(config_path=cfg_path)
         fn = _tool(server, "check_snippet")

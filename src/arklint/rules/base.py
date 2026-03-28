@@ -4,6 +4,7 @@ Every rule must satisfy the ``Rule`` Protocol - implement ``check()`` and
 nothing else is required.  The ``BaseRule`` convenience class handles the
 boilerplate (config access, root path, violation factory).
 """
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -19,7 +20,7 @@ class Violation:
     """A single rule violation found in the codebase."""
 
     rule_id: str
-    severity: str       # "error" | "warning"
+    severity: str  # "error" | "warning"
     file: Path
     # None when not applicable (e.g. dependency-level check)
     line: int | None
@@ -53,8 +54,7 @@ class BaseRule:
         self.root = root
 
     def check(self, files: list[Path]) -> list[Violation]:  # pragma: no cover
-        raise NotImplementedError(
-            f"{type(self).__name__}.check() not implemented")
+        raise NotImplementedError(f"{type(self).__name__}.check() not implemented")
 
     # ------------------------------------------------------------------
     # Helpers

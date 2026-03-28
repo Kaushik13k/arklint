@@ -8,6 +8,7 @@ Reads all rules from the loaded config and produces a diagram that shows:
 The output is a Mermaid ``flowchart LR`` block that can be pasted into any
 Markdown file or rendered at mermaid.live.
 """
+
 from __future__ import annotations
 
 from arklint.config import ArklintConfig
@@ -31,6 +32,7 @@ def build_mermaid(cfg: ArklintConfig) -> str:
 # Per rule-type renderers
 # ---------------------------------------------------------------------------
 
+
 def _add_layer_boundary(cfg: ArklintConfig, lines: list[str]) -> None:
     rules = [r for r in cfg.rules if r.type == "layer-boundary"]
     if not rules:
@@ -44,8 +46,7 @@ def _add_layer_boundary(cfg: ArklintConfig, lines: list[str]) -> None:
         if not layers:
             continue
 
-        lines.append(
-            f"\n    subgraph {_safe_id(rule.id)} [\"{rule.description}\"]")
+        lines.append(f'\n    subgraph {_safe_id(rule.id)} ["{rule.description}"]')
 
         layer_names = [lay["name"] for lay in layers if lay.get("name")]
 
@@ -54,7 +55,7 @@ def _add_layer_boundary(cfg: ArklintConfig, lines: list[str]) -> None:
             name = lay.get("name", "")
             path = lay.get("path", name)
             nid = _safe_id(name)
-            lines.append(f"        {nid}[\"{name}\\n{path}\"]")
+            lines.append(f'        {nid}["{name}\\n{path}"]')
 
         # Edges - allowed deps get a solid arrow, blocked get a red X edge
         all_pairs: set[tuple[str, str]] = set()
@@ -83,7 +84,7 @@ def _add_boundary(cfg: ArklintConfig, lines: list[str]) -> None:
     if not rules:
         return
 
-    lines.append("\n    subgraph boundaries [\"Import boundaries\"]")
+    lines.append('\n    subgraph boundaries ["Import boundaries"]')
     for rule in rules:
         raw = rule.raw
         sources = raw.get("source", [])
@@ -93,10 +94,10 @@ def _add_boundary(cfg: ArklintConfig, lines: list[str]) -> None:
 
         for src in sources:
             src_id = _safe_id(f"src_{src}")
-            lines.append(f"        {src_id}[\"{src}\"]")
+            lines.append(f'        {src_id}["{src}"]')
             for pkg in blocked:
                 pkg_id = _safe_id(f"pkg_{pkg}")
-                lines.append(f"        {pkg_id}([\"{pkg}\"])")
+                lines.append(f'        {pkg_id}(["{pkg}"])')
                 lines.append(f"        {src_id} -. blocked .-> {pkg_id}")
 
     lines.append("    end")
@@ -107,17 +108,17 @@ def _add_dependency(cfg: ArklintConfig, lines: list[str]) -> None:
     if not rules:
         return
 
-    lines.append("\n    subgraph deps [\"Dependency constraints\"]")
+    lines.append('\n    subgraph deps ["Dependency constraints"]')
     for rule in rules:
         raw = rule.raw
         group: list[str] = raw.get("allow_only_one_of", [])
         if len(group) < 2:
             continue
         rule_id = _safe_id(rule.id)
-        lines.append(f"        {rule_id}{{\"choose one\"}}")
+        lines.append(f'        {rule_id}{{"choose one"}}')
         for pkg in group:
             pkg_id = _safe_id(f"dep_{pkg}")
-            lines.append(f"        {pkg_id}([\"{pkg}\"])")
+            lines.append(f'        {pkg_id}(["{pkg}"])')
             lines.append(f"        {rule_id} --- {pkg_id}")
 
     lines.append("    end")
@@ -127,14 +128,15 @@ def _add_dependency(cfg: ArklintConfig, lines: list[str]) -> None:
 # Helpers
 # ---------------------------------------------------------------------------
 
+
 def _safe_id(text: str) -> str:
     """Convert an arbitrary string to a valid Mermaid node ID."""
     return (
         text.replace("/", "_")
-            .replace("-", "_")
-            .replace(".", "_")
-            .replace("@", "_")
-            .replace(" ", "_")
-            .replace("\\", "_")
-            .strip("_")
+        .replace("-", "_")
+        .replace(".", "_")
+        .replace("@", "_")
+        .replace(" ", "_")
+        .replace("\\", "_")
+        .strip("_")
     )

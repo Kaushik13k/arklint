@@ -3,6 +3,7 @@
 Accepts ``list[CheckResult]`` from the engine and produces a structured,
 coloured terminal report.  The only public surface is :func:`print_report`.
 """
+
 from __future__ import annotations
 
 from pathlib import Path
@@ -11,7 +12,6 @@ from rich.console import Console
 from rich.text import Text
 
 from arklint.engine import CheckResult
-
 
 # Single shared console - callers can import this to print their own messages.
 console = Console()
@@ -56,6 +56,7 @@ def print_report(
 # GitHub Actions annotations
 # ---------------------------------------------------------------------------
 
+
 def emit_github_annotations(
     results: list[CheckResult],
     scan_root: Path,
@@ -84,11 +85,11 @@ def emit_github_annotations(
 # Internal renderers
 # ---------------------------------------------------------------------------
 
+
 def _render_result(result: CheckResult, scan_root: Path, quiet: bool = False) -> None:
     if result.passed:
         if not quiet:
-            console.print(
-                f"  [bold green]✓ PASS[/bold green]  [dim]{result.rule.id}[/dim]")
+            console.print(f"  [bold green]✓ PASS[/bold green]  [dim]{result.rule.id}[/dim]")
         return
 
     severity = result.rule.severity
@@ -116,13 +117,10 @@ def _render_result(result: CheckResult, scan_root: Path, quiet: bool = False) ->
         else:
             location = f"[cyan]{rel_path}[/cyan]"
 
-        console.print(
-            f"         {location} [dim]→[/dim] [{msg_color}]{v.message}[/{msg_color}]")
+        console.print(f"         {location} [dim]→[/dim] [{msg_color}]{v.message}[/{msg_color}]")
 
 
-def _render_summary(
-    results: list[CheckResult], errors: int, warnings: int
-) -> None:
+def _render_summary(results: list[CheckResult], errors: int, warnings: int) -> None:
     passed = sum(1 for r in results if r.passed)
 
     console.print()
@@ -130,19 +128,13 @@ def _render_summary(
 
     parts: list[str] = []
     if errors:
-        parts.append(
-            f"[bold red]{errors} error{'s' if errors != 1 else ''}[/bold red]")
+        parts.append(f"[bold red]{errors} error{'s' if errors != 1 else ''}[/bold red]")
     if warnings:
-        parts.append(
-            f"[bold yellow]{warnings} warning{'s' if warnings != 1 else ''}[/bold yellow]"
-        )
+        parts.append(f"[bold yellow]{warnings} warning{'s' if warnings != 1 else ''}[/bold yellow]")
     if passed:
-        parts.append(
-            f"[bold green]{passed} passed[/bold green]"
-        )
+        parts.append(f"[bold green]{passed} passed[/bold green]")
 
-    summary = ", ".join(
-        parts) if parts else "[bold green]all rules passed[/bold green]"
+    summary = ", ".join(parts) if parts else "[bold green]all rules passed[/bold green]"
     console.print(f"Results: {summary}")
     console.print(_DIVIDER)
     console.print()

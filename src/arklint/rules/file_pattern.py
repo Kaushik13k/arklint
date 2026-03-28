@@ -11,6 +11,7 @@ Example config::
         - "schemas/**"
       severity: warning
 """
+
 from __future__ import annotations
 
 import re
@@ -18,8 +19,9 @@ from pathlib import Path
 
 import pathspec
 
-from .base import BaseRule, Violation
 from arklint.parsers.patterns import scan_pattern
+
+from .base import BaseRule, Violation
 
 
 class FilePatternRule(BaseRule):

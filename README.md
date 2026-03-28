@@ -111,11 +111,16 @@ arklint add arklint/fastapi     # add to .arklint.yml
 
 | Pack | Rules | Description |
 |------|-------|-------------|
-| `arklint/fastapi` | 4 | FastAPI service/route/schema separation |
-| `arklint/django` | 4 | Django model/view/serializer placement |
-| `arklint/nextjs` | 3 | Next.js server/client boundary rules |
-| `arklint/express` | 3 | Express route/service separation |
-| `arklint/clean-arch` | 2 | Clean architecture layer ordering |
+| `arklint/fastapi` | 6 | FastAPI routers/services/schemas, layered architecture |
+| `arklint/django` | 6 | Django model/view/serializer, Celery tasks, signals |
+| `arklint/flask` | 6 | Flask blueprints, service layer, config management |
+| `arklint/nextjs` | 5 | Next.js server/client boundary, API routes |
+| `arklint/express` | 5 | Express route/controller/service separation |
+| `arklint/nestjs` | 6 | NestJS controller/service/repository, single ORM |
+| `arklint/spring` | 6 | Spring Boot layers, constructor injection, DTOs |
+| `arklint/clean-arch` | 3 | Clean architecture layer ordering |
+| `arklint/security` | 8 | eval, shell injection, XSS, SQL concat, deserialization |
+| `arklint/code-hygiene` | 5 | TODO comments, debug breakpoints, test placement |
 
 Packs are composable - mix framework packs with your own project rules:
 

@@ -1,8 +1,8 @@
 from .boundary import BoundaryRule
 from .dependency import DependencyRule
 from .file_pattern import FilePatternRule
-from .pattern_ban import PatternBanRule
 from .layer_boundary import LayerBoundaryRule
+from .pattern_ban import PatternBanRule
 
 RULE_REGISTRY = {
     "boundary": BoundaryRule,

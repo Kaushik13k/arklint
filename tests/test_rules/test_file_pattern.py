@@ -1,10 +1,9 @@
 """Tests for FilePatternRule."""
+
 from __future__ import annotations
 
 import textwrap
 from pathlib import Path
-
-import pytest
 
 from arklint.config import RuleConfig
 from arklint.rules.file_pattern import FilePatternRule
@@ -38,6 +37,7 @@ def _write(tmp_path: Path, rel: str, content: str) -> Path:
 
 # ── basic detection ───────────────────────────────────────────────────────────
 
+
 class TestFilePatternDetection:
     def test_pattern_in_disallowed_dir_reports_violation(self, tmp_path):
         f = _write(tmp_path, "routes/user.py", "class UserModel(Base): pass\n")
@@ -57,26 +57,28 @@ class TestFilePatternDetection:
         assert rule.check([f]) == []
 
     def test_multiple_violations_in_one_file(self, tmp_path):
-        f = _write(tmp_path, "routes/user.py", (
-            "class UserModel(Base): pass\n"
-            "class OrderModel(Base): pass\n"
-        ))
+        f = _write(
+            tmp_path,
+            "routes/user.py",
+            ("class UserModel(Base): pass\nclass OrderModel(Base): pass\n"),
+        )
         rule = _make_rule(r"class\s+\w+Model", "models/**", tmp_path)
         violations = rule.check([f])
         assert len(violations) == 2
 
     def test_correct_line_number_reported(self, tmp_path):
-        f = _write(tmp_path, "services/x.py", (
-            "# line 1\n"
-            "# line 2\n"
-            "class FooModel(Base): pass\n"
-        ))
+        f = _write(
+            tmp_path,
+            "services/x.py",
+            ("# line 1\n# line 2\nclass FooModel(Base): pass\n"),
+        )
         rule = _make_rule(r"class\s+\w+Model", "models/**", tmp_path)
         violations = rule.check([f])
         assert violations[0].line == 3
 
 
 # ── allowed_in variants ───────────────────────────────────────────────────────
+
 
 class TestAllowedInVariants:
     def test_allowed_in_as_string(self, tmp_path):
@@ -102,6 +104,7 @@ class TestAllowedInVariants:
 
 # ── edge cases ────────────────────────────────────────────────────────────────
 
+
 class TestEdgeCases:
     def test_empty_files_list(self, tmp_path):
         rule = _make_rule(r"class\s+\w+Model", "models/**", tmp_path)
@@ -116,8 +119,13 @@ class TestEdgeCases:
             "allowed_in": "models/**",
             "severity": "warning",
         }
-        cfg = RuleConfig(id="test/file-pattern", type="file-pattern",
-                         description="Test", severity="warning", raw=raw)
+        cfg = RuleConfig(
+            id="test/file-pattern",
+            type="file-pattern",
+            description="Test",
+            severity="warning",
+            raw=raw,
+        )
         rule = FilePatternRule(config=cfg, root=tmp_path)
         assert rule.check([f]) == []
 
@@ -130,8 +138,13 @@ class TestEdgeCases:
             "pattern": r"class\s+\w+Model",
             "severity": "warning",
         }
-        cfg = RuleConfig(id="test/file-pattern", type="file-pattern",
-                         description="Test", severity="warning", raw=raw)
+        cfg = RuleConfig(
+            id="test/file-pattern",
+            type="file-pattern",
+            description="Test",
+            severity="warning",
+            raw=raw,
+        )
         rule = FilePatternRule(config=cfg, root=tmp_path)
         assert rule.check([f]) == []
 

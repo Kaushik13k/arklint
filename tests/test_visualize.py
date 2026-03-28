@@ -1,15 +1,14 @@
 """Tests for arklint visualize - Mermaid diagram generation."""
+
 from __future__ import annotations
 
 from pathlib import Path
 
-import pytest
 from typer.testing import CliRunner
 
 from arklint.cli import app
 from arklint.config import ArklintConfig, RuleConfig
-from arklint.visualize import build_mermaid, _safe_id
-
+from arklint.visualize import _safe_id, build_mermaid
 
 runner = CliRunner()
 
@@ -17,6 +16,7 @@ runner = CliRunner()
 # ---------------------------------------------------------------------------
 # _safe_id helper
 # ---------------------------------------------------------------------------
+
 
 class TestSafeId:
     def test_slashes_replaced(self):
@@ -39,6 +39,7 @@ class TestSafeId:
 # build_mermaid - layer-boundary rules
 # ---------------------------------------------------------------------------
 
+
 def _make_cfg(rules: list[dict]) -> ArklintConfig:
     rule_cfgs = [
         RuleConfig(
@@ -55,22 +56,26 @@ def _make_cfg(rules: list[dict]) -> ArklintConfig:
 
 class TestLayerBoundaryDiagram:
     def _cfg(self):
-        return _make_cfg([{
-            "id": "arch/layers",
-            "type": "layer-boundary",
-            "description": "Clean layers",
-            "layers": [
-                {"name": "routes", "path": "routes/**"},
-                {"name": "services", "path": "services/**"},
-                {"name": "repositories", "path": "repositories/**"},
-            ],
-            "allowed_dependencies": {
-                "routes": ["services"],
-                "services": ["repositories"],
-                "repositories": [],
-            },
-            "severity": "error",
-        }])
+        return _make_cfg(
+            [
+                {
+                    "id": "arch/layers",
+                    "type": "layer-boundary",
+                    "description": "Clean layers",
+                    "layers": [
+                        {"name": "routes", "path": "routes/**"},
+                        {"name": "services", "path": "services/**"},
+                        {"name": "repositories", "path": "repositories/**"},
+                    ],
+                    "allowed_dependencies": {
+                        "routes": ["services"],
+                        "services": ["repositories"],
+                        "repositories": [],
+                    },
+                    "severity": "error",
+                }
+            ]
+        )
 
     def test_output_starts_with_flowchart(self):
         diagram = build_mermaid(self._cfg())
@@ -105,16 +110,21 @@ class TestLayerBoundaryDiagram:
 # build_mermaid - boundary rules
 # ---------------------------------------------------------------------------
 
+
 class TestBoundaryDiagram:
     def _cfg(self):
-        return _make_cfg([{
-            "id": "arch/no-db-in-routes",
-            "type": "boundary",
-            "description": "No DB in routes",
-            "source": "routes/**",
-            "blocked_imports": ["sqlalchemy", "psycopg2"],
-            "severity": "error",
-        }])
+        return _make_cfg(
+            [
+                {
+                    "id": "arch/no-db-in-routes",
+                    "type": "boundary",
+                    "description": "No DB in routes",
+                    "source": "routes/**",
+                    "blocked_imports": ["sqlalchemy", "psycopg2"],
+                    "severity": "error",
+                }
+            ]
+        )
 
     def test_source_node_present(self):
         diagram = build_mermaid(self._cfg())
@@ -138,15 +148,20 @@ class TestBoundaryDiagram:
 # build_mermaid - dependency rules
 # ---------------------------------------------------------------------------
 
+
 class TestDependencyDiagram:
     def _cfg(self):
-        return _make_cfg([{
-            "id": "arch/single-http",
-            "type": "dependency",
-            "description": "One HTTP client",
-            "allow_only_one_of": ["httpx", "requests", "aiohttp"],
-            "severity": "warning",
-        }])
+        return _make_cfg(
+            [
+                {
+                    "id": "arch/single-http",
+                    "type": "dependency",
+                    "description": "One HTTP client",
+                    "allow_only_one_of": ["httpx", "requests", "aiohttp"],
+                    "severity": "warning",
+                }
+            ]
+        )
 
     def test_packages_present(self):
         diagram = build_mermaid(self._cfg())
@@ -167,6 +182,7 @@ class TestDependencyDiagram:
 # build_mermaid - empty / unknown rules
 # ---------------------------------------------------------------------------
 
+
 class TestEmptyConfig:
     def test_no_rules_shows_comment(self):
         cfg = _make_cfg([])
@@ -174,13 +190,17 @@ class TestEmptyConfig:
         assert "no visualisable" in diagram
 
     def test_pattern_ban_not_visualised(self):
-        cfg = _make_cfg([{
-            "id": "x/no-print",
-            "type": "pattern-ban",
-            "description": "No print",
-            "pattern": r"print\(",
-            "severity": "warning",
-        }])
+        cfg = _make_cfg(
+            [
+                {
+                    "id": "x/no-print",
+                    "type": "pattern-ban",
+                    "description": "No print",
+                    "pattern": r"print\(",
+                    "severity": "warning",
+                }
+            ]
+        )
         diagram = build_mermaid(cfg)
         assert "no visualisable" in diagram
 
@@ -189,10 +209,12 @@ class TestEmptyConfig:
 # CLI: arklint visualize
 # ---------------------------------------------------------------------------
 
+
 class TestVisualizeCLI:
     def _write_config(self, tmp_path: Path) -> Path:
         cfg = tmp_path / ".arklint.yml"
-        cfg.write_text("""\
+        cfg.write_text(
+            """\
 version: "1"
 rules:
   - id: arch/layers
@@ -207,7 +229,8 @@ rules:
       routes: [services]
       services: []
     severity: error
-""")
+"""
+        )
         return cfg
 
     def test_visualize_prints_mermaid(self, tmp_path):
@@ -219,13 +242,11 @@ rules:
     def test_visualize_output_file(self, tmp_path):
         cfg = self._write_config(tmp_path)
         out = tmp_path / "diagram.md"
-        result = runner.invoke(
-            app, ["visualize", "--config", str(cfg), "--output", str(out)])
+        result = runner.invoke(app, ["visualize", "--config", str(cfg), "--output", str(out)])
         assert result.exit_code == 0
         assert out.exists()
         assert "flowchart LR" in out.read_text()
 
     def test_visualize_missing_config_exits_1(self, tmp_path):
-        result = runner.invoke(
-            app, ["visualize", "--config", str(tmp_path / "missing.yml")])
+        result = runner.invoke(app, ["visualize", "--config", str(tmp_path / "missing.yml")])
         assert result.exit_code == 1

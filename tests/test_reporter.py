@@ -1,8 +1,8 @@
 """Tests for reporter.py - color coding and output formatting."""
+
 import tempfile
 from pathlib import Path
 
-import pytest
 from typer.testing import CliRunner
 
 from arklint.cli import app
@@ -16,9 +16,9 @@ def _make_project(code: str, severity: str = "error") -> tuple[Path, Path]:
     cfg = tmp_dir / ".arklint.yml"
     cfg.write_text(
         f'version: "1"\nrules:\n'
-        f'  - id: no-print\n    type: pattern-ban\n'
-        f'    description: No print\n    pattern: \'print\\(\'\n'
-        f'    severity: {severity}\n'
+        f"  - id: no-print\n    type: pattern-ban\n"
+        f"    description: No print\n    pattern: 'print\\('\n"
+        f"    severity: {severity}\n"
     )
     (tmp_dir / "main.py").write_text(code)
     return cfg, tmp_dir
@@ -28,35 +28,33 @@ def _make_project(code: str, severity: str = "error") -> tuple[Path, Path]:
 # Reporter color output
 # ---------------------------------------------------------------------------
 
+
 class TestReporterColors:
     def test_error_violation_message_shown(self):
         cfg, scan_dir = _make_project('print("hi")\n', severity="error")
-        result = runner.invoke(
-            app, ["check", str(scan_dir), "--config", str(cfg)])
+        result = runner.invoke(app, ["check", str(scan_dir), "--config", str(cfg)])
         assert "banned pattern matched" in result.output
 
     def test_warning_violation_message_shown(self):
         cfg, scan_dir = _make_project('print("hi")\n', severity="warning")
-        result = runner.invoke(
-            app, ["check", str(scan_dir), "--config", str(cfg)])
+        result = runner.invoke(app, ["check", str(scan_dir), "--config", str(cfg)])
         assert "banned pattern matched" in result.output
 
     def test_fail_label_shown_for_error(self):
         cfg, scan_dir = _make_project('print("hi")\n', severity="error")
-        result = runner.invoke(
-            app, ["check", str(scan_dir), "--config", str(cfg)])
+        result = runner.invoke(app, ["check", str(scan_dir), "--config", str(cfg)])
         assert "FAIL" in result.output
 
     def test_warn_label_shown_for_warning(self):
         cfg, scan_dir = _make_project('print("hi")\n', severity="warning")
-        result = runner.invoke(
-            app, ["check", str(scan_dir), "--config", str(cfg)])
+        result = runner.invoke(app, ["check", str(scan_dir), "--config", str(cfg)])
         assert "WARN" in result.output
 
 
 # ---------------------------------------------------------------------------
 # init_templates detect_template
 # ---------------------------------------------------------------------------
+
 
 class TestDetectTemplate:
     def _dir(self, files: list[str]) -> Path:
@@ -166,12 +164,12 @@ class TestDetectTemplate:
 # arklint init ecosystem detection
 # ---------------------------------------------------------------------------
 
+
 class TestInitEcosystem:
     def test_init_node_project_mentions_node(self):
         tmp_dir = Path(tempfile.mkdtemp())
         (tmp_dir / "package.json").write_text("{}")
-        result = runner.invoke(app, ["init"], catch_exceptions=False,
-                               env={"PWD": str(tmp_dir)})
+        result = runner.invoke(app, ["init"], catch_exceptions=False, env={"PWD": str(tmp_dir)})
         # detect_template is called on cwd; runner uses tmp_dir indirectly
         # just verify the command succeeds and creates the file
         assert (tmp_dir / ".arklint.yml").exists() or result.exit_code in (0, 1)

@@ -6,10 +6,10 @@ A template is chosen based on markers found in the current directory:
   - pyproject.toml etc.    → Python
   - (none matched)         → generic fallback
 """
+
 from __future__ import annotations
 
 from pathlib import Path
-
 
 # ---------------------------------------------------------------------------
 # Templates
@@ -337,16 +337,22 @@ STARTER_TEMPLATE = _PYTHON_TEMPLATE
 # Detection
 # ---------------------------------------------------------------------------
 
+
 def detect_template(directory: Path) -> tuple[str, str]:
     """Return (template_content, ecosystem_label) for *directory*."""
     files = {p.name for p in directory.iterdir() if p.is_file()}
-    csproj = any(p.suffix in (".csproj", ".sln")
-                 for p in directory.iterdir() if p.is_file())
+    csproj = any(p.suffix in (".csproj", ".sln") for p in directory.iterdir() if p.is_file())
 
     if "package.json" in files:
         return _NODE_TEMPLATE, "Node / TypeScript"
     if csproj:
         return _DOTNET_TEMPLATE, ".NET / C#"
-    if files & {"pyproject.toml", "setup.py", "setup.cfg", "requirements.txt", "Pipfile"}:
+    if files & {
+        "pyproject.toml",
+        "setup.py",
+        "setup.cfg",
+        "requirements.txt",
+        "Pipfile",
+    }:
         return _PYTHON_TEMPLATE, "Python"
     return _PYTHON_TEMPLATE, "Python"

@@ -18,13 +18,14 @@ Example config::
         - "pandas"
       severity: error
 """
+
 from __future__ import annotations
 
 from pathlib import Path
 
-from .base import BaseRule, Violation
 from arklint.parsers.deps import parse_dependency_file
 
+from .base import BaseRule, Violation
 
 # File names that are considered dependency manifests
 _DEP_FILENAMES: frozenset[str] = frozenset(
@@ -48,8 +49,7 @@ class DependencyRule(BaseRule):
 
     def check(self, files: list[Path]) -> list[Violation]:
         raw = self.config.raw
-        allow_only_one_of: list[str] = [p.lower()
-                                        for p in raw.get("allow_only_one_of", [])]
+        allow_only_one_of: list[str] = [p.lower() for p in raw.get("allow_only_one_of", [])]
         banned: list[str] = [p.lower() for p in raw.get("banned", [])]
 
         if not allow_only_one_of and not banned:
@@ -68,9 +68,7 @@ class DependencyRule(BaseRule):
         if allow_only_one_of:
             found = [p for p in allow_only_one_of if p in pkg_sources]
             if len(found) > 1:
-                source_names = sorted(
-                    {self._rel(f) for p in found for f in pkg_sources[p]}
-                )
+                source_names = sorted({self._rel(f) for p in found for f in pkg_sources[p]})
                 violations.append(
                     self._violation(
                         file=self.root,

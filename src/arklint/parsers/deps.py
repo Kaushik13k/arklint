@@ -4,7 +4,6 @@ import json
 import re
 from pathlib import Path
 
-
 _REQUIREMENTS_RE = re.compile(r"^\s*([A-Za-z0-9_\-\.]+)", re.MULTILINE)
 _TOML_DEP_RE = re.compile(r"""^\s*["']?([A-Za-z0-9_\-\.]+)["']?\s*[=<>!~]""", re.MULTILINE)
 

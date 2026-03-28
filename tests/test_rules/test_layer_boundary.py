@@ -1,16 +1,18 @@
 """Tests for LayerBoundaryRule."""
+
 from __future__ import annotations
 
 import textwrap
 from pathlib import Path
 
-import pytest
-
-from arklint.config import RuleConfig
-from arklint.rules.layer_boundary import LayerBoundaryRule, _import_to_layer, _match_layer
-
 import pathspec
 
+from arklint.config import RuleConfig
+from arklint.rules.layer_boundary import (
+    LayerBoundaryRule,
+    _import_to_layer,
+    _match_layer,
+)
 
 # ── helpers ───────────────────────────────────────────────────────────────────
 
@@ -59,6 +61,7 @@ def _write(tmp_path: Path, rel: str, content: str) -> Path:
 
 # ── _match_layer helper ───────────────────────────────────────────────────────
 
+
 class TestMatchLayer:
     def _specs(self):
         return {
@@ -88,6 +91,7 @@ class TestMatchLayer:
 
 # ── _import_to_layer helper ───────────────────────────────────────────────────
 
+
 class TestImportToLayer:
     def _specs(self):
         return {
@@ -113,6 +117,7 @@ class TestImportToLayer:
 
 # ── allowed imports ───────────────────────────────────────────────────────────
 
+
 class TestAllowedImports:
     def test_routes_importing_services_passes(self, tmp_path):
         f = _write(tmp_path, "routes/user.py", "from services import user_service\n")
@@ -137,6 +142,7 @@ class TestAllowedImports:
 
 # ── violations ────────────────────────────────────────────────────────────────
 
+
 class TestViolations:
     def test_routes_importing_repositories_violates(self, tmp_path):
         f = _write(tmp_path, "routes/user.py", "from repositories import user_repo\n")
@@ -160,10 +166,11 @@ class TestViolations:
 
     def test_violation_deduplicated_per_layer_pair(self, tmp_path):
         # Two imports from same disallowed layer → one violation per pair
-        f = _write(tmp_path, "routes/user.py", (
-            "from repositories import user_repo\n"
-            "from repositories import order_repo\n"
-        ))
+        f = _write(
+            tmp_path,
+            "routes/user.py",
+            ("from repositories import user_repo\nfrom repositories import order_repo\n"),
+        )
         rule = _make_rule(root=tmp_path)
         violations = rule.check([f])
         assert len(violations) == 1
@@ -176,6 +183,7 @@ class TestViolations:
 
 
 # ── edge cases ────────────────────────────────────────────────────────────────
+
 
 class TestEdgeCases:
     def test_empty_files_list(self, tmp_path):

@@ -1,10 +1,7 @@
 from pathlib import Path
-import tempfile
-import textwrap
 
 from arklint.config import RuleConfig
 from arklint.rules.boundary import BoundaryRule
-
 
 FIXTURES = Path(__file__).parent.parent / "fixtures"
 
@@ -17,7 +14,13 @@ def make_rule(root: Path, source: str, blocked: list[str]) -> BoundaryRule:
         "blocked_imports": blocked,
         "severity": "error",
     }
-    cfg = RuleConfig(id="no-db-in-routes", type="boundary", description="No DB in routes", severity="error", raw=raw)
+    cfg = RuleConfig(
+        id="no-db-in-routes",
+        type="boundary",
+        description="No DB in routes",
+        severity="error",
+        raw=raw,
+    )
     return BoundaryRule(cfg, root=root)
 
 
