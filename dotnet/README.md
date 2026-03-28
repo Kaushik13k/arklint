@@ -7,7 +7,7 @@
 
 ---
 
-Arklint enforces **architectural rules** before bad code ever lands - whether written by AI agents or humans. It's language-agnostic, runs locally with zero cloud dependency, and takes 60 seconds to set up.
+Arklint enforces **architectural rules** before bad code ever lands - whether written by AI agents or humans. It's language-agnostic, runs locally with zero cloud dependency, and requires no external services.
 
 This package is a .NET global tool wrapper. On first run it downloads the platform-specific prebuilt binary from [GitHub Releases](https://github.com/Kaushik13k/arklint/releases) and caches it at `~/.arklint/bin/`. **No Python required.**
 
@@ -132,9 +132,57 @@ arklint add arklint/clean-arch
 
 ---
 
+## MCP server (AI agents)
+
+The MCP server is bundled — no extra install needed.
+
+```bash
+arklint mcp
+```
+
+**Claude Code** — add to `.claude/settings.json`:
+
+```json
+{
+  "mcpServers": {
+    "arklint": {
+      "command": "arklint",
+      "args": ["mcp"]
+    }
+  }
+}
+```
+
+**Cursor** — add to `.cursor/mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "arklint": {
+      "command": "arklint",
+      "args": ["mcp"]
+    }
+  }
+}
+```
+
+---
+
+## Export rules for AI assistants
+
+Keep your AI coding tools aligned with the same architectural constraints:
+
+```bash
+arklint export --format cursorrules   # → .cursorrules
+arklint export --format claude        # → CLAUDE.md
+arklint export --format copilot       # → .github/copilot-instructions.md
+```
+
+---
+
 ## Full documentation
 
-[https://arklint.elevane.org](https://https://arklint.elevane.org) · [GitHub](https://github.com/Kaushik13k/arklint) · [PyPI](https://pypi.org/project/arklint/) · [npm](https://www.npmjs.com/package/arklint)
+[arklint.elevane.org](https://arklint.elevane.org) · [GitHub](https://github.com/Kaushik13k/arklint) · [PyPI](https://pypi.org/project/arklint/) · [npm](https://www.npmjs.com/package/arklint)
 
 ---
 
