@@ -45,6 +45,31 @@ jobs:
 | `config` | Path to `.arklint.yml`. Auto-discovered if omitted. | (auto) |
 | `working-directory` | Directory to run arklint in, for monorepos | `.` |
 
+## Prerequisites
+
+The action requires a `.arklint.yml` in your repository root. If it's missing you'll see:
+
+```
+Config error: No .arklint.yml found. Run 'arklint init' to create one.
+```
+
+Run this locally first and commit the file:
+
+```bash
+arklint init
+git add .arklint.yml
+git commit -m "chore: add arklint config"
+git push
+```
+
+If your config lives elsewhere (e.g. a monorepo), point the action to it explicitly:
+
+```yaml
+- uses: Kaushik13k/ark-lint@main
+  with:
+    config: "services/api/.arklint.yml"
+```
+
 ## Inline PR annotations
 
 When `diff` mode is enabled, the action automatically passes `--github-annotations` to emit inline annotations on the pull request. Violations appear directly on the changed lines — no need to scroll through logs.
