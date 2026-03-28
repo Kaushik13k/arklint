@@ -1,6 +1,6 @@
-from pathlib import Path
 import tempfile
 import textwrap
+from pathlib import Path
 
 from arklint.config import RuleConfig
 from arklint.rules.pattern_ban import PatternBanRule
@@ -14,10 +14,21 @@ def make_file(content: str, suffix=".py") -> Path:
 
 
 def make_rule(pattern: str, exclude=None, severity="warning") -> PatternBanRule:
-    raw = {"id": "no-print", "type": "pattern-ban", "pattern": pattern, "severity": severity}
+    raw = {
+        "id": "no-print",
+        "type": "pattern-ban",
+        "pattern": pattern,
+        "severity": severity,
+    }
     if exclude:
         raw["exclude"] = exclude
-    cfg = RuleConfig(id="no-print", type="pattern-ban", description="No prints", severity=severity, raw=raw)
+    cfg = RuleConfig(
+        id="no-print",
+        type="pattern-ban",
+        description="No prints",
+        severity=severity,
+        raw=raw,
+    )
     return PatternBanRule(cfg, root=Path("/"))
 
 

@@ -9,13 +9,13 @@ Usage:
     pip install markdown pymdown-extensions
     python build.py
 """
+
 from __future__ import annotations
 
 import re
 from pathlib import Path
 
 import markdown
-
 
 ROOT = Path(__file__).parent
 CONTENT_DIR = ROOT / "content"
@@ -33,26 +33,23 @@ def style_code_blocks(html_str: str) -> str:
         block = match.group(0)
         lang_m = re.search(r'class="language-(\w+)"', block)
         lang = lang_m.group(1) if lang_m else ""
-        code_m = re.search(r'<code[^>]*>(.*?)</code>', block, re.DOTALL)
+        code_m = re.search(r"<code[^>]*>(.*?)</code>", block, re.DOTALL)
         if not code_m:
             return block
         raw = code_m.group(1)
 
-        label_map = {"bash": "Terminal",
-                     "yaml": ".arklint.yml", "json": "Config"}
+        label_map = {"bash": "Terminal", "yaml": ".arklint.yml", "json": "Config"}
         label = label_map.get(lang, "Code")
 
         if lang == "yaml":
             # Strings first - before key regex adds class="k" HTML attributes
             # (otherwise the string regex would match the "k" in class="k")
-            raw = re.sub(r'(&quot;[^&]*?&quot;)',
-                         r'<span class="s">\1</span>', raw)
-            raw = re.sub(r"('(?:[^'\\\\]|\\\\.)*')",
-                         r'<span class="s">\1</span>', raw)
+            raw = re.sub(r"(&quot;[^&]*?&quot;)", r'<span class="s">\1</span>', raw)
+            raw = re.sub(r"('(?:[^'\\\\]|\\\\.)*')", r'<span class="s">\1</span>', raw)
             raw = re.sub(
-                r'^(\s*)([\w-]+)(:)', r'\1<span class="k">\2\3</span>', raw, flags=re.MULTILINE)
-            raw = re.sub(r'(#.*)$', r'<span class="c">\1</span>',
-                         raw, flags=re.MULTILINE)
+                r"^(\s*)([\w-]+)(:)", r'\1<span class="k">\2\3</span>', raw, flags=re.MULTILINE
+            )
+            raw = re.sub(r"(#.*)$", r'<span class="c">\1</span>', raw, flags=re.MULTILINE)
 
         if lang == "bash":
             lines = raw.split("\n")
@@ -61,8 +58,7 @@ def style_code_blocks(html_str: str) -> str:
                 stripped = line.strip()
                 if stripped.startswith("$ "):
                     cmd = stripped[2:]
-                    out.append(
-                        f'<span class="p">$ </span><span class="cmd">{cmd}</span>')
+                    out.append(f'<span class="p">$ </span><span class="cmd">{cmd}</span>')
                 elif stripped.startswith("#"):
                     out.append(f'<span class="c">{line}</span>')
                 elif stripped == "":
@@ -78,18 +74,16 @@ def style_code_blocks(html_str: str) -> str:
             raw = "\n".join(out)
 
         if lang == "json":
-            raw = re.sub(r'(&quot;[^&]*?&quot;|"[^"]*?")\s*:',
-                         r'<span class="k">\1</span>:', raw)
-            raw = re.sub(r':\s*(&quot;[^&]*?&quot;|"[^"]*?")',
-                         r': <span class="s">\1</span>', raw)
+            raw = re.sub(r'(&quot;[^&]*?&quot;|"[^"]*?")\s*:', r'<span class="k">\1</span>:', raw)
+            raw = re.sub(r':\s*(&quot;[^&]*?&quot;|"[^"]*?")', r': <span class="s">\1</span>', raw)
 
         return (
             f'<div class="cb"><div class="cb-h">'
             f'<span class="l">{label}</span><span class="r">{lang}</span>'
-            f'</div><pre>{raw}</pre></div>'
+            f"</div><pre>{raw}</pre></div>"
         )
 
-    return re.sub(r'<pre><code[^>]*>.*?</code></pre>', _replace, html_str, flags=re.DOTALL)
+    return re.sub(r"<pre><code[^>]*>.*?</code></pre>", _replace, html_str, flags=re.DOTALL)
 
 
 def style_tables(html_str: str) -> str:
@@ -99,15 +93,17 @@ def style_tables(html_str: str) -> str:
 def style_inline_code(html_str: str) -> str:
     def _repl(m):
         return f'<code class="i">{m.group(1)}</code>'
-    return re.sub(r'(?<!<pre>)<code>([^<]+)</code>', _repl, html_str)
+
+    return re.sub(r"(?<!<pre>)<code>([^<]+)</code>", _repl, html_str)
 
 
 def style_blockquotes_as_tips(html_str: str) -> str:
     tip_svg = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>'
     return re.sub(
-        r'<blockquote>\s*<p>(.*?)</p>\s*</blockquote>',
+        r"<blockquote>\s*<p>(.*?)</p>\s*</blockquote>",
         rf'<div class="tip">{tip_svg}<span class="tip-body">\1</span></div>',
-        html_str, flags=re.DOTALL,
+        html_str,
+        flags=re.DOTALL,
     )
 
 
@@ -122,17 +118,32 @@ def convert_section(md_text: str, section_id: str) -> str:
             title = line[2:].strip()
             body_start = i + 1
             continue
-        if title and not lead and line.strip() and not line.startswith("#") and not line.startswith("```") and not line.startswith("|") and not line.startswith("-") and not line.startswith(">"):
+        if (
+            title
+            and not lead
+            and line.strip()
+            and not line.startswith("#")
+            and not line.startswith("```")
+            and not line.startswith("|")
+            and not line.startswith("-")
+            and not line.startswith(">")
+        ):
             lead = line.strip()
             body_start = i + 1
             break
-        if title and (line.startswith("#") or line.startswith("```") or line.startswith("|") or line.startswith("-") or line.startswith(">")):
+        if title and (
+            line.startswith("#")
+            or line.startswith("```")
+            or line.startswith("|")
+            or line.startswith("-")
+            or line.startswith(">")
+        ):
             body_start = i
             break
 
     body_md = "\n".join(lines[body_start:])
     # Downgrade ## → ### so section title stays h2, sub-sections become h3
-    body_md = re.sub(r'^## ', '### ', body_md, flags=re.MULTILINE)
+    body_md = re.sub(r"^## ", "### ", body_md, flags=re.MULTILINE)
 
     body_html = md_to_html(body_md)
     body_html = style_code_blocks(body_html)
@@ -141,8 +152,8 @@ def convert_section(md_text: str, section_id: str) -> str:
     body_html = style_blockquotes_as_tips(body_html)
 
     # Convert markdown formatting in lead
-    lead = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', lead)
-    lead = re.sub(r'\*(.+?)\*', r'<em>\1</em>', lead)
+    lead = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", lead)
+    lead = re.sub(r"\*(.+?)\*", r"<em>\1</em>", lead)
 
     title_html = f'  <h2>{title} <a href="#{section_id}" class="anchor">#</a></h2>'
     lead_html = f'  <p class="lead">{lead}</p>' if lead else ""
@@ -169,7 +180,7 @@ def convert_rules_section(md_text: str) -> str:
     body = "\n".join(lines[body_start:])
 
     # Split by ## headings
-    rule_sections = re.split(r'^## ', body, flags=re.MULTILINE)
+    rule_sections = re.split(r"^## ", body, flags=re.MULTILINE)
     rule_sections = [s for s in rule_sections if s.strip()]
 
     cards_html = []
@@ -178,7 +189,7 @@ def convert_rules_section(md_text: str) -> str:
         heading = section_lines[0].strip()
 
         # Parse "type - Description"
-        parts = heading.split(' - ', maxsplit=1)
+        parts = heading.split(" - ", maxsplit=1)
         rule_type = parts[0].strip()
         rule_name = parts[1].strip() if len(parts) > 1 else rule_type
 
@@ -212,7 +223,6 @@ def convert_rules_section(md_text: str) -> str:
 
         desc_html = md_to_html(desc) if desc else ""
         desc_html = style_tables(desc_html)
-        desc_text = re.sub(r'</?p>', '', desc_html).strip()
 
         code_html = md_to_html(code_md) if code_md else ""
         code_html = style_code_blocks(code_html)
@@ -222,8 +232,8 @@ def convert_rules_section(md_text: str) -> str:
             f'    <div class="rc" id="{card_id}">'
             f'<div class="rc-head"><span class="rb">{rule_type}</span>'
             f'<div class="ri"><h4>{rule_name}</h4></div></div>'
-            f'{body_section}'
-            f'{code_html}</div>'
+            f"{body_section}"
+            f"{code_html}</div>"
         )
         cards_html.append(card)
 
@@ -233,7 +243,7 @@ def convert_rules_section(md_text: str) -> str:
         f'  <h2>{title} <a href="#rules" class="anchor">#</a></h2>\n'
         f'  <p class="lead">{lead}</p>\n'
         f'  <div class="rc-list">\n{all_cards}\n  </div>\n'
-        f'</section>'
+        f"</section>"
     )
 
 

@@ -1,4 +1,5 @@
 """Tests for the __main__ module (python -m arklint entry point)."""
+
 import subprocess
 import sys
 

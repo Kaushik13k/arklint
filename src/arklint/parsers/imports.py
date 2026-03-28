@@ -14,11 +14,11 @@ Supported languages (detected by file extension):
   .cs          C#
   .php         PHP
 """
+
 from __future__ import annotations
 
 import re
 from pathlib import Path
-
 
 # ---------------------------------------------------------------------------
 # Per-language regex patterns
@@ -45,7 +45,7 @@ _JS_RE = re.compile(
 # Only matches inside  import "..." or import ( ... ) blocks, never bare strings.
 _GO_SINGLE_RE = re.compile(r'^\s*import\s+"([^"]+)"', re.MULTILINE)
 _GO_BLOCK_RE = re.compile(r"import\s*\(([^)]*)\)", re.DOTALL)
-_GO_PKG_RE = re.compile(r'(?:_\s+|[\w]+\s+)?"([^"]+)"')   # optional alias
+_GO_PKG_RE = re.compile(r'(?:_\s+|[\w]+\s+)?"([^"]+)"')  # optional alias
 
 # Ruby ────────────────────────────────────────────────────────────────────────
 _RUBY_RE = re.compile(r"""^\s*require(?:_relative)?\s+['"]([^'"]+)['"]""", re.MULTILINE)
@@ -70,6 +70,7 @@ _PHP_RE = re.compile(
 # ---------------------------------------------------------------------------
 # Public API
 # ---------------------------------------------------------------------------
+
 
 def extract_imports(path: Path) -> list[str]:
     """Return a deduplicated list of imported package/module names from *path*.
@@ -112,6 +113,7 @@ def extract_imports(path: Path) -> list[str]:
 # ---------------------------------------------------------------------------
 # Language extractors (private)
 # ---------------------------------------------------------------------------
+
 
 def _extract_python(src: str) -> list[str]:
     results: list[str] = []
@@ -177,6 +179,7 @@ def _extract_php(src: str) -> list[str]:
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+
 
 def _dedup(items: list[str]) -> list[str]:
     seen: set[str] = set()

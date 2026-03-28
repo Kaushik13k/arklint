@@ -6,6 +6,7 @@ arklint init    Create a starter .arklint.yml in the current directory.
 arklint check   Scan the codebase against all configured rules.
 arklint export  Export rules as AI assistant instruction files.
 """
+
 from __future__ import annotations
 
 import time
@@ -15,12 +16,17 @@ import typer
 import yaml
 
 from arklint import __version__
-from arklint.config import load_config, ConfigError
+from arklint.config import ConfigError, load_config
 from arklint.engine import run_rules
 from arklint.init_templates import detect_template
-from arklint.reporter import console, err_console, emit_github_annotations, print_header, print_report
+from arklint.reporter import (
+    console,
+    emit_github_annotations,
+    err_console,
+    print_header,
+    print_report,
+)
 from arklint.scanner import collect_diff_files, collect_files
-
 
 app = typer.Typer(
     name="arklint",
@@ -35,19 +41,17 @@ app = typer.Typer(
 # arklint init
 # ---------------------------------------------------------------------------
 
+
 @app.command()
 def init(
-    force: bool = typer.Option(
-        False, "--force", "-f", help="Overwrite an existing .arklint.yml."
-    ),
+    force: bool = typer.Option(False, "--force", "-f", help="Overwrite an existing .arklint.yml."),
 ) -> None:
     """Create a starter [bold].arklint.yml[/bold] in the current directory."""
     target = Path.cwd() / ".arklint.yml"
 
     if target.exists() and not force:
         err_console.print(
-            "[yellow].arklint.yml already exists.[/yellow] "
-            "Use [bold]--force[/bold] to overwrite."
+            "[yellow].arklint.yml already exists.[/yellow] Use [bold]--force[/bold] to overwrite."
         )
         raise typer.Exit(1)
 
@@ -63,6 +67,7 @@ def init(
 # ---------------------------------------------------------------------------
 # arklint check
 # ---------------------------------------------------------------------------
+
 
 @app.command()
 def check(
@@ -137,12 +142,12 @@ def check(
         console.print("[bold red]✗ violations found[/bold red]")
         raise typer.Exit(1)
     elif strict and warnings > 0:
-        console.print(
-            "[bold red]✗ warnings treated as errors (--strict)[/bold red]")
+        console.print("[bold red]✗ warnings treated as errors (--strict)[/bold red]")
         raise typer.Exit(1)
     elif warnings > 0:
         console.print(
-            "[bold yellow]⚠ warnings found - run with --strict to fail on warnings[/bold yellow]")
+            "[bold yellow]⚠ warnings found - run with --strict to fail on warnings[/bold yellow]"
+        )
     else:
         console.print("[bold green]✓ all rules passed[/bold green]")
 
@@ -150,6 +155,7 @@ def check(
 # ---------------------------------------------------------------------------
 # arklint watch
 # ---------------------------------------------------------------------------
+
 
 @app.command()
 def watch(
@@ -159,10 +165,15 @@ def watch(
         show_default=False,
     ),
     config: Path | None = typer.Option(
-        None, "--config", "-c", help="Path to .arklint.yml.",
+        None,
+        "--config",
+        "-c",
+        help="Path to .arklint.yml.",
     ),
     strict: bool = typer.Option(
-        False, "--strict", help="Treat warnings as errors.",
+        False,
+        "--strict",
+        help="Treat warnings as errors.",
     ),
 ) -> None:
     """Watch for file changes and re-run checks automatically."""
@@ -193,11 +204,11 @@ def watch(
         if errors > 0:
             console.print("[bold red]✗ violations found[/bold red]")
         elif strict and warnings > 0:
-            console.print(
-                "[bold red]✗ warnings treated as errors (--strict)[/bold red]")
+            console.print("[bold red]✗ warnings treated as errors (--strict)[/bold red]")
         elif warnings > 0:
             console.print(
-                "[bold yellow]⚠ warnings - run with --strict to treat as errors[/bold yellow]")
+                "[bold yellow]⚠ warnings - run with --strict to treat as errors[/bold yellow]"
+            )
         else:
             console.print("[bold green]✓ all rules passed[/bold green]")
 
@@ -207,14 +218,15 @@ def watch(
                 return
             src = str(event.src_path)
             # ignore hidden dirs, caches, build artefacts
-            if any(part.startswith(".") or part in ("__pycache__", "dist", "build")
-                   for part in Path(src).parts):
+            if any(
+                part.startswith(".") or part in ("__pycache__", "dist", "build")
+                for part in Path(src).parts
+            ):
                 return
             _run()
 
     _run()
-    console.print(
-        f"\n[dim]Watching [cyan]{scan_root}[/cyan] - press Ctrl+C to stop.[/dim]\n")
+    console.print(f"\n[dim]Watching [cyan]{scan_root}[/cyan] - press Ctrl+C to stop.[/dim]\n")
 
     observer = Observer()
     observer.schedule(_Handler(), str(scan_root), recursive=True)
@@ -233,6 +245,7 @@ def watch(
 # ---------------------------------------------------------------------------
 # arklint validate
 # ---------------------------------------------------------------------------
+
 
 @app.command()
 def validate(
@@ -260,6 +273,7 @@ def validate(
 # ---------------------------------------------------------------------------
 # arklint export
 # ---------------------------------------------------------------------------
+
 
 @app.command()
 def export(
@@ -290,7 +304,8 @@ def export(
       [bold]claude[/bold]       →  CLAUDE.md
       [bold]copilot[/bold]      →  .github/copilot-instructions.md
     """
-    from arklint.exporter import export as do_export, SUPPORTED_FORMATS
+    from arklint.exporter import SUPPORTED_FORMATS
+    from arklint.exporter import export as do_export
 
     if fmt not in SUPPORTED_FORMATS:
         err_console.print(
@@ -317,6 +332,7 @@ def export(
 # ---------------------------------------------------------------------------
 # arklint learn
 # ---------------------------------------------------------------------------
+
 
 @app.command()
 def learn(
@@ -360,7 +376,7 @@ def learn(
 
       arklint learn --describe "no raw SQL in routes" --provider openai
     """
-    from arklint.learner import suggest_rule, SUPPORTED_PROVIDERS
+    from arklint.learner import SUPPORTED_PROVIDERS, suggest_rule
 
     if provider not in SUPPORTED_PROVIDERS:
         err_console.print(
@@ -372,8 +388,7 @@ def learn(
     console.print(f"[dim]Generating rule via {provider}…[/dim]")
 
     try:
-        yaml_snippet = suggest_rule(
-            description=describe, provider=provider, api_key=api_key)
+        yaml_snippet = suggest_rule(description=describe, provider=provider, api_key=api_key)
     except ImportError as exc:
         err_console.print(f"[bold red]Missing dependency:[/bold red] {exc}")
         raise typer.Exit(1) from exc
@@ -418,14 +433,13 @@ def _find_config_path() -> Path:
         candidate = parent / ".arklint.yml"
         if candidate.exists():
             return candidate
-    raise FileNotFoundError(
-        "No .arklint.yml found. Run 'arklint init' to create one."
-    )
+    raise FileNotFoundError("No .arklint.yml found. Run 'arklint init' to create one.")
 
 
 # ---------------------------------------------------------------------------
 # arklint search
 # ---------------------------------------------------------------------------
+
 
 @app.command()
 def search(
@@ -436,7 +450,7 @@ def search(
     ),
 ) -> None:
     """Search available official rule packs."""
-    from arklint.packs import search_packs, PackError
+    from arklint.packs import PackError, search_packs
 
     try:
         results = search_packs(query)
@@ -455,12 +469,13 @@ def search(
             f"[dim]({pack.get('rules', '?')} rules)[/dim]\n"
             f"  {pack.get('description', '')}\n"
         )
-    console.print(f"[dim]Add a pack with: arklint add <name>[/dim]")
+    console.print("[dim]Add a pack with: arklint add <name>[/dim]")
 
 
 # ---------------------------------------------------------------------------
 # arklint add
 # ---------------------------------------------------------------------------
+
 
 @app.command()
 def add(
@@ -477,7 +492,7 @@ def add(
     ),
 ) -> None:
     """Add an official rule pack to your .arklint.yml."""
-    from arklint.packs import resolve_pack, PackError
+    from arklint.packs import PackError, resolve_pack
 
     # resolve and validate config path
     try:
@@ -493,19 +508,16 @@ def add(
     try:
         raw_cfg = yaml.safe_load(cfg_path.read_text())
     except yaml.YAMLError as exc:
-        err_console.print(
-            f"[bold red]Invalid YAML in config:[/bold red] {exc}")
+        err_console.print(f"[bold red]Invalid YAML in config:[/bold red] {exc}")
         raise typer.Exit(1) from exc
 
     if not isinstance(raw_cfg, dict):
-        err_console.print(
-            "[bold red]Config error:[/bold red] .arklint.yml must be a YAML mapping.")
+        err_console.print("[bold red]Config error:[/bold red] .arklint.yml must be a YAML mapping.")
         raise typer.Exit(1)
 
     extends: list = raw_cfg.get("extends", [])
     if not isinstance(extends, list):
-        err_console.print(
-            "[bold red]Config error:[/bold red] 'extends' must be a list.")
+        err_console.print("[bold red]Config error:[/bold red] 'extends' must be a list.")
         raise typer.Exit(1)
 
     if pack in extends:
@@ -522,8 +534,7 @@ def add(
 
     # safe YAML rewrite - no text surgery
     raw_cfg["extends"] = extends + [pack]
-    cfg_path.write_text(
-        yaml.dump(raw_cfg, default_flow_style=False, sort_keys=False))
+    cfg_path.write_text(yaml.dump(raw_cfg, default_flow_style=False, sort_keys=False))
 
     console.print(
         f"[bold green]✓ Added[/bold green] [cyan]{pack}[/cyan] "
@@ -535,6 +546,7 @@ def add(
 # ---------------------------------------------------------------------------
 # arklint mcp
 # ---------------------------------------------------------------------------
+
 
 @app.command()
 def mcp(
@@ -561,6 +573,7 @@ def mcp(
 # ---------------------------------------------------------------------------
 # arklint visualize
 # ---------------------------------------------------------------------------
+
 
 @app.command()
 def visualize(
@@ -594,8 +607,7 @@ def visualize(
 
     if output:
         output.write_text(diagram)
-        console.print(
-            f"[bold green]✓[/bold green] Diagram written to [cyan]{output}[/cyan]")
+        console.print(f"[bold green]✓[/bold green] Diagram written to [cyan]{output}[/cyan]")
     else:
         console.print(diagram)
 
@@ -603,6 +615,7 @@ def visualize(
 # ---------------------------------------------------------------------------
 # --version flag (attached to the root callback)
 # ---------------------------------------------------------------------------
+
 
 @app.callback(invoke_without_command=True)
 def _root(
@@ -621,6 +634,7 @@ def _root(
 # ---------------------------------------------------------------------------
 # JSON output helper
 # ---------------------------------------------------------------------------
+
 
 def _check_json(cfg, files, scan_root, strict: bool, diff_base: str | None = None) -> None:
     import json
@@ -657,6 +671,7 @@ def _check_json(cfg, files, scan_root, strict: bool, diff_base: str | None = Non
 # ---------------------------------------------------------------------------
 # Entrypoint
 # ---------------------------------------------------------------------------
+
 
 def main() -> None:
     app()

@@ -5,7 +5,6 @@ from pathlib import Path
 
 import pathspec
 
-
 DEFAULT_EXCLUDES = [
     ".git",
     ".venv",
@@ -49,6 +48,7 @@ def collect_diff_files(root: Path, base: str = "HEAD") -> list[Path]:
     Runs ``git diff --name-only <base>`` plus ``git diff --name-only`` (staged)
     so both staged and unstaged changes are included.
     """
+
     def _git(*args: str) -> list[str]:
         try:
             result = subprocess.run(
@@ -57,7 +57,7 @@ def collect_diff_files(root: Path, base: str = "HEAD") -> list[Path]:
                 text=True,
                 check=True,
             )
-            return [l for l in result.stdout.splitlines() if l.strip()]
+            return [line for line in result.stdout.splitlines() if line.strip()]
         except subprocess.CalledProcessError:
             return []
 

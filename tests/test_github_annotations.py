@@ -1,9 +1,9 @@
 """Tests for --github-annotations flag on arklint check."""
-import textwrap
+
 import tempfile
+import textwrap
 from pathlib import Path
 
-import pytest
 from typer.testing import CliRunner
 
 from arklint.cli import app
@@ -21,7 +21,9 @@ def _make_project(code: str) -> tuple[Path, Path]:
     scan_dir = Path(tempfile.mkdtemp())
 
     cfg = cfg_dir / ".arklint.yml"
-    cfg.write_text(textwrap.dedent("""\
+    cfg.write_text(
+        textwrap.dedent(
+            """\
         version: "1"
         rules:
           - id: no-print
@@ -34,7 +36,9 @@ def _make_project(code: str) -> tuple[Path, Path]:
             description: No debug-only markers
             pattern: "__debug_only__"
             severity: error
-    """))
+    """
+        )
+    )
     (scan_dir / "main.py").write_text(code)
     return cfg, scan_dir
 
@@ -89,8 +93,6 @@ class TestGithubAnnotations:
 
     def test_without_flag_no_annotations(self):
         cfg, scan_dir = _make_project('print("hello")\n')
-        result = runner.invoke(
-            app, ["check", str(scan_dir), "--config", str(cfg)]
-        )
+        result = runner.invoke(app, ["check", str(scan_dir), "--config", str(cfg)])
         assert "::warning" not in result.output
         assert "::error" not in result.output

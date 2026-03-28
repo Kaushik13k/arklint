@@ -1,14 +1,18 @@
 from __future__ import annotations
 
-import sys
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
 import yaml
 
-
-VALID_RULE_TYPES = {"boundary", "dependency", "file-pattern", "pattern-ban", "layer-boundary"}
+VALID_RULE_TYPES = {
+    "boundary",
+    "dependency",
+    "file-pattern",
+    "pattern-ban",
+    "layer-boundary",
+}
 VALID_SEVERITIES = {"error", "warning"}
 
 
@@ -37,7 +41,7 @@ def load_config(path: Path | None = None) -> ArklintConfig:
         path = _find_config()
 
     if not path.exists():
-        raise ConfigError(f"No .arklint.yml found. Run 'arklint init' to create one.")
+        raise ConfigError("No .arklint.yml found. Run 'arklint init' to create one.")
 
     try:
         with open(path) as f:
@@ -117,11 +121,12 @@ def _parse_rule(raw: Any, index: int) -> RuleConfig:
     severity = raw.get("severity", "error")
     if severity not in VALID_SEVERITIES:
         raise ConfigError(
-            f"Rule '{rule_id}' has invalid severity '{severity}'. "
-            f"Use 'error' or 'warning'."
+            f"Rule '{rule_id}' has invalid severity '{severity}'. Use 'error' or 'warning'."
         )
 
-    return RuleConfig(id=rule_id, type=rule_type, description=description, severity=severity, raw=raw)
+    return RuleConfig(
+        id=rule_id, type=rule_type, description=description, severity=severity, raw=raw
+    )
 
 
 def _find_config() -> Path:

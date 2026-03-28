@@ -11,14 +11,16 @@ Example config::
         - "psycopg2"
       severity: error
 """
+
 from __future__ import annotations
 
 from pathlib import Path
 
 import pathspec
 
-from .base import BaseRule, Violation
 from arklint.parsers.imports import extract_imports
+
+from .base import BaseRule, Violation
 
 
 class BoundaryRule(BaseRule):
@@ -27,11 +29,9 @@ class BoundaryRule(BaseRule):
     def check(self, files: list[Path]) -> list[Violation]:
         raw = self.config.raw
         source_globs: list[str] = (
-            [raw["source"]] if isinstance(
-                raw.get("source"), str) else raw.get("source", [])
+            [raw["source"]] if isinstance(raw.get("source"), str) else raw.get("source", [])
         )
-        blocked: list[str] = [b.lower()
-                              for b in raw.get("blocked_imports", [])]
+        blocked: list[str] = [b.lower() for b in raw.get("blocked_imports", [])]
 
         if not source_globs or not blocked:
             return []

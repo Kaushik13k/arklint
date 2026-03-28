@@ -1,9 +1,8 @@
 """Tests for the language-aware import extractor (all 8 languages)."""
+
 from __future__ import annotations
 
 from pathlib import Path
-
-import pytest
 
 from arklint.parsers.imports import extract_imports
 
@@ -15,6 +14,7 @@ def _file(tmp_path: Path, name: str, content: str) -> Path:
 
 
 # ── Python ────────────────────────────────────────────────────────────────────
+
 
 class TestPython:
     def test_simple_import(self, tmp_path):
@@ -51,6 +51,7 @@ class TestPython:
 
 # ── JavaScript / TypeScript ───────────────────────────────────────────────────
 
+
 class TestJavaScript:
     def test_esm_import(self, tmp_path):
         f = _file(tmp_path, "f.js", "import React from 'react';\n")
@@ -69,8 +70,7 @@ class TestJavaScript:
         assert "lodash" in extract_imports(f)
 
     def test_typescript_file(self, tmp_path):
-        f = _file(tmp_path, "f.ts",
-                  "import { Component } from '@angular/core';\n")
+        f = _file(tmp_path, "f.ts", "import { Component } from '@angular/core';\n")
         assert "@angular/core" in extract_imports(f)
 
     def test_tsx_file(self, tmp_path):
@@ -83,6 +83,7 @@ class TestJavaScript:
 
 
 # ── Go ────────────────────────────────────────────────────────────────────────
+
 
 class TestGo:
     def test_single_import(self, tmp_path):
@@ -106,6 +107,7 @@ class TestGo:
 
 # ── Ruby ──────────────────────────────────────────────────────────────────────
 
+
 class TestRuby:
     def test_require(self, tmp_path):
         f = _file(tmp_path, "f.rb", "require 'rails'\n")
@@ -125,6 +127,7 @@ class TestRuby:
 
 
 # ── Rust ──────────────────────────────────────────────────────────────────────
+
 
 class TestRust:
     def test_use_statement(self, tmp_path):
@@ -146,14 +149,14 @@ class TestRust:
 
 # ── Java ──────────────────────────────────────────────────────────────────────
 
+
 class TestJava:
     def test_simple_import(self, tmp_path):
         f = _file(tmp_path, "f.java", "import java.util.List;\n")
         assert "java.util.List" in extract_imports(f)
 
     def test_static_import(self, tmp_path):
-        f = _file(tmp_path, "f.java",
-                  "import static org.junit.Assert.assertEquals;\n")
+        f = _file(tmp_path, "f.java", "import static org.junit.Assert.assertEquals;\n")
         assert "org.junit.Assert.assertEquals" in extract_imports(f)
 
     def test_wildcard_import(self, tmp_path):
@@ -166,6 +169,7 @@ class TestJava:
 
 
 # ── C# ────────────────────────────────────────────────────────────────────────
+
 
 class TestCSharp:
     def test_using_statement(self, tmp_path):
@@ -185,6 +189,7 @@ class TestCSharp:
 
 # ── PHP ───────────────────────────────────────────────────────────────────────
 
+
 class TestPHP:
     def test_use_statement(self, tmp_path):
         f = _file(tmp_path, "f.php", "use Illuminate\\Support\\Facades\\DB;\n")
@@ -200,6 +205,7 @@ class TestPHP:
 
 
 # ── Unknown extension ─────────────────────────────────────────────────────────
+
 
 class TestUnknownExtension:
     def test_unknown_extension_returns_empty(self, tmp_path):

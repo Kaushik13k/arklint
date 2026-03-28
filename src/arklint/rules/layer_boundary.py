@@ -18,14 +18,16 @@ Example config::
         repositories: []
       severity: error
 """
+
 from __future__ import annotations
 
 from pathlib import Path
 
 import pathspec
 
-from .base import BaseRule, Violation
 from arklint.parsers.imports import extract_imports
+
+from .base import BaseRule, Violation
 
 
 class LayerBoundaryRule(BaseRule):
@@ -34,8 +36,7 @@ class LayerBoundaryRule(BaseRule):
     def check(self, files: list[Path]) -> list[Violation]:
         raw = self.config.raw
         layers_config: list[dict] = raw.get("layers", [])
-        allowed_deps: dict[str, list[str]] = raw.get(
-            "allowed_dependencies", {})
+        allowed_deps: dict[str, list[str]] = raw.get("allowed_dependencies", {})
 
         if not layers_config:
             return []
@@ -44,8 +45,7 @@ class LayerBoundaryRule(BaseRule):
         layer_specs: dict[str, pathspec.PathSpec] = {
             layer["name"]: pathspec.PathSpec.from_lines(
                 "gitignore",
-                [layer["path"]] if isinstance(
-                    layer["path"], str) else layer["path"],
+                [layer["path"]] if isinstance(layer["path"], str) else layer["path"],
             )
             for layer in layers_config
             if layer.get("name") and layer.get("path")
@@ -92,6 +92,7 @@ class LayerBoundaryRule(BaseRule):
 # ---------------------------------------------------------------------------
 # Helpers (module-level to keep the class small)
 # ---------------------------------------------------------------------------
+
 
 def _match_layer(rel_path: str, specs: dict[str, pathspec.PathSpec]) -> str | None:
     for name, spec in specs.items():

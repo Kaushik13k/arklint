@@ -3,7 +3,6 @@ from pathlib import Path
 from arklint.config import RuleConfig
 from arklint.rules.dependency import DependencyRule
 
-
 FIXTURES = Path(__file__).parent.parent / "fixtures"
 
 
@@ -15,8 +14,11 @@ def make_rule(root: Path, allow_only_one_of: list[str]) -> DependencyRule:
         "severity": "error",
     }
     cfg = RuleConfig(
-        id="single-http-client", type="dependency",
-        description="One HTTP client", severity="error", raw=raw
+        id="single-http-client",
+        type="dependency",
+        description="One HTTP client",
+        severity="error",
+        raw=raw,
     )
     return DependencyRule(cfg, root=root)
 

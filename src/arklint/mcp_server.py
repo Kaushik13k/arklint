@@ -12,6 +12,7 @@ An AI agent that connects to this server can:
   - check_file        → validate an existing file against all rules
   - check_snippet     → validate a code snippet before writing it to disk
 """
+
 from __future__ import annotations
 
 import json
@@ -183,7 +184,11 @@ def create_server(config_path: Path | None = None) -> "FastMCP":
             violations = _collect_violations(results)
 
             return json.dumps(
-                {"filename": filename, "violations": violations, "passed": not violations},
+                {
+                    "filename": filename,
+                    "violations": violations,
+                    "passed": not violations,
+                },
                 indent=2,
             )
         finally:

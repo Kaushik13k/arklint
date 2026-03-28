@@ -9,6 +9,7 @@ Usage
 Call :func:`suggest_rule` with a plain-English description of what you want
 to enforce and it returns a YAML snippet ready to paste into .arklint.yml.
 """
+
 from __future__ import annotations
 
 import os
@@ -20,7 +21,8 @@ _ANTHROPIC_MODEL = "claude-haiku-4-5-20251001"
 _OPENAI_MODEL = "gpt-4o-mini"
 _MAX_TOKENS = 512
 
-SYSTEM_PROMPT = textwrap.dedent("""\
+SYSTEM_PROMPT = textwrap.dedent(
+    """\
     You are an expert software architect helping users define architectural
     rules for their codebase using the arklint tool.
 
@@ -54,7 +56,8 @@ SYSTEM_PROMPT = textwrap.dedent("""\
       description: Use structured logging instead of print()
       pattern: 'print\\('
       severity: warning
-""")
+"""
+)
 
 
 def suggest_rule(
@@ -101,12 +104,11 @@ def suggest_rule(
 # Provider implementations
 # ---------------------------------------------------------------------------
 
+
 def _validate_response(raw: str, provider: str) -> str:
     raw = raw.strip()
     if not raw.startswith("- id:"):
-        raise RuntimeError(
-            f"Unexpected response from {provider} API:\n{raw}"
-        )
+        raise RuntimeError(f"Unexpected response from {provider} API:\n{raw}")
     return raw
 
 

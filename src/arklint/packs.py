@@ -38,11 +38,7 @@ def resolve_pack(ref: str, config_root: Path) -> list[dict[str, Any]]:
 
     # Detect local paths: relative prefixes, absolute POSIX, or absolute Windows
     ref_path = Path(ref)
-    is_local = (
-        ref.startswith("./")
-        or ref.startswith("../")
-        or ref_path.is_absolute()
-    )
+    is_local = ref.startswith("./") or ref.startswith("../") or ref_path.is_absolute()
     if is_local:
         return _load_local(ref, config_root)
     return _load_named(ref)
@@ -79,7 +75,8 @@ def search_packs(query: str) -> list[dict[str, Any]]:
     registry = fetch_registry()
     q = query.lower()
     return [
-        p for p in registry.get("packs", [])
+        p
+        for p in registry.get("packs", [])
         if q in p.get("name", "").lower()
         or q in p.get("description", "").lower()
         or any(q in t.lower() for t in p.get("tags", []))
@@ -93,6 +90,7 @@ def list_all_packs() -> list[dict[str, Any]]:
 
 
 # ── private helpers ──────────────────────────────────────────────────────────
+
 
 def _load_local(ref: str, config_root: Path) -> list[dict[str, Any]]:
     path = Path(ref) if Path(ref).is_absolute() else (config_root / ref).resolve()
@@ -124,8 +122,7 @@ def _load_named(name: str) -> list[dict[str, Any]]:
             content = resp.read().decode()
     except (urllib.error.URLError, OSError) as exc:
         raise PackError(
-            f"Could not fetch pack '{name}'. "
-            f"Run 'arklint search' to see available packs.\n{exc}"
+            f"Could not fetch pack '{name}'. Run 'arklint search' to see available packs.\n{exc}"
         ) from exc
 
     # Validate before writing to cache

@@ -3,6 +3,7 @@
 Orchestrates running every configured rule against the collected file list and
 returns a structured result for each rule.
 """
+
 from __future__ import annotations
 
 from dataclasses import dataclass, field

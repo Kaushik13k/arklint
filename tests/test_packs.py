@@ -1,13 +1,13 @@
 """Tests for packs.py (extends system) and the search/add CLI commands."""
+
 from __future__ import annotations
 
 import textwrap
+import urllib.error
 from pathlib import Path
 from unittest.mock import MagicMock, patch
-import urllib.error
 
 import pytest
-import yaml
 from typer.testing import CliRunner
 
 from arklint.cli import app
@@ -23,7 +23,8 @@ runner = CliRunner()
 
 # ── helpers ───────────────────────────────────────────────────────────────────
 
-SIMPLE_PACK = textwrap.dedent("""\
+SIMPLE_PACK = textwrap.dedent(
+    """\
     name: test/simple
     version: "1"
     rules:
@@ -32,7 +33,8 @@ SIMPLE_PACK = textwrap.dedent("""\
         description: No print statements
         pattern: 'print\\('
         severity: warning
-""")
+"""
+)
 
 REGISTRY_DATA = {
     "packs": [
@@ -60,11 +62,11 @@ def _make_local_pack(tmp_path: Path, content: str = SIMPLE_PACK) -> Path:
 
 # ── _extract_rules ────────────────────────────────────────────────────────────
 
+
 class TestExtractRules:
     def test_returns_rules_list(self):
         data = {"rules": [{"id": "r1", "type": "pattern-ban"}]}
-        assert _extract_rules(data, "ref") == [
-            {"id": "r1", "type": "pattern-ban"}]
+        assert _extract_rules(data, "ref") == [{"id": "r1", "type": "pattern-ban"}]
 
     def test_empty_rules(self):
         assert _extract_rules({"rules": []}, "ref") == []
@@ -83,6 +85,7 @@ class TestExtractRules:
 
 
 # ── resolve_pack - local ──────────────────────────────────────────────────────
+
 
 class TestResolvePackLocal:
     def test_loads_local_pack(self, tmp_path):
@@ -116,6 +119,7 @@ class TestResolvePackLocal:
 
 # ── resolve_pack - named (mocked network) ────────────────────────────────────
 
+
 class TestResolvePackNamed:
     def test_fetches_named_pack(self, tmp_path):
         mock_resp = MagicMock()
@@ -123,16 +127,23 @@ class TestResolvePackNamed:
         mock_resp.__enter__ = lambda s: s
         mock_resp.__exit__ = MagicMock(return_value=False)
 
-        with patch("arklint.packs.urllib.request.urlopen", return_value=mock_resp), \
-                patch("arklint.packs.PACKS_CACHE_DIR", tmp_path):
+        with (
+            patch("arklint.packs.urllib.request.urlopen", return_value=mock_resp),
+            patch("arklint.packs.PACKS_CACHE_DIR", tmp_path),
+        ):
             rules = resolve_pack("arklint/fastapi", tmp_path)
 
         assert len(rules) == 1
         assert rules[0]["id"] == "test/no-print"
 
     def test_network_failure_raises(self, tmp_path):
-        with patch("arklint.packs.urllib.request.urlopen", side_effect=urllib.error.URLError("timeout")), \
-                patch("arklint.packs.PACKS_CACHE_DIR", tmp_path):
+        with (
+            patch(
+                "arklint.packs.urllib.request.urlopen",
+                side_effect=urllib.error.URLError("timeout"),
+            ),
+            patch("arklint.packs.PACKS_CACHE_DIR", tmp_path),
+        ):
             with pytest.raises(PackError, match="Could not fetch pack"):
                 resolve_pack("arklint/fastapi", tmp_path)
 
@@ -147,6 +158,7 @@ class TestResolvePackNamed:
 
 
 # ── search_packs ──────────────────────────────────────────────────────────────
+
 
 class TestSearchPacks:
     def test_search_matches_name(self):
@@ -179,25 +191,33 @@ class TestSearchPacks:
 
 # ── extends in config ─────────────────────────────────────────────────────────
 
+
 class TestExtendsConfig:
     def test_extends_loads_pack_rules(self, tmp_path):
         pack_file = _make_local_pack(tmp_path)
         cfg_file = tmp_path / ".arklint.yml"
-        cfg_file.write_text(textwrap.dedent(f"""\
+        cfg_file.write_text(
+            textwrap.dedent(
+                f"""\
             version: "1"
             extends:
               - ./{pack_file.name}
             rules: []
-        """))
+        """
+            )
+        )
 
         from arklint.config import load_config
+
         cfg = load_config(cfg_file)
         assert any(r.id == "test/no-print" for r in cfg.rules)
 
     def test_local_rules_override_extended(self, tmp_path):
         pack_file = _make_local_pack(tmp_path)
         cfg_file = tmp_path / ".arklint.yml"
-        cfg_file.write_text(textwrap.dedent(f"""\
+        cfg_file.write_text(
+            textwrap.dedent(
+                f"""\
             version: "1"
             extends:
               - ./{pack_file.name}
@@ -207,9 +227,12 @@ class TestExtendsConfig:
                 description: Overridden locally
                 pattern: 'print\\('
                 severity: error
-        """))
+        """
+            )
+        )
 
         from arklint.config import load_config
+
         cfg = load_config(cfg_file)
         # only one rule with this id
         matching = [r for r in cfg.rules if r.id == "test/no-print"]
@@ -218,32 +241,44 @@ class TestExtendsConfig:
 
     def test_extends_not_list_raises(self, tmp_path):
         cfg_file = tmp_path / ".arklint.yml"
-        cfg_file.write_text(textwrap.dedent("""\
+        cfg_file.write_text(
+            textwrap.dedent(
+                """\
             version: "1"
             extends: "not-a-list"
             rules: []
-        """))
+        """
+            )
+        )
 
-        from arklint.config import load_config, ConfigError
+        from arklint.config import ConfigError, load_config
+
         with pytest.raises(ConfigError, match="'extends' must be a list"):
             load_config(cfg_file)
 
     def test_bad_pack_ref_raises_config_error(self, tmp_path):
         cfg_file = tmp_path / ".arklint.yml"
-        cfg_file.write_text(textwrap.dedent("""\
+        cfg_file.write_text(
+            textwrap.dedent(
+                """\
             version: "1"
             extends:
               - ./nonexistent.yml
             rules: []
-        """))
+        """
+            )
+        )
 
-        from arklint.config import load_config, ConfigError
+        from arklint.config import ConfigError, load_config
+
         with pytest.raises(ConfigError, match="Failed to load pack"):
             load_config(cfg_file)
 
     def test_no_extends_still_works(self, tmp_path):
         cfg_file = tmp_path / ".arklint.yml"
-        cfg_file.write_text(textwrap.dedent("""\
+        cfg_file.write_text(
+            textwrap.dedent(
+                """\
             version: "1"
             rules:
               - id: my-rule
@@ -251,14 +286,18 @@ class TestExtendsConfig:
                 description: Test
                 pattern: 'foo'
                 severity: warning
-        """))
+        """
+            )
+        )
 
         from arklint.config import load_config
+
         cfg = load_config(cfg_file)
         assert len(cfg.rules) == 1
 
 
 # ── CLI: arklint search ───────────────────────────────────────────────────────
+
 
 class TestSearchCommand:
     def test_search_shows_results(self):
@@ -282,13 +321,15 @@ class TestSearchCommand:
 
 # ── _urlopen SSL fallback ─────────────────────────────────────────────────────
 
+
 class TestUrlOpenSSLFallback:
     def test_retries_with_unverified_context_on_ssl_error(self):
         ssl_error = urllib.error.URLError("CERTIFICATE_VERIFY_FAILED")
         mock_resp = MagicMock()
 
-        with patch("arklint.packs.urllib.request.urlopen",
-                   side_effect=[ssl_error, mock_resp]) as mock_open:
+        with patch(
+            "arklint.packs.urllib.request.urlopen", side_effect=[ssl_error, mock_resp]
+        ) as mock_open:
             result = _urlopen("https://example.com")
 
         assert result is mock_resp
@@ -298,8 +339,10 @@ class TestUrlOpenSSLFallback:
         assert "context" in kwargs
 
     def test_raises_on_non_ssl_error(self):
-        with patch("arklint.packs.urllib.request.urlopen",
-                   side_effect=urllib.error.URLError("timeout")):
+        with patch(
+            "arklint.packs.urllib.request.urlopen",
+            side_effect=urllib.error.URLError("timeout"),
+        ):
             with pytest.raises(urllib.error.URLError):
                 _urlopen("https://example.com")
 
@@ -312,16 +355,22 @@ class TestUrlOpenSSLFallback:
 
 # ── CLI: arklint add ──────────────────────────────────────────────────────────
 
+
 class TestAddCommand:
     def test_add_pack_to_config(self, tmp_path):
         pack_file = _make_local_pack(tmp_path)
         cfg_file = tmp_path / ".arklint.yml"
         cfg_file.write_text("version: '1'\nrules: []\n")
 
-        result = runner.invoke(app, [
-            "add", f"./{pack_file.name}",
-            "--config", str(cfg_file),
-        ])
+        result = runner.invoke(
+            app,
+            [
+                "add",
+                f"./{pack_file.name}",
+                "--config",
+                str(cfg_file),
+            ],
+        )
         assert result.exit_code == 0
         content = cfg_file.read_text()
         assert pack_file.name in content
@@ -329,20 +378,28 @@ class TestAddCommand:
     def test_add_already_present(self, tmp_path):
         pack_file = _make_local_pack(tmp_path)
         cfg_file = tmp_path / ".arklint.yml"
-        cfg_file.write_text(
-            f"version: '1'\nextends:\n  - ./{pack_file.name}\nrules: []\n"
-        )
+        cfg_file.write_text(f"version: '1'\nextends:\n  - ./{pack_file.name}\nrules: []\n")
 
-        result = runner.invoke(app, [
-            "add", f"./{pack_file.name}",
-            "--config", str(cfg_file),
-        ])
+        result = runner.invoke(
+            app,
+            [
+                "add",
+                f"./{pack_file.name}",
+                "--config",
+                str(cfg_file),
+            ],
+        )
         assert result.exit_code == 0
         assert "already in extends" in result.output
 
     def test_add_missing_config(self, tmp_path):
-        result = runner.invoke(app, [
-            "add", "arklint/fastapi",
-            "--config", str(tmp_path / ".arklint.yml"),
-        ])
+        result = runner.invoke(
+            app,
+            [
+                "add",
+                "arklint/fastapi",
+                "--config",
+                str(tmp_path / ".arklint.yml"),
+            ],
+        )
         assert result.exit_code == 1

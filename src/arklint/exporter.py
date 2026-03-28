@@ -6,6 +6,7 @@ cursorrules  →  .cursorrules           (Cursor IDE)
 claude       →  CLAUDE.md              (Claude Code)
 copilot      →  .github/copilot-instructions.md  (GitHub Copilot)
 """
+
 from __future__ import annotations
 
 from pathlib import Path
@@ -18,6 +19,7 @@ SUPPORTED_FORMATS = ("cursorrules", "claude", "copilot")
 # ---------------------------------------------------------------------------
 # Public API
 # ---------------------------------------------------------------------------
+
 
 def export(cfg: ArklintConfig, fmt: str, output_dir: Path) -> Path:
     """Render *cfg* rules into the file for *fmt* inside *output_dir*.
@@ -34,6 +36,7 @@ def export(cfg: ArklintConfig, fmt: str, output_dir: Path) -> Path:
 # ---------------------------------------------------------------------------
 # Rendering
 # ---------------------------------------------------------------------------
+
 
 def _render(cfg: ArklintConfig, fmt: str) -> str:
     rules = cfg.rules
@@ -97,6 +100,7 @@ def _render_copilot(rules: list[RuleConfig]) -> str:
 # ---------------------------------------------------------------------------
 # Destination paths
 # ---------------------------------------------------------------------------
+
 
 def _dest_path(output_dir: Path, fmt: str) -> Path:
     if fmt == "cursorrules":

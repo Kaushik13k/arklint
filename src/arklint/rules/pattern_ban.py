@@ -11,6 +11,7 @@ Example config::
         - "scripts/**"
       severity: warning
 """
+
 from __future__ import annotations
 
 import re
@@ -18,8 +19,9 @@ from pathlib import Path
 
 import pathspec
 
-from .base import BaseRule, Violation
 from arklint.parsers.patterns import scan_pattern
+
+from .base import BaseRule, Violation
 
 
 class PatternBanRule(BaseRule):
@@ -40,10 +42,7 @@ class PatternBanRule(BaseRule):
                 f"Rule '{self.config.id}': invalid regex pattern {pattern!r}: {exc}"
             ) from exc
 
-        exclude_spec = (
-            pathspec.PathSpec.from_lines(
-                "gitignore", excludes) if excludes else None
-        )
+        exclude_spec = pathspec.PathSpec.from_lines("gitignore", excludes) if excludes else None
 
         violations: list[Violation] = []
         for file in files:

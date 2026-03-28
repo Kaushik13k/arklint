@@ -1,9 +1,8 @@
 import psycopg2
-import requests
 
 print("Loading orders route...")
 
 
 def get_orders():
-    conn = psycopg2.connect("dbname=mydb")
+    conn = psycopg2.connect("dbname=mydb")  # noqa: F841
     return []
