@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Arklint — The Architectural Rulebook for Your Codebase</title>
+<title>Arklint - The Architectural Rulebook for Your Codebase</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#fff;--bg-s:#f8f9fb;--bg-code:#1b1b1f;--bg-ci:#f1f3f5;--border:#e5e7eb;--border-l:#f0f1f3;--text:#111827;--text-s:#4b5563;--text-t:#9ca3af;--accent:#059669;--accent-l:#ecfdf5;--accent-b:#a7f3d0;--accent-d:#047857;--mono:'JetBrains Mono',ui-monospace,monospace;--sans:'Inter',-apple-system,sans-serif;--sidebar-w:240px;--max:820px;--ease:cubic-bezier(.16,1,.3,1)}
@@ -93,8 +94,9 @@ code.i{font-family:var(--mono);font-size:12.5px;background:var(--bg-ci);padding:
 .ct tr:last-child td{border-bottom:none}
 
 /* TIP */
-.tip{background:var(--accent-l);border:1px solid var(--accent-b);border-radius:8px;padding:14px 18px;font-size:13.5px;color:var(--accent-d);line-height:1.6;margin-bottom:24px;display:flex;align-items:flex-start;gap:10px}
+.tip{background:var(--accent-l);border:1px solid var(--accent-b);border-radius:8px;padding:14px 18px;font-size:13.5px;color:var(--accent-d);line-height:1.6;margin-bottom:24px;display:flex;align-items:flex-start;gap:10px;overflow:hidden}
 .tip svg{flex-shrink:0;margin-top:2px}
+.tip-body{min-width:0;overflow-wrap:break-word;word-break:break-word;flex:1}
 
 /* CI GRID */
 .ci-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
@@ -152,7 +154,7 @@ code.i{font-family:var(--mono);font-size:12.5px;background:var(--bg-ci);padding:
 <div class="topbar"><div class="topbar-inner">
   <div style="display:flex;align-items:center;gap:16px">
     <button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')" aria-label="Menu"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>
-    <a href="#" class="topbar-logo"><span class="icon">A</span> Arklint</a>
+    <a href="#" class="topbar-logo"><svg width="28" height="28" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" style="border-radius:6px;flex-shrink:0"><defs><clipPath id="tl-lh"><rect x="0" y="0" width="32" height="64"/></clipPath><clipPath id="tl-rh"><rect x="32" y="0" width="32" height="64"/></clipPath><mask id="tl-km"><polygon points="11,10 53,10 53,31 32,55 11,31" fill="white"/></mask></defs><rect width="64" height="64" rx="13" fill="#0f172a"/><g mask="url(#tl-km)" clip-path="url(#tl-lh)"><rect x="0" y="10" width="64" height="12" fill="#ffffff"/><rect x="0" y="22" width="64" height="33" fill="#34d399"/></g><polygon points="11,10 53,10 53,31 32,55 11,31" fill="none" stroke="white" stroke-width="6" stroke-linejoin="round" clip-path="url(#tl-rh)" opacity="0.6"/><polygon points="11,10 53,10 53,31 32,55 11,31" fill="none" stroke="white" stroke-width="2" stroke-linejoin="round" opacity="0.15"/></svg> Arklint</a>
   </div>
   <div class="topbar-right">
     <a href="https://pypi.org/project/arklint/">PyPI</a>
@@ -214,7 +216,7 @@ code.i{font-family:var(--mono);font-size:12.5px;background:var(--bg-ci);padding:
 <section class="hero" id="overview">
   <div class="hero-version"><span class="dot"></span> v0.5.1</div>
   <h1>Arklint</h1>
-  <p class="hero-tagline">Enforce import boundaries, dependency rules, and layer constraints across your codebase. Define your architecture in YAML — Arklint checks it automatically, before violations ever reach main.</p>
+  <p class="hero-tagline">Enforce import boundaries, dependency rules, and layer constraints across your codebase. Define your architecture in YAML - Arklint checks it automatically, before violations ever reach main.</p>
   <div class="features">
     <div class="fp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Prevention, not detection</div>
     <div class="fp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>Language-agnostic</div>
@@ -283,14 +285,14 @@ code.i{font-family:var(--mono);font-size:12.5px;background:var(--bg-ci);padding:
   <div class="cb-h"><span class="l">Terminal</span><span class="r">~/my-project</span></div>
   <pre><span class="p">$ </span><span class="cmd">arklint check</span>
 
-<span class="dim">Arklint v0.5.1 — Scanning 142 files against 5 rules...</span>
+<span class="dim">Arklint v0.5.1 - Scanning 142 files against 5 rules...</span>
 
   <span class="fail">✗ FAIL</span>  <span class="rule">no-direct-db-in-routes</span>
-         <span class="dim">routes/users.py → imports 'sqlalchemy' — blocked</span>
-         <span class="dim">routes/orders.py → imports 'psycopg2' — blocked</span>
+         <span class="dim">routes/users.py → imports 'sqlalchemy' - blocked</span>
+         <span class="dim">routes/orders.py → imports 'psycopg2' - blocked</span>
 
   <span class="fail">✗ FAIL</span>  <span class="rule">single-http-client</span>
-         <span class="dim">conflicting packages — keep one of requests, httpx</span>
+         <span class="dim">conflicting packages - keep one of requests, httpx</span>
 
   <span class="warn">⚠ WARN</span>  <span class="rule">no-print-statements</span>
          <span class="dim">services/email.py:45 → banned pattern: 'print('</span>

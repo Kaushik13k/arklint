@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <clipPath id="lh-fv"><rect x="0" y="0" width="32" height="64"/></clipPath>
+    <clipPath id="rh-fv"><rect x="32" y="0" width="32" height="64"/></clipPath>
+    <mask id="km-fv">
+      <polygon points="11,10 53,10 53,31 32,55 11,31" fill="white"/>
+    </mask>
+  </defs>
+  <rect width="64" height="64" rx="13" fill="#0f172a"/>
+  <g mask="url(#km-fv)" clip-path="url(#lh-fv)">
+    <rect x="0" y="10" width="64" height="12" fill="#ffffff"/>
+    <rect x="0" y="22" width="64" height="33" fill="#34d399"/>
+  </g>
+  <polygon points="11,10 53,10 53,31 32,55 11,31"
+           fill="none" stroke="white" stroke-width="6" stroke-linejoin="round"
+           clip-path="url(#rh-fv)" opacity="0.6"/>
+  <polygon points="11,10 53,10 53,31 32,55 11,31"
+           fill="none" stroke="white" stroke-width="2" stroke-linejoin="round" opacity="0.15"/>
+</svg>

@@ -1,6 +1,6 @@
 # Language Support
 
-Arklint is language-agnostic. Import extraction and dependency file parsing are built in for the most common languages and package managers — no plugins or configuration needed.
+Arklint is language-agnostic. Import extraction and dependency file parsing are built in for the most common languages and package managers - no plugins or configuration needed.
 
 ## Import extraction
 
@@ -33,6 +33,6 @@ Arklint reads dependency files to enforce `dependency` rules (e.g. "keep only on
 
 ## Language detection
 
-Arklint detects language from file extension automatically. No configuration needed — rules based on file paths (like `source: "routes/**"`) match regardless of the file's language.
+Arklint detects language from file extension automatically. No configuration needed - rules based on file paths (like `source: "routes/**"`) match regardless of the file's language.
 
-> **Missing a language?** Open an issue or pull request on [GitHub](https://github.com/Kaushik13k/ark-lint). See [Contributing](#contributing).
+> **Missing a language?** Open an issue or pull request on [GitHub](https://github.com/Kaushik13k/arklint). See [Contributing](#contributing).
