@@ -38,12 +38,12 @@ Run it once when you start coding and leave it in the background. Any violation 
 $ arklint watch ./src --strict
 Watching ./src for changes…  (Ctrl+C to stop)
 
-[12:34:01] Change detected — re-running checks…
+[12:34:01] Change detected - re-running checks…
 
   ✗ FAIL  no-direct-db-in-routes
-         routes/orders.py → imports 'psycopg2' — blocked
+         routes/orders.py → imports 'psycopg2' - blocked
 
-[12:34:09] Change detected — re-running checks…
+[12:34:09] Change detected - re-running checks…
 
   ✓ PASS  no-direct-db-in-routes
   ✓ PASS  no-print-statements

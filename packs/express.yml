@@ -1,5 +1,5 @@
 name: arklint/express
-description: Express.js patterns — enforces middleware/routes/controllers separation.
+description: Express.js patterns - enforces middleware/routes/controllers separation.
 version: "1"
 
 rules:
@@ -19,6 +19,6 @@ rules:
 
   - id: express/single-http-framework
     type: dependency
-    description: Use only one HTTP framework — mixing express and fastify causes confusion.
+    description: Use only one HTTP framework - mixing express and fastify causes confusion.
     allow_only_one_of: ["express", "fastify", "koa", "hapi"]
     severity: error

@@ -1,4 +1,4 @@
-"""Pattern-ban rule — forbid a regex pattern across the codebase.
+"""Pattern-ban rule - forbid a regex pattern across the codebase.
 
 Example config::
 
@@ -41,7 +41,8 @@ class PatternBanRule(BaseRule):
             ) from exc
 
         exclude_spec = (
-            pathspec.PathSpec.from_lines("gitignore", excludes) if excludes else None
+            pathspec.PathSpec.from_lines(
+                "gitignore", excludes) if excludes else None
         )
 
         violations: list[Violation] = []

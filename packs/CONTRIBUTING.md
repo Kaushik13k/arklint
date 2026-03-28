@@ -2,17 +2,17 @@
 
 Rule packs are shareable bundles of arklint rules for a specific framework, architecture pattern, or language convention. They live in `packs/` and are fetched automatically when a user runs `arklint add arklint/<name>`.
 
-Contributing a pack is the easiest way to contribute to arklint — **no Python required, just YAML.**
+Contributing a pack is the easiest way to contribute to arklint - **no Python required, just YAML.**
 
 ---
 
 ## What makes a good pack
 
-- **Focused** — one framework or pattern per pack (e.g. `fastapi`, not `python-everything`)
-- **Opinionated but safe** — rules should reflect widely-accepted best practices, not personal style
-- **Severity-appropriate** — use `error` only for things that will definitely break or cause security issues; use `warning` for things that are bad practice but not catastrophic
-- **Well-scoped** — avoid rules that fire on files they're not meant to check (use `exclude` and `source` carefully)
-- **Tested mentally** — before submitting, ask: "would this fire on a clean, well-structured project?"
+- **Focused** - one framework or pattern per pack (e.g. `fastapi`, not `python-everything`)
+- **Opinionated but safe** - rules should reflect widely-accepted best practices, not personal style
+- **Severity-appropriate** - use `error` only for things that will definitely break or cause security issues; use `warning` for things that are bad practice but not catastrophic
+- **Well-scoped** - avoid rules that fire on files they're not meant to check (use `exclude` and `source` carefully)
+- **Tested mentally** - before submitting, ask: "would this fire on a clean, well-structured project?"
 
 ---
 
@@ -98,7 +98,7 @@ rules:
 cp packs/fastapi.yml packs/<your-pack>.yml
 ```
 
-Edit it — use the format above. Name convention:
+Edit it - use the format above. Name convention:
 - File: `packs/<framework>.yml` (e.g. `packs/flask.yml`)
 - Pack name: `arklint/<framework>` (e.g. `arklint/flask`)
 - Rule IDs: `<framework>/<rule-slug>` (e.g. `flask/no-direct-db-in-views`)
@@ -167,13 +167,13 @@ arklint check
 
 Looking for something to contribute? These are wanted:
 
-- `arklint/flask` — Flask blueprint/model/service separation
-- `arklint/sqlalchemy` — model placement, session management
-- `arklint/celery` — task placement, no DB in tasks
-- `arklint/nestjs` — NestJS module/service/controller separation
-- `arklint/rails` — Rails MVC conventions
-- `arklint/gin` — Go Gin handler/service/repository layers
-- `arklint/microservices` — service boundary rules
+- `arklint/flask` - Flask blueprint/model/service separation
+- `arklint/sqlalchemy` - model placement, session management
+- `arklint/celery` - task placement, no DB in tasks
+- `arklint/nestjs` - NestJS module/service/controller separation
+- `arklint/rails` - Rails MVC conventions
+- `arklint/gin` - Go Gin handler/service/repository layers
+- `arklint/microservices` - service boundary rules
 
 ---
 

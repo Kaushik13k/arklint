@@ -17,7 +17,7 @@ from pathlib import Path
 
 _PYTHON_TEMPLATE = r"""version: "1"
 
-# Arklint — architectural rules for your Python project
+# Arklint - architectural rules for your Python project
 # Docs: https://arklintapp.com
 
 rules:
@@ -45,7 +45,7 @@ rules:
     severity: error
 
   # ── FILE-PATTERN ──────────────────────────────────────────────────────────
-  # Data models belong in models/ or schemas/ — nowhere else.
+  # Data models belong in models/ or schemas/ - nowhere else.
   - id: models-in-models-dir
     type: file-pattern
     description: "Data models must live in models/ or schemas/"
@@ -56,7 +56,7 @@ rules:
     severity: warning
 
   # ── PATTERN-BAN ───────────────────────────────────────────────────────────
-  # Use structured logging — never bare print().
+  # Use structured logging - never bare print().
   - id: no-print-statements
     type: pattern-ban
     description: "Use structured logging, not print()"
@@ -89,7 +89,7 @@ rules:
 
 _NODE_TEMPLATE = r"""version: "1"
 
-# Arklint — architectural rules for your Node / TypeScript project
+# Arklint - architectural rules for your Node / TypeScript project
 # Docs: https://arklintapp.com
 
 rules:
@@ -119,7 +119,7 @@ rules:
     severity: error
 
   # ── FILE-PATTERN ──────────────────────────────────────────────────────────
-  # Type definitions belong in types/ or models/ — not scattered around.
+  # Type definitions belong in types/ or models/ - not scattered around.
   - id: types-in-types-dir
     type: file-pattern
     description: "Shared types must live in types/ or models/"
@@ -132,7 +132,7 @@ rules:
     severity: warning
 
   # ── PATTERN-BAN ───────────────────────────────────────────────────────────
-  # Use a logger — never raw console.log in production code.
+  # Use a logger - never raw console.log in production code.
   - id: no-console-log
     type: pattern-ban
     description: "Use a structured logger, not console.log"
@@ -166,12 +166,12 @@ rules:
 
 _DOTNET_TEMPLATE = r"""version: "1"
 
-# Arklint — architectural rules for your .NET / C# project
+# Arklint - architectural rules for your .NET / C# project
 # Docs: https://arklintapp.com
 
 rules:
   # ── BOUNDARY ──────────────────────────────────────────────────────────────
-  # Controllers must not access the database directly — use repositories.
+  # Controllers must not access the database directly - use repositories.
   - id: no-direct-db-in-controllers
     type: boundary
     description: "Controllers must not reference DbContext or raw SQL directly"
@@ -193,7 +193,7 @@ rules:
     severity: error
 
   # ── FILE-PATTERN ──────────────────────────────────────────────────────────
-  # DTOs belong in Models/ or DTOs/ — not inside Controllers or Services.
+  # DTOs belong in Models/ or DTOs/ - not inside Controllers or Services.
   - id: dtos-in-models-dir
     type: file-pattern
     description: "DTO / model classes must live in Models/ or DTOs/"
@@ -205,7 +205,7 @@ rules:
     severity: warning
 
   # ── PATTERN-BAN ───────────────────────────────────────────────────────────
-  # Use ILogger — never raw Console.WriteLine in production code.
+  # Use ILogger - never raw Console.WriteLine in production code.
   - id: no-console-writeline
     type: pattern-ban
     description: "Use ILogger, not Console.WriteLine"
@@ -247,7 +247,8 @@ STARTER_TEMPLATE = _PYTHON_TEMPLATE
 def detect_template(directory: Path) -> tuple[str, str]:
     """Return (template_content, ecosystem_label) for *directory*."""
     files = {p.name for p in directory.iterdir() if p.is_file()}
-    csproj = any(p.suffix in (".csproj", ".sln") for p in directory.iterdir() if p.is_file())
+    csproj = any(p.suffix in (".csproj", ".sln")
+                 for p in directory.iterdir() if p.is_file())
 
     if "package.json" in files:
         return _NODE_TEMPLATE, "Node / TypeScript"

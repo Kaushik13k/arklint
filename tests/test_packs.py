@@ -82,7 +82,7 @@ class TestExtractRules:
             _extract_rules({"rules": "bad"}, "ref")
 
 
-# ── resolve_pack — local ──────────────────────────────────────────────────────
+# ── resolve_pack - local ──────────────────────────────────────────────────────
 
 class TestResolvePackLocal:
     def test_loads_local_pack(self, tmp_path):
@@ -114,7 +114,7 @@ class TestResolvePackLocal:
         assert len(rules) == 1
 
 
-# ── resolve_pack — named (mocked network) ────────────────────────────────────
+# ── resolve_pack - named (mocked network) ────────────────────────────────────
 
 class TestResolvePackNamed:
     def test_fetches_named_pack(self, tmp_path):

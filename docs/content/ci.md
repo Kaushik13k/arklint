@@ -4,7 +4,7 @@ Block architectural violations automatically on every push or commit.
 
 ## GitHub Actions
 
-The simplest setup — add Arklint to any existing workflow:
+The simplest setup - add Arklint to any existing workflow:
 
 ```yaml
 - name: Run Arklint
@@ -23,6 +23,8 @@ For large repos, use diff mode to only scan changed files:
 ```
 
 The `--github-annotations` flag emits inline PR annotations so violations appear directly on the changed lines in the pull request.
+
+> **Tip:** For faster installs, use the [GitHub Action](#action) directly - it handles caching and version pinning automatically.
 
 ## pre-commit hook
 

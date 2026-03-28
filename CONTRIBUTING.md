@@ -6,7 +6,7 @@ Thank you for your interest in contributing. This document explains how to get s
 
 ## Ground rules
 
-- Every change goes through a pull request — no direct pushes to `main`.
+- Every change goes through a pull request - no direct pushes to `main`.
 - Every PR needs at least one approval from a CODEOWNER before merging.
 - Every source change (`src/`) must be accompanied by a test in `tests/`.
 - All CI checks must be green before a PR can merge.
@@ -43,9 +43,9 @@ arklint check
    git checkout -b your-branch-name
    ```
 
-2. **Make your changes** — follow the existing code style (no external linters enforced beyond arklint itself).
+2. **Make your changes** - follow the existing code style (no external linters enforced beyond arklint itself).
 
-3. **Write tests** — every new behaviour and every bug fix needs a test under `tests/`.
+3. **Write tests** - every new behaviour and every bug fix needs a test under `tests/`.
 
 4. **Run CI locally** before pushing:
    ```bash
@@ -53,13 +53,13 @@ arklint check
    arklint check
    ```
 
-5. **Open a pull request** — the PR template will prompt you for what, why, and how it was tested. Fill it in.
+5. **Open a pull request** - the PR template will prompt you for what, why, and how it was tested. Fill it in.
 
 ---
 
 ## Pull request checklist
 
-The PR template includes this checklist — all items must be checked before review:
+The PR template includes this checklist - all items must be checked before review:
 
 - Tests added or updated for every change
 - `arklint check` passes locally
@@ -70,16 +70,16 @@ The PR template includes this checklist — all items must be checked before rev
 
 ## Contributing a rule pack
 
-Rule packs are the fastest way to contribute — no Python required, just YAML.
+Rule packs are the fastest way to contribute - no Python required, just YAML.
 
 A pack is a `.yml` file in `packs/` that bundles related rules for a specific framework or architecture pattern.
 
 **Quick steps:**
 1. Copy `packs/fastapi.yml` as a starting point
 2. Name your file `packs/<framework>.yml` (e.g. `packs/flask.yml`)
-3. Fill in the rules — see [packs/CONTRIBUTING.md](packs/CONTRIBUTING.md) for the full guide and template
+3. Fill in the rules - see [packs/CONTRIBUTING.md](packs/CONTRIBUTING.md) for the full guide and template
 4. Add an entry to `packs/registry.json`
-5. Open a PR — for pack-only changes, Python tests are not required; mark the "tests added/updated" checklist item as N/A in the PR description.
+5. Open a PR - for pack-only changes, Python tests are not required; mark the "tests added/updated" checklist item as N/A in the PR description.
 
 See [packs/CONTRIBUTING.md](packs/CONTRIBUTING.md) for the detailed guide, schema reference, and quality checklist.
 
@@ -87,7 +87,7 @@ See [packs/CONTRIBUTING.md](packs/CONTRIBUTING.md) for the detailed guide, schem
 
 ## Adding a new rule type
 
-1. Create `src/arklint/rules/your_rule.py` — implement `BaseRule` (see `rules/base.py`).
+1. Create `src/arklint/rules/your_rule.py` - implement `BaseRule` (see `rules/base.py`).
 2. Register it in `src/arklint/rules/__init__.py`.
 3. Register it in `src/arklint/engine.py` (the `RULE_REGISTRY` dict).
 4. Add a YAML example to `src/arklint/init_templates.py`.

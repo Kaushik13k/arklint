@@ -1,9 +1,10 @@
 """Tests for the MCP server tools.
 
 These tests call the tool functions directly via the server object
-without starting a real MCP process — no mcp package required at test time.
+without starting a real MCP process - no mcp package required at test time.
 """
 from __future__ import annotations
+from arklint.mcp_server import create_server
 
 import json
 import tempfile
@@ -13,9 +14,8 @@ from unittest.mock import patch
 
 import pytest
 
-mcp = pytest.importorskip("mcp", reason="mcp package not installed; skipping MCP server tests")
-
-from arklint.mcp_server import create_server
+mcp = pytest.importorskip(
+    "mcp", reason="mcp package not installed; skipping MCP server tests")
 
 
 # ---------------------------------------------------------------------------

@@ -1,8 +1,8 @@
 """AI-powered rule generation.
 
 Supports multiple providers:
-  - anthropic  (default) — Claude Haiku via ANTHROPIC_API_KEY
-  - openai               — GPT-4o-mini via OPENAI_API_KEY
+  - anthropic  (default) - Claude Haiku via ANTHROPIC_API_KEY
+  - openai               - GPT-4o-mini via OPENAI_API_KEY
 
 Usage
 -----
@@ -27,25 +27,25 @@ SYSTEM_PROMPT = textwrap.dedent("""\
     Arklint rules are defined in YAML. The supported rule types and their
     required fields are:
 
-    1. pattern-ban — ban a regex pattern in file contents
+    1. pattern-ban - ban a regex pattern in file contents
        required: id, type, description, pattern, severity
 
-    2. boundary — prevent one module group from importing another
+    2. boundary - prevent one module group from importing another
        required: id, type, description, from_modules (list), banned_imports (list), severity
 
-    3. dependency — enforce that a module only imports from an allowed list
+    3. dependency - enforce that a module only imports from an allowed list
        required: id, type, description, module_pattern, allowed_imports (list), severity
 
-    4. file-pattern — enforce naming conventions on files in a directory
+    4. file-pattern - enforce naming conventions on files in a directory
        required: id, type, description, directory, pattern, severity
 
-    5. layer-boundary — enforce strict layer ordering (e.g. routes→services→repos)
+    5. layer-boundary - enforce strict layer ordering (e.g. routes→services→repos)
        required: id, type, description, layers (list of module name strings), severity
 
     severity must be "error" or "warning".
 
     When the user describes what they want to enforce, output EXACTLY one YAML
-    rule block — nothing else. No explanation, no markdown fences, no comments.
+    rule block - nothing else. No explanation, no markdown fences, no comments.
     The block must start with "- id:" and be valid YAML.
 
     Example output:

@@ -3,7 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Arklint — The Architectural Rulebook for Your Codebase</title>
+<title>Arklint</title>
+<meta name="description" content="Enforce architectural rules across your codebase. Language-agnostic, zero cloud dependency, no configuration required.">
+<meta name="theme-color" content="#059669">
+<link rel="icon" type="image/svg+xml" href="favicon.svg?v=5">
+<link rel="apple-touch-icon" href="apple-touch-icon.svg?v=3">
+<link rel="manifest" href="manifest.json">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Arklint - The Architectural Rulebook for Your Codebase">
+<meta property="og:description" content="Enforce architectural rules across your codebase. Language-agnostic, zero cloud dependency, no configuration required.">
+<meta property="og:image" content="og-image.svg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Arklint">
+<meta name="twitter:description" content="Enforce architectural rules across your codebase. Language-agnostic, zero cloud dependency.">
+<meta name="twitter:image" content="og-image.svg">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#fff;--bg-s:#f8f9fb;--bg-code:#1b1b1f;--bg-ci:#f1f3f5;--border:#e5e7eb;--border-l:#f0f1f3;--text:#111827;--text-s:#4b5563;--text-t:#9ca3af;--accent:#059669;--accent-l:#ecfdf5;--accent-b:#a7f3d0;--accent-d:#047857;--mono:'JetBrains Mono',ui-monospace,monospace;--sans:'Inter',-apple-system,sans-serif;--sidebar-w:240px;--max:820px;--ease:cubic-bezier(.16,1,.3,1)}
@@ -65,7 +78,7 @@
 .ds p{font-size:14.5px;color:var(--text-s);margin-bottom:16px;line-height:1.7}
 
 /* CODE */
-.cb{background:var(--bg-code);border-radius:10px;overflow:hidden;margin-bottom:24px}
+.cb{background:var(--bg-code);border-radius:10px;overflow:hidden;margin-bottom:24px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64' fill='none'%3E%3Cdefs%3E%3CclipPath id='wmlh'%3E%3Crect width='32' height='64'/%3E%3C/clipPath%3E%3Cmask id='wmkm'%3E%3Cpolygon points='12,11 52,11 52,30 32,54 12,30' fill='white'/%3E%3C/mask%3E%3C/defs%3E%3Cg mask='url(%23wmkm)' clip-path='url(%23wmlh)'%3E%3Crect y='11' width='64' height='10' fill='white' opacity='.3'/%3E%3Crect y='21' width='64' height='17' fill='%2334d399' opacity='.35'/%3E%3Crect y='38' width='64' height='20' fill='%23fbbf24' opacity='.3'/%3E%3C/g%3E%3Cpolygon points='12,11 52,11 52,30 32,54 12,30' fill='none' stroke='white' stroke-width='2' stroke-linejoin='round' opacity='.2'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:calc(100% - 14px) calc(100% - 12px);background-size:26px 26px}
 .cb-h{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:rgba(255,255,255,.04);border-bottom:1px solid rgba(255,255,255,.06)}
 .cb-h .l{font-family:var(--mono);font-size:11px;color:#9ca3af;font-weight:500}
 .cb-h .r{font-family:var(--mono);font-size:10px;color:#6b7280;background:rgba(255,255,255,.06);padding:2px 8px;border-radius:4px;font-weight:500}
@@ -80,21 +93,25 @@ code.i{font-family:var(--mono);font-size:12.5px;background:var(--bg-ci);padding:
 .rc-head{padding:18px 20px 14px;display:flex;align-items:flex-start;gap:12px}
 .rb{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--accent-d);background:var(--accent-l);border:1px solid var(--accent-b);padding:3px 8px;border-radius:4px;letter-spacing:.5px;text-transform:uppercase;white-space:nowrap;margin-top:2px}
 .rc-head .ri{flex:1}
-.rc-head h4{font-size:15px;font-weight:700;margin-bottom:4px}
-.rc-head p{font-size:13px;color:var(--text-s);line-height:1.55;margin:0}
+.rc-head h4{font-size:15px;font-weight:700;margin:0}
+.rc-body{padding:0 20px 20px;border-top:1px solid var(--border-l)}
+.rc-body>p:first-child{font-size:13px;color:var(--text-s);line-height:1.6;margin:14px 0 12px}
 .rc .cb{border-radius:0;margin:0}
 
 /* TABLE */
-.ct{width:100%;border-collapse:collapse;font-size:14px;margin-bottom:24px}
-.ct th{text-align:left;font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--text-t);padding:0 0 10px;border-bottom:2px solid var(--border)}
-.ct td{padding:12px 16px 12px 0;border-bottom:1px solid var(--border-l);vertical-align:top}
-.ct td:first-child{font-family:var(--mono);font-size:12.5px;color:var(--accent-d);font-weight:600;white-space:nowrap;width:44%}
-.ct td:last-child{color:var(--text-s)}
+.ct{width:100%;border-collapse:collapse;font-size:13.5px;margin-bottom:24px}
+.ct th{text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--text-t);padding:0 24px 8px 0;border-bottom:1.5px solid var(--border)}
+.ct th:last-child{padding-right:0}
+.ct td{padding:9px 24px 9px 0;border-bottom:1px solid var(--border-l);vertical-align:middle;line-height:1.55}
+.ct td:first-child{font-family:var(--mono);font-size:12px;color:var(--accent-d);font-weight:700;white-space:nowrap;padding-left:0;width:1%}
+.ct td:nth-child(2){white-space:nowrap;font-size:13px;color:var(--text-s)}
+.ct td:last-child{color:var(--text-s);padding-right:0}
 .ct tr:last-child td{border-bottom:none}
 
 /* TIP */
-.tip{background:var(--accent-l);border:1px solid var(--accent-b);border-radius:8px;padding:14px 18px;font-size:13.5px;color:var(--accent-d);line-height:1.6;margin-bottom:24px;display:flex;align-items:flex-start;gap:10px}
+.tip{background:var(--accent-l);border:1px solid var(--accent-b);border-radius:8px;padding:14px 18px;font-size:13.5px;color:var(--accent-d);line-height:1.6;margin-bottom:24px;display:flex;align-items:flex-start;gap:10px;overflow:hidden}
 .tip svg{flex-shrink:0;margin-top:2px}
+.tip-body{min-width:0;overflow-wrap:break-word;word-break:break-word;flex:1}
 
 /* CI GRID */
 .ci-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
@@ -152,7 +169,7 @@ code.i{font-family:var(--mono);font-size:12.5px;background:var(--bg-ci);padding:
 <div class="topbar"><div class="topbar-inner">
   <div style="display:flex;align-items:center;gap:16px">
     <button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')" aria-label="Menu"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>
-    <a href="#" class="topbar-logo"><span class="icon">A</span> Arklint</a>
+    <a href="#" class="topbar-logo"><svg width="28" height="28" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" style="border-radius:6px;flex-shrink:0"><defs><clipPath id="tl-lh"><rect x="0" y="0" width="32" height="64"/></clipPath><clipPath id="tl-rh"><rect x="32" y="0" width="32" height="64"/></clipPath><mask id="tl-km"><polygon points="12,11 52,11 52,30 32,54 12,30" fill="white"/></mask></defs><rect width="64" height="64" rx="13" fill="#0f172a"/><g mask="url(#tl-km)" clip-path="url(#tl-lh)"><rect x="0" y="11" width="64" height="10" fill="#ffffff"/><rect x="0" y="21" width="64" height="17" fill="#34d399"/><rect x="0" y="38" width="64" height="20" fill="#fbbf24"/></g><line x1="12" y1="21" x2="32" y2="21" stroke="#0f172a" stroke-width="1.5" opacity="0.35"/><line x1="12" y1="38" x2="32" y2="38" stroke="#0f172a" stroke-width="1.5" opacity="0.35"/><polygon points="12,11 52,11 52,30 32,54 12,30" fill="none" stroke="white" stroke-width="3.5" stroke-linejoin="round" clip-path="url(#tl-rh)" opacity="0.6"/><polygon points="12,11 52,11 52,30 32,54 12,30" fill="none" stroke="white" stroke-width="1.5" stroke-linejoin="round" opacity="0.2"/></svg> Arklint</a>
   </div>
   <div class="topbar-right">
     <a href="https://pypi.org/project/arklint/">PyPI</a>
@@ -214,12 +231,12 @@ code.i{font-family:var(--mono);font-size:12.5px;background:var(--bg-ci);padding:
 <section class="hero" id="overview">
   <div class="hero-version"><span class="dot"></span> v0.5.1</div>
   <h1>Arklint</h1>
-  <p class="hero-tagline">Enforce import boundaries, dependency rules, and layer constraints across your codebase. Define your architecture in YAML — Arklint checks it automatically, before violations ever reach main.</p>
+  <p class="hero-tagline">Enforce import boundaries, dependency rules, and layer constraints across your codebase. Define your architecture in YAML - Arklint checks it automatically, before violations ever reach main.</p>
   <div class="features">
     <div class="fp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Prevention, not detection</div>
     <div class="fp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>Language-agnostic</div>
     <div class="fp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>100% local</div>
-    <div class="fp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>60-second setup</div>
+    <div class="fp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Quick setup</div>
     <div class="fp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.66 0 3-4.03 3-9s-1.34-9-3-9m0 18c-1.66 0-3-4.03-3-9s1.34-9 3-9"/></svg>MCP server for AI agents</div>
   </div>
   <!-- Multi-ecosystem install tabs -->
@@ -283,14 +300,14 @@ code.i{font-family:var(--mono);font-size:12.5px;background:var(--bg-ci);padding:
   <div class="cb-h"><span class="l">Terminal</span><span class="r">~/my-project</span></div>
   <pre><span class="p">$ </span><span class="cmd">arklint check</span>
 
-<span class="dim">Arklint v0.5.1 — Scanning 142 files against 5 rules...</span>
+<span class="dim">Arklint v0.5.1 - Scanning 142 files against 5 rules...</span>
 
   <span class="fail">✗ FAIL</span>  <span class="rule">no-direct-db-in-routes</span>
-         <span class="dim">routes/users.py → imports 'sqlalchemy' — blocked</span>
-         <span class="dim">routes/orders.py → imports 'psycopg2' — blocked</span>
+         <span class="dim">routes/users.py → imports 'sqlalchemy' - blocked</span>
+         <span class="dim">routes/orders.py → imports 'psycopg2' - blocked</span>
 
   <span class="fail">✗ FAIL</span>  <span class="rule">single-http-client</span>
-         <span class="dim">conflicting packages — keep one of requests, httpx</span>
+         <span class="dim">conflicting packages - keep one of requests, httpx</span>
 
   <span class="warn">⚠ WARN</span>  <span class="rule">no-print-statements</span>
          <span class="dim">services/email.py:45 → banned pattern: 'print('</span>
@@ -306,7 +323,10 @@ code.i{font-family:var(--mono);font-size:12.5px;background:var(--bg-ci);padding:
 
 <!-- FOOTER -->
 <div class="footer">
-  <span>Built by <a href="https://github.com/Kaushik13k">Kaushik</a> · MIT License</span>
+  <span style="display:flex;align-items:center;gap:10px">
+    <svg width="22" height="22" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;opacity:0.5"><defs><clipPath id="ft-lh"><rect x="0" y="0" width="32" height="64"/></clipPath><clipPath id="ft-rh"><rect x="32" y="0" width="32" height="64"/></clipPath><mask id="ft-km"><polygon points="12,11 52,11 52,30 32,54 12,30" fill="white"/></mask></defs><rect width="64" height="64" rx="13" fill="#0f172a"/><g mask="url(#ft-km)" clip-path="url(#ft-lh)"><rect x="0" y="11" width="64" height="10" fill="#ffffff"/><rect x="0" y="21" width="64" height="17" fill="#34d399"/><rect x="0" y="38" width="64" height="20" fill="#fbbf24"/></g><line x1="12" y1="21" x2="32" y2="21" stroke="#0f172a" stroke-width="1.5" opacity="0.35"/><line x1="12" y1="38" x2="32" y2="38" stroke="#0f172a" stroke-width="1.5" opacity="0.35"/><polygon points="12,11 52,11 52,30 32,54 12,30" fill="none" stroke="white" stroke-width="3.5" stroke-linejoin="round" clip-path="url(#ft-rh)" opacity="0.6"/><polygon points="12,11 52,11 52,30 32,54 12,30" fill="none" stroke="white" stroke-width="1.5" stroke-linejoin="round" opacity="0.2"/></svg>
+    Built by <a href="https://github.com/Kaushik13k">Kaushik</a> · MIT License
+  </span>
   <div class="footer-links">
     <a href="https://pypi.org/project/arklint/">PyPI</a>
     <a href="https://www.npmjs.com/package/arklint">npm</a>

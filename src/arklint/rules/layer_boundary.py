@@ -1,4 +1,4 @@
-"""Layer-boundary rule — enforce a strict layered architecture.
+"""Layer-boundary rule - enforce a strict layered architecture.
 
 Example config::
 
@@ -34,7 +34,8 @@ class LayerBoundaryRule(BaseRule):
     def check(self, files: list[Path]) -> list[Violation]:
         raw = self.config.raw
         layers_config: list[dict] = raw.get("layers", [])
-        allowed_deps: dict[str, list[str]] = raw.get("allowed_dependencies", {})
+        allowed_deps: dict[str, list[str]] = raw.get(
+            "allowed_dependencies", {})
 
         if not layers_config:
             return []
@@ -43,7 +44,8 @@ class LayerBoundaryRule(BaseRule):
         layer_specs: dict[str, pathspec.PathSpec] = {
             layer["name"]: pathspec.PathSpec.from_lines(
                 "gitignore",
-                [layer["path"]] if isinstance(layer["path"], str) else layer["path"],
+                [layer["path"]] if isinstance(
+                    layer["path"], str) else layer["path"],
             )
             for layer in layers_config
             if layer.get("name") and layer.get("path")

@@ -2,7 +2,7 @@
 "use strict";
 
 /**
- * Postinstall script — downloads the arklint binary at install time
+ * Postinstall script - downloads the arklint binary at install time
  * so the package directory is already owned by npm when writing.
  */
 
@@ -23,7 +23,7 @@ function getBinaryName() {
   const name = PLATFORM_MAP[key];
   if (!name) {
     process.stderr.write(
-      `arklint: no prebuilt binary for ${key} — install via pip instead.\n`
+      `arklint: no prebuilt binary for ${key} - install via pip instead.\n`
     );
     process.exit(0); // non-fatal: pip users don't need the binary
   }
@@ -82,7 +82,7 @@ async function main() {
 }
 
 main().catch((err) => {
-  // Non-fatal — user can still run arklint and it will re-attempt download
+  // Non-fatal - user can still run arklint and it will re-attempt download
   process.stderr.write(`arklint postinstall warning: ${err.message}\n`);
   process.exit(0);
 });

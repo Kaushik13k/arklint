@@ -7,7 +7,7 @@
 
 ---
 
-Arklint enforces **architectural rules** before bad code ever lands — whether written by AI agents or humans. It's language-agnostic, runs locally with zero cloud dependency, and takes 60 seconds to set up.
+Arklint enforces **architectural rules** before bad code ever lands - whether written by AI agents or humans. It's language-agnostic, runs locally with zero cloud dependency, and takes 60 seconds to set up.
 
 This package is a thin Node.js wrapper. On first run it downloads the platform-specific prebuilt binary from [GitHub Releases](https://github.com/Kaushik13k/arklint/releases) and caches it locally. **No Python required.**
 
@@ -38,7 +38,7 @@ arklint init
 # 3. Check your codebase
 arklint check
 
-# 4. In CI — exit 1 on any violation
+# 4. In CI - exit 1 on any violation
 arklint check --strict
 ```
 

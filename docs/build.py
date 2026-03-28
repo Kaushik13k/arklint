@@ -38,16 +38,21 @@ def style_code_blocks(html_str: str) -> str:
             return block
         raw = code_m.group(1)
 
-        label_map = {"bash": "Terminal", "yaml": ".arklint.yml", "json": "Config"}
+        label_map = {"bash": "Terminal",
+                     "yaml": ".arklint.yml", "json": "Config"}
         label = label_map.get(lang, "Code")
 
         if lang == "yaml":
-            # Strings first — before key regex adds class="k" HTML attributes
+            # Strings first - before key regex adds class="k" HTML attributes
             # (otherwise the string regex would match the "k" in class="k")
-            raw = re.sub(r'(&quot;[^&]*?&quot;)', r'<span class="s">\1</span>', raw)
-            raw = re.sub(r"('(?:[^'\\\\]|\\\\.)*')", r'<span class="s">\1</span>', raw)
-            raw = re.sub(r'^(\s*)([\w-]+)(:)', r'\1<span class="k">\2\3</span>', raw, flags=re.MULTILINE)
-            raw = re.sub(r'(#.*)$', r'<span class="c">\1</span>', raw, flags=re.MULTILINE)
+            raw = re.sub(r'(&quot;[^&]*?&quot;)',
+                         r'<span class="s">\1</span>', raw)
+            raw = re.sub(r"('(?:[^'\\\\]|\\\\.)*')",
+                         r'<span class="s">\1</span>', raw)
+            raw = re.sub(
+                r'^(\s*)([\w-]+)(:)', r'\1<span class="k">\2\3</span>', raw, flags=re.MULTILINE)
+            raw = re.sub(r'(#.*)$', r'<span class="c">\1</span>',
+                         raw, flags=re.MULTILINE)
 
         if lang == "bash":
             lines = raw.split("\n")
@@ -56,7 +61,8 @@ def style_code_blocks(html_str: str) -> str:
                 stripped = line.strip()
                 if stripped.startswith("$ "):
                     cmd = stripped[2:]
-                    out.append(f'<span class="p">$ </span><span class="cmd">{cmd}</span>')
+                    out.append(
+                        f'<span class="p">$ </span><span class="cmd">{cmd}</span>')
                 elif stripped.startswith("#"):
                     out.append(f'<span class="c">{line}</span>')
                 elif stripped == "":
@@ -72,8 +78,10 @@ def style_code_blocks(html_str: str) -> str:
             raw = "\n".join(out)
 
         if lang == "json":
-            raw = re.sub(r'(&quot;[^&]*?&quot;|"[^"]*?")\s*:', r'<span class="k">\1</span>:', raw)
-            raw = re.sub(r':\s*(&quot;[^&]*?&quot;|"[^"]*?")', r': <span class="s">\1</span>', raw)
+            raw = re.sub(r'(&quot;[^&]*?&quot;|"[^"]*?")\s*:',
+                         r'<span class="k">\1</span>:', raw)
+            raw = re.sub(r':\s*(&quot;[^&]*?&quot;|"[^"]*?")',
+                         r': <span class="s">\1</span>', raw)
 
         return (
             f'<div class="cb"><div class="cb-h">'
@@ -98,7 +106,7 @@ def style_blockquotes_as_tips(html_str: str) -> str:
     tip_svg = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>'
     return re.sub(
         r'<blockquote>\s*<p>(.*?)</p>\s*</blockquote>',
-        rf'<div class="tip">{tip_svg}\1</div>',
+        rf'<div class="tip">{tip_svg}<span class="tip-body">\1</span></div>',
         html_str, flags=re.DOTALL,
     )
 
@@ -169,8 +177,8 @@ def convert_rules_section(md_text: str) -> str:
         section_lines = section.strip().split("\n")
         heading = section_lines[0].strip()
 
-        # Parse "type — Description"
-        parts = heading.split(' — ', maxsplit=1)
+        # Parse "type - Description"
+        parts = heading.split(' - ', maxsplit=1)
         rule_type = parts[0].strip()
         rule_name = parts[1].strip() if len(parts) > 1 else rule_type
 
@@ -203,15 +211,18 @@ def convert_rules_section(md_text: str) -> str:
         code_md = "\n".join(code_lines).strip()
 
         desc_html = md_to_html(desc) if desc else ""
+        desc_html = style_tables(desc_html)
         desc_text = re.sub(r'</?p>', '', desc_html).strip()
 
         code_html = md_to_html(code_md) if code_md else ""
         code_html = style_code_blocks(code_html)
 
+        body_section = f'<div class="rc-body">{desc_html}</div>' if desc_html else ""
         card = (
             f'    <div class="rc" id="{card_id}">'
             f'<div class="rc-head"><span class="rb">{rule_type}</span>'
-            f'<div class="ri"><h4>{rule_name}</h4><p>{desc_text}</p></div></div>'
+            f'<div class="ri"><h4>{rule_name}</h4></div></div>'
+            f'{body_section}'
             f'{code_html}</div>'
         )
         cards_html.append(card)

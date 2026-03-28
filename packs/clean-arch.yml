@@ -1,5 +1,5 @@
 name: arklint/clean-arch
-description: Generic clean architecture — enforces entity/use-case/interface/infrastructure layer boundaries.
+description: Generic clean architecture - enforces entity/use-case/interface/infrastructure layer boundaries.
 version: "1"
 
 rules:

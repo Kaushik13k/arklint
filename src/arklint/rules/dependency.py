@@ -1,4 +1,4 @@
-"""Dependency rule — control what packages are allowed in the project.
+"""Dependency rule - control what packages are allowed in the project.
 
 Example config::
 
@@ -48,7 +48,8 @@ class DependencyRule(BaseRule):
 
     def check(self, files: list[Path]) -> list[Violation]:
         raw = self.config.raw
-        allow_only_one_of: list[str] = [p.lower() for p in raw.get("allow_only_one_of", [])]
+        allow_only_one_of: list[str] = [p.lower()
+                                        for p in raw.get("allow_only_one_of", [])]
         banned: list[str] = [p.lower() for p in raw.get("banned", [])]
 
         if not allow_only_one_of and not banned:
@@ -75,7 +76,7 @@ class DependencyRule(BaseRule):
                         file=self.root,
                         line=None,
                         message=(
-                            f"conflicting packages — keep exactly one of "
+                            f"conflicting packages - keep exactly one of "
                             f"{', '.join(found)} "
                             f"(found in: {', '.join(source_names)})"
                         ),

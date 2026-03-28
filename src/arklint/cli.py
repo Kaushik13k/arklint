@@ -97,7 +97,7 @@ def check(
         False,
         "--quiet",
         "-q",
-        help="Suppress passing rules — only show failures and warnings.",
+        help="Suppress passing rules - only show failures and warnings.",
     ),
     github_annotations: bool = typer.Option(
         False,
@@ -137,10 +137,12 @@ def check(
         console.print("[bold red]✗ violations found[/bold red]")
         raise typer.Exit(1)
     elif strict and warnings > 0:
-        console.print("[bold red]✗ warnings treated as errors (--strict)[/bold red]")
+        console.print(
+            "[bold red]✗ warnings treated as errors (--strict)[/bold red]")
         raise typer.Exit(1)
     elif warnings > 0:
-        console.print("[bold yellow]⚠ warnings found — run with --strict to fail on warnings[/bold yellow]")
+        console.print(
+            "[bold yellow]⚠ warnings found - run with --strict to fail on warnings[/bold yellow]")
     else:
         console.print("[bold green]✓ all rules passed[/bold green]")
 
@@ -191,9 +193,11 @@ def watch(
         if errors > 0:
             console.print("[bold red]✗ violations found[/bold red]")
         elif strict and warnings > 0:
-            console.print("[bold red]✗ warnings treated as errors (--strict)[/bold red]")
+            console.print(
+                "[bold red]✗ warnings treated as errors (--strict)[/bold red]")
         elif warnings > 0:
-            console.print("[bold yellow]⚠ warnings — run with --strict to treat as errors[/bold yellow]")
+            console.print(
+                "[bold yellow]⚠ warnings - run with --strict to treat as errors[/bold yellow]")
         else:
             console.print("[bold green]✓ all rules passed[/bold green]")
 
@@ -209,7 +213,8 @@ def watch(
             _run()
 
     _run()
-    console.print(f"\n[dim]Watching [cyan]{scan_root}[/cyan] — press Ctrl+C to stop.[/dim]\n")
+    console.print(
+        f"\n[dim]Watching [cyan]{scan_root}[/cyan] - press Ctrl+C to stop.[/dim]\n")
 
     observer = Observer()
     observer.schedule(_Handler(), str(scan_root), recursive=True)
@@ -246,7 +251,7 @@ def validate(
         raise typer.Exit(1) from exc
 
     console.print(
-        f"[bold green]✓ Valid[/bold green] — "
+        f"[bold green]✓ Valid[/bold green] - "
         f"[bold]{len(cfg.rules)}[/bold] rule{'s' if len(cfg.rules) != 1 else ''} loaded "
         f"from [cyan]{cfg.root / '.arklint.yml'}[/cyan]"
     )
@@ -367,7 +372,8 @@ def learn(
     console.print(f"[dim]Generating rule via {provider}…[/dim]")
 
     try:
-        yaml_snippet = suggest_rule(description=describe, provider=provider, api_key=api_key)
+        yaml_snippet = suggest_rule(
+            description=describe, provider=provider, api_key=api_key)
     except ImportError as exc:
         err_console.print(f"[bold red]Missing dependency:[/bold red] {exc}")
         raise typer.Exit(1) from exc
@@ -385,7 +391,7 @@ def learn(
     if not append:
         confirm = typer.confirm("Append this rule to .arklint.yml?")
         if not confirm:
-            console.print("[dim]Aborted — rule not saved.[/dim]")
+            console.print("[dim]Aborted - rule not saved.[/dim]")
             return
 
     try:
@@ -425,7 +431,7 @@ def _find_config_path() -> Path:
 def search(
     query: str = typer.Argument(
         ...,
-        help="Search term — e.g. 'fastapi', 'django', 'clean-arch'.",
+        help="Search term - e.g. 'fastapi', 'django', 'clean-arch'.",
         metavar="QUERY",
     ),
 ) -> None:
@@ -460,7 +466,7 @@ def search(
 def add(
     pack: str = typer.Argument(
         ...,
-        help="Pack name to add — e.g. 'arklint/fastapi'.",
+        help="Pack name to add - e.g. 'arklint/fastapi'.",
         metavar="PACK",
     ),
     config: Path | None = typer.Option(
@@ -487,16 +493,19 @@ def add(
     try:
         raw_cfg = yaml.safe_load(cfg_path.read_text())
     except yaml.YAMLError as exc:
-        err_console.print(f"[bold red]Invalid YAML in config:[/bold red] {exc}")
+        err_console.print(
+            f"[bold red]Invalid YAML in config:[/bold red] {exc}")
         raise typer.Exit(1) from exc
 
     if not isinstance(raw_cfg, dict):
-        err_console.print("[bold red]Config error:[/bold red] .arklint.yml must be a YAML mapping.")
+        err_console.print(
+            "[bold red]Config error:[/bold red] .arklint.yml must be a YAML mapping.")
         raise typer.Exit(1)
 
     extends: list = raw_cfg.get("extends", [])
     if not isinstance(extends, list):
-        err_console.print("[bold red]Config error:[/bold red] 'extends' must be a list.")
+        err_console.print(
+            "[bold red]Config error:[/bold red] 'extends' must be a list.")
         raise typer.Exit(1)
 
     if pack in extends:
@@ -511,9 +520,10 @@ def add(
         err_console.print(f"[bold red]Pack error:[/bold red] {exc}")
         raise typer.Exit(1) from exc
 
-    # safe YAML rewrite — no text surgery
+    # safe YAML rewrite - no text surgery
     raw_cfg["extends"] = extends + [pack]
-    cfg_path.write_text(yaml.dump(raw_cfg, default_flow_style=False, sort_keys=False))
+    cfg_path.write_text(
+        yaml.dump(raw_cfg, default_flow_style=False, sort_keys=False))
 
     console.print(
         f"[bold green]✓ Added[/bold green] [cyan]{pack}[/cyan] "
@@ -584,7 +594,8 @@ def visualize(
 
     if output:
         output.write_text(diagram)
-        console.print(f"[bold green]✓[/bold green] Diagram written to [cyan]{output}[/cyan]")
+        console.print(
+            f"[bold green]✓[/bold green] Diagram written to [cyan]{output}[/cyan]")
     else:
         console.print(diagram)
 

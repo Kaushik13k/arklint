@@ -1,4 +1,4 @@
-"""Tests for reporter.py — color coding and output formatting."""
+"""Tests for reporter.py - color coding and output formatting."""
 import tempfile
 from pathlib import Path
 
@@ -31,22 +31,26 @@ def _make_project(code: str, severity: str = "error") -> tuple[Path, Path]:
 class TestReporterColors:
     def test_error_violation_message_shown(self):
         cfg, scan_dir = _make_project('print("hi")\n', severity="error")
-        result = runner.invoke(app, ["check", str(scan_dir), "--config", str(cfg)])
+        result = runner.invoke(
+            app, ["check", str(scan_dir), "--config", str(cfg)])
         assert "banned pattern matched" in result.output
 
     def test_warning_violation_message_shown(self):
         cfg, scan_dir = _make_project('print("hi")\n', severity="warning")
-        result = runner.invoke(app, ["check", str(scan_dir), "--config", str(cfg)])
+        result = runner.invoke(
+            app, ["check", str(scan_dir), "--config", str(cfg)])
         assert "banned pattern matched" in result.output
 
     def test_fail_label_shown_for_error(self):
         cfg, scan_dir = _make_project('print("hi")\n', severity="error")
-        result = runner.invoke(app, ["check", str(scan_dir), "--config", str(cfg)])
+        result = runner.invoke(
+            app, ["check", str(scan_dir), "--config", str(cfg)])
         assert "FAIL" in result.output
 
     def test_warn_label_shown_for_warning(self):
         cfg, scan_dir = _make_project('print("hi")\n', severity="warning")
-        result = runner.invoke(app, ["check", str(scan_dir), "--config", str(cfg)])
+        result = runner.invoke(
+            app, ["check", str(scan_dir), "--config", str(cfg)])
         assert "WARN" in result.output
 
 

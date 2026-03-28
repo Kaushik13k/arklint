@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/site/favicon.svg" width="64" height="64" alt="Arklint logo">
+</p>
+
 # Arklint
 
 > The architectural rulebook for your codebase. Prevention, not detection.
@@ -9,17 +13,17 @@
 
 ---
 
-Arklint enforces **architectural rules** before bad code ever lands — whether written by AI agents or humans. It's language-agnostic, runs locally with zero cloud dependency, and takes 60 seconds to set up.
+Arklint enforces **architectural rules** before bad code ever lands - whether written by AI agents or humans. It's language-agnostic, runs locally with zero cloud dependency, and requires no external services.
 
 ```
 $ arklint check
 
-Arklint v0.5.1 — Scanning 142 files against 5 rules...
+Arklint v0.5.1 - Scanning 142 files against 5 rules...
 
   ✗ FAIL  no-direct-db-in-routes
          API routes must not import database modules directly
-         routes/users.py → imports 'sqlalchemy' — blocked by this rule
-         routes/orders.py → imports 'psycopg2' — blocked by this rule
+         routes/users.py → imports 'sqlalchemy' - blocked by this rule
+         routes/orders.py → imports 'psycopg2' - blocked by this rule
 
   ⚠ WARN  no-print-statements
          services/email.py:45 → banned pattern matched: 'print('
@@ -36,7 +40,7 @@ Results: 1 error, 1 warning, 2 passed
 
 ## Installation
 
-Install whichever way fits your stack — they all run the same binary.
+Install whichever way fits your stack - they all run the same binary.
 
 ### Python
 ```bash
@@ -111,7 +115,7 @@ arklint add arklint/fastapi     # add to .arklint.yml
 | `arklint/express` | 3 | Express route/service separation |
 | `arklint/clean-arch` | 2 | Clean architecture layer ordering |
 
-Packs are composable — mix framework packs with your own project rules:
+Packs are composable - mix framework packs with your own project rules:
 
 ```yaml
 # .arklint.yml
@@ -130,7 +134,7 @@ rules:
 
 ## Rule types
 
-### `boundary` — Import restrictions between directories
+### `boundary` - Import restrictions between directories
 
 Prevent files in source directories from importing blocked packages.
 
@@ -146,7 +150,7 @@ Prevent files in source directories from importing blocked packages.
   severity: error
 ```
 
-### `dependency` — Control what packages are in the project
+### `dependency` - Control what packages are in the project
 
 Detect conflicting or banned dependencies in `requirements.txt`, `package.json`, `go.mod`, and more.
 
@@ -161,7 +165,7 @@ Detect conflicting or banned dependencies in `requirements.txt`, `package.json`,
   severity: error
 ```
 
-### `file-pattern` — Code patterns only allowed in specific directories
+### `file-pattern` - Code patterns only allowed in specific directories
 
 ```yaml
 - id: models-in-models-dir
@@ -174,7 +178,7 @@ Detect conflicting or banned dependencies in `requirements.txt`, `package.json`,
   severity: warning
 ```
 
-### `pattern-ban` — Ban a pattern across the codebase
+### `pattern-ban` - Ban a pattern across the codebase
 
 ```yaml
 - id: no-print-statements
@@ -187,7 +191,7 @@ Detect conflicting or banned dependencies in `requirements.txt`, `package.json`,
   severity: warning
 ```
 
-### `layer-boundary` — Enforce layered architecture
+### `layer-boundary` - Enforce layered architecture
 
 Control which layers are allowed to import from which.
 
@@ -356,4 +360,4 @@ Dependency parsing works for: `requirements.txt`, `package.json`, `pyproject.tom
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+MIT - see [LICENSE](LICENSE).

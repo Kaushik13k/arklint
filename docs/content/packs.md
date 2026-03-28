@@ -19,7 +19,7 @@ Fetching pack 'arklint/fastapi'…
   Run arklint validate to confirm.
 ```
 
-This appends the pack to the `extends` list in your `.arklint.yml`. Your own rules always take precedence — if you define a rule with the same `id` as a pack rule, yours wins.
+This appends the pack to the `extends` list in your `.arklint.yml`. Your own rules always take precedence - if you define a rule with the same `id` as a pack rule, yours wins.
 
 ## Official packs
 
@@ -42,7 +42,7 @@ extends:
   - ./local-packs/my-company.yml   # local file packs also work
 
 rules:
-  # project-specific rules — these override pack rules with the same id
+  # project-specific rules - these override pack rules with the same id
   - id: fastapi/no-db-in-routes
     type: boundary
     description: "Customised version of the pack rule"
@@ -60,8 +60,8 @@ extends:
   - ../../shared/arklint-rules.yml
 ```
 
-The referenced file must have the same structure as a named pack — a `rules:` list at the top level.
+The referenced file must have the same structure as a named pack - a `rules:` list at the top level.
 
 ## Contributing a pack
 
-See [packs/CONTRIBUTING.md](https://github.com/Kaushik13k/arklint/blob/main/packs/CONTRIBUTING.md) for the full guide. No Python required — just YAML.
+See [packs/CONTRIBUTING.md](https://github.com/Kaushik13k/arklint/blob/main/packs/CONTRIBUTING.md) for the full guide. No Python required - just YAML.
