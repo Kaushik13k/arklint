@@ -30,3 +30,17 @@ rules:
     pattern: 'DEBUG\s*=\s*True'
     exclude: ["**/settings/local.py", "**/settings/development.py", "**/settings/dev.py", "tests/**"]
     severity: error
+
+  - id: django/celery-tasks-in-tasks-dir
+    type: file-pattern
+    description: Celery task functions must live in tasks.py or tasks/ - not inside views or models.
+    pattern: '@(?:app|shared_task)\.task|@shared_task'
+    allowed_in: ["**/tasks.py", "**/tasks/**"]
+    severity: warning
+
+  - id: django/signals-in-signals-dir
+    type: file-pattern
+    description: Django signal handlers must live in signals.py - not scattered in models or apps.
+    pattern: '@receiver\('
+    allowed_in: ["**/signals.py", "**/signals/**"]
+    severity: warning

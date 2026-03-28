@@ -22,3 +22,26 @@ rules:
     description: Use only one HTTP framework - mixing express and fastify causes confusion.
     allow_only_one_of: ["express", "fastify", "koa", "hapi"]
     severity: error
+
+  - id: express/middleware-in-middleware-dir
+    type: file-pattern
+    description: Express middleware functions must live in middleware/ - not scattered in route files.
+    pattern: '\(req,\s*res,\s*next\)'
+    allowed_in: ["**/middleware/**", "**/middlewares/**", "**/routes/**", "**/app.*", "**/server.*", "tests/**"]
+    severity: warning
+
+  - id: express/layered-architecture
+    type: layer-boundary
+    description: Enforce routes → controllers → services dependency direction.
+    layers:
+      - name: routes
+        path: "**/routes/**"
+      - name: controllers
+        path: "**/controllers/**"
+      - name: services
+        path: "**/services/**"
+    allowed_dependencies:
+      routes: [controllers]
+      controllers: [services]
+      services: []
+    severity: error

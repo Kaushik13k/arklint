@@ -110,6 +110,57 @@ class TestDetectTemplate:
         template, _ = detect_template(d)
         assert "print" in template
 
+    def test_python_template_contains_no_bare_except(self):
+        d = self._dir(["requirements.txt"])
+        template, _ = detect_template(d)
+        assert "no-bare-except" in template
+
+    def test_python_template_contains_no_hardcoded_secrets(self):
+        d = self._dir(["requirements.txt"])
+        template, _ = detect_template(d)
+        assert "no-hardcoded-secrets" in template
+
+    def test_python_template_contains_no_debug_breakpoints(self):
+        d = self._dir(["requirements.txt"])
+        template, _ = detect_template(d)
+        assert "no-debug-breakpoints" in template
+
+    def test_node_template_contains_no_any_type(self):
+        d = self._dir(["package.json"])
+        template, _ = detect_template(d)
+        assert "no-any-type" in template
+
+    def test_node_template_contains_no_hardcoded_secrets(self):
+        d = self._dir(["package.json"])
+        template, _ = detect_template(d)
+        assert "no-hardcoded-secrets" in template
+
+    def test_node_template_contains_no_debug_breakpoints(self):
+        d = self._dir(["package.json"])
+        template, _ = detect_template(d)
+        assert "no-debug-breakpoints" in template
+
+    def test_dotnet_template_contains_no_async_void(self):
+        d = self._dir(["MyApp.csproj"])
+        template, _ = detect_template(d)
+        assert "no-async-void" in template
+
+    def test_dotnet_template_contains_no_hardcoded_secrets(self):
+        d = self._dir(["MyApp.csproj"])
+        template, _ = detect_template(d)
+        assert "no-hardcoded-secrets" in template
+
+    def test_dotnet_template_contains_no_debug_breakpoints(self):
+        d = self._dir(["MyApp.csproj"])
+        template, _ = detect_template(d)
+        assert "no-debug-breakpoints" in template
+
+    def test_all_templates_reference_correct_docs_url(self):
+        for marker in [["requirements.txt"], ["package.json"], ["MyApp.csproj"]]:
+            d = self._dir(marker)
+            template, _ = detect_template(d)
+            assert "arklint.elevane.org" in template
+
 
 # ---------------------------------------------------------------------------
 # arklint init ecosystem detection

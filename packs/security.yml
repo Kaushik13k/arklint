@@ -1,0 +1,68 @@
+name: arklint/security
+description: Security guardrails - bans eval/exec, unsafe deserialization, shell injection, innerHTML assignments, and SQL string concatenation.
+version: "1"
+
+rules:
+  # eval() and exec() execute arbitrary code - a major injection vector.
+  - id: security/no-eval
+    type: pattern-ban
+    description: "eval() executes arbitrary code and is a security risk - avoid it"
+    pattern: '\beval\s*\('
+    exclude: ["tests/**", "**/*.test.*", "**/*.spec.*"]
+    severity: error
+
+  # subprocess with shell=True passes the command through the shell, enabling injection.
+  - id: security/no-subprocess-shell
+    type: pattern-ban
+    description: "subprocess with shell=True enables shell injection - pass a list instead"
+    pattern: 'subprocess\.\w+\([^)]*shell\s*=\s*True'
+    exclude: ["tests/**", "scripts/**"]
+    severity: error
+
+  # pickle.loads can execute arbitrary code when deserialising untrusted data.
+  - id: security/no-pickle-loads
+    type: pattern-ban
+    description: "pickle.loads on untrusted data enables remote code execution"
+    pattern: 'pickle\.loads\('
+    exclude: ["tests/**"]
+    severity: error
+
+  # yaml.load without an explicit Loader silently executes Python constructors.
+  - id: security/no-yaml-unsafe-load
+    type: pattern-ban
+    description: "yaml.load() without a Loader is unsafe - use yaml.safe_load() instead"
+    pattern: 'yaml\.load\s*\([^)]*\)(?!\s*#.*safe)'
+    exclude: ["tests/**"]
+    severity: error
+
+  # Direct innerHTML assignment is an XSS vector in browser code.
+  - id: security/no-innerhtml-assignment
+    type: pattern-ban
+    description: "innerHTML assignment is an XSS risk - use textContent or a sanitiser"
+    pattern: '\.innerHTML\s*='
+    exclude: ["tests/**", "**/*.test.*", "**/*.spec.*"]
+    severity: error
+
+  # dangerouslySetInnerHTML bypasses React's XSS protection - needs explicit review.
+  - id: security/no-dangerous-set-innerhtml
+    type: pattern-ban
+    description: "dangerouslySetInnerHTML bypasses React's XSS protection - ensure input is sanitised"
+    pattern: 'dangerouslySetInnerHTML\s*='
+    exclude: ["tests/**", "**/*.test.*", "**/*.spec.*"]
+    severity: warning
+
+  # SQL built by string concatenation is vulnerable to injection.
+  - id: security/no-string-sql-concat
+    type: pattern-ban
+    description: "SQL built from string concatenation is vulnerable to injection - use parameterised queries"
+    pattern: '(?:SELECT|INSERT|UPDATE|DELETE|WHERE).*["\x27]\s*\+\s*\w'
+    exclude: ["tests/**", "migrations/**"]
+    severity: error
+
+  # os.system passes commands through the shell, enabling injection.
+  - id: security/no-os-system
+    type: pattern-ban
+    description: "os.system() is a shell injection risk - use subprocess with a list instead"
+    pattern: '\bos\.system\s*\('
+    exclude: ["scripts/**", "tests/**"]
+    severity: error

@@ -2,33 +2,63 @@
   "packs": [
     {
       "name": "arklint/fastapi",
-      "description": "FastAPI best practices - routers, dependencies, schemas, no direct DB in routes",
+      "description": "FastAPI best practices - routers, services, schemas, settings, and layered architecture",
       "tags": ["python", "fastapi", "api"],
-      "rules": 4
+      "rules": 6
     },
     {
       "name": "arklint/django",
-      "description": "Django conventions - views, models, serializers, no raw SQL in views",
+      "description": "Django conventions - views, models, serializers, Celery tasks, signals, no raw SQL",
       "tags": ["python", "django", "web"],
-      "rules": 4
+      "rules": 6
+    },
+    {
+      "name": "arklint/flask",
+      "description": "Flask best practices - blueprints, service layer, config management, no debug in prod",
+      "tags": ["python", "flask", "api"],
+      "rules": 6
     },
     {
       "name": "arklint/nextjs",
-      "description": "Next.js App Router conventions - server/client components, data fetching patterns",
+      "description": "Next.js App Router conventions - server/client boundaries, API routes, env vars, state management",
       "tags": ["javascript", "typescript", "nextjs", "react"],
-      "rules": 3
+      "rules": 5
     },
     {
       "name": "arklint/express",
-      "description": "Express.js patterns - middleware, routes, controllers separation",
+      "description": "Express.js patterns - middleware, routes/controllers/services separation, layered architecture",
       "tags": ["javascript", "node", "express"],
-      "rules": 3
+      "rules": 5
+    },
+    {
+      "name": "arklint/nestjs",
+      "description": "NestJS conventions - controller/service/repository separation, DI patterns, single ORM",
+      "tags": ["typescript", "nestjs", "node"],
+      "rules": 6
+    },
+    {
+      "name": "arklint/spring",
+      "description": "Spring Boot conventions - Controller/Service/Repository layers, constructor injection, DTO placement",
+      "tags": ["java", "spring", "springboot"],
+      "rules": 6
     },
     {
       "name": "arklint/clean-arch",
-      "description": "Generic clean architecture - entities, use cases, interfaces, infrastructure layers",
+      "description": "Generic clean architecture - entities, use cases, interfaces, infrastructure layer boundaries",
       "tags": ["architecture", "clean-arch", "language-agnostic"],
-      "rules": 2
+      "rules": 3
+    },
+    {
+      "name": "arklint/security",
+      "description": "Security guardrails - bans eval/exec, unsafe deserialization, shell injection, innerHTML, SQL concatenation",
+      "tags": ["security", "language-agnostic"],
+      "rules": 8
+    },
+    {
+      "name": "arklint/code-hygiene",
+      "description": "Code hygiene - bans TODO comments, debug breakpoints, sleep in tests, scattered test files",
+      "tags": ["hygiene", "code-quality", "language-agnostic"],
+      "rules": 5
     }
   ]
 }

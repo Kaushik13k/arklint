@@ -1,0 +1,54 @@
+name: arklint/flask
+description: Flask best practices - blueprints, service layer separation, config management, and no debug mode in prod.
+version: "1"
+
+rules:
+  - id: flask/no-db-in-routes
+    type: boundary
+    description: Flask route handlers must not import database sessions directly - use a service or repository layer.
+    source: "routes/**"
+    blocked_imports: ["sqlalchemy", "psycopg2", "pymongo", "flask_sqlalchemy"]
+    severity: error
+
+  - id: flask/models-in-models-dir
+    type: file-pattern
+    description: SQLAlchemy model classes must live in models/ or models.py.
+    pattern: 'class\s+\w+\s*\(\s*(?:db\.Model|Base|DeclarativeBase)\s*\)'
+    allowed_in: ["models/**", "**/models.py"]
+    severity: warning
+
+  - id: flask/config-in-config-dir
+    type: file-pattern
+    description: Flask config classes must live in config/ or config.py - not inside route or service files.
+    pattern: 'class\s+\w*Config\s*[:(]'
+    allowed_in: ["config/**", "**/config.py", "**/settings.py"]
+    severity: warning
+
+  - id: flask/no-app-run-debug-true
+    type: pattern-ban
+    description: app.run(debug=True) must not appear outside development entry points.
+    pattern: 'app\.run\(.*debug\s*=\s*True'
+    exclude: ["**/dev.py", "**/development.py", "**/run_dev.*", "scripts/**"]
+    severity: error
+
+  - id: flask/single-orm
+    type: dependency
+    description: Use only one ORM or database client - mixing SQLAlchemy and Peewee causes confusion.
+    allow_only_one_of: ["flask_sqlalchemy", "sqlalchemy", "peewee", "tortoise"]
+    severity: warning
+
+  - id: flask/layered-architecture
+    type: layer-boundary
+    description: Enforce routes → services → repositories dependency direction.
+    layers:
+      - name: routes
+        path: "routes/**"
+      - name: services
+        path: "services/**"
+      - name: repositories
+        path: "repositories/**"
+    allowed_dependencies:
+      routes: [services]
+      services: [repositories]
+      repositories: []
+    severity: error

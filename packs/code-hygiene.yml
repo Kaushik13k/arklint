@@ -1,0 +1,51 @@
+name: arklint/code-hygiene
+description: Code hygiene rules - bans TODO comments, debug breakpoints, sleep in tests, and enforces test file placement.
+version: "1"
+
+rules:
+  # TODO/FIXME/HACK comments signal unfinished work - they should never ship to prod.
+  - id: hygiene/no-todo-comments
+    type: pattern-ban
+    description: "Resolve or ticket TODO/FIXME/HACK comments before merging"
+    pattern: '\b(?:TODO|FIXME|HACK|XXX)\b'
+    exclude: ["tests/**", "docs/**", "**/*.md"]
+    severity: warning
+
+  # Debug breakpoints committed by accident will pause or crash production.
+  - id: hygiene/no-debug-breakpoints
+    type: pattern-ban
+    description: "Remove debug breakpoints before committing - pdb, debugger, binding.pry, etc."
+    pattern: 'pdb\.set_trace\(\)|breakpoint\(\)|\bdebugger\b|binding\.pry\b|byebug\b|Debugger\.Break\(\)'
+    exclude: ["tests/**", "**/*.test.*", "**/*.spec.*"]
+    severity: error
+
+  # Sleep in tests makes CI slow and flaky - use retries or event waits instead.
+  - id: hygiene/no-sleep-in-tests
+    type: pattern-ban
+    description: "Avoid time.sleep() / Thread.sleep in tests - use proper waits or retries"
+    pattern: 'time\.sleep\(|Thread\.sleep\(|setTimeout\([^,]+,\s*\d{4,}'
+    exclude: ["scripts/**"]
+    severity: warning
+
+  # Test files scattered outside tests/ are hard to find and easy to miss in CI.
+  - id: hygiene/tests-in-tests-dir
+    type: file-pattern
+    description: "Test files must live in tests/ or __tests__/ - not alongside production code"
+    pattern: '(?:def test_\w+|it\(["\x27]|describe\(["\x27]|\[Fact\]|\[Test\])'
+    allowed_in:
+      - "tests/**"
+      - "__tests__/**"
+      - "**/*.test.*"
+      - "**/*.spec.*"
+      - "**/*Tests/**"
+      - "**/*Test.cs"
+      - "spec/**"
+    severity: warning
+
+  # Large blocks of commented-out code are noise - delete or restore it.
+  - id: hygiene/no-commented-code
+    type: pattern-ban
+    description: "Remove commented-out code blocks - use git history instead"
+    pattern: '^\s*#\s*(?:def |class |import |from |return |if |for |while )'
+    exclude: ["tests/**", "docs/**", "**/*.md", "**/*.yml", "**/*.yaml"]
+    severity: warning

@@ -22,3 +22,17 @@ rules:
     description: Use only one client-side state management library.
     allow_only_one_of: ["zustand", "jotai", "recoil", "redux", "@reduxjs/toolkit", "mobx"]
     severity: warning
+
+  - id: nextjs/no-process-env-in-components
+    type: pattern-ban
+    description: Do not read process.env directly in React components - use a typed config module.
+    pattern: 'process\.env\.\w+'
+    exclude: ["**/config.*", "**/env.*", "next.config.*", "**/*.test.*", "**/*.spec.*"]
+    severity: warning
+
+  - id: nextjs/api-routes-in-api-dir
+    type: file-pattern
+    description: Next.js API route handlers must live in app/api/ or pages/api/.
+    pattern: 'export\s+(?:async\s+)?function\s+(?:GET|POST|PUT|PATCH|DELETE|HEAD)\b'
+    allowed_in: ["**/app/api/**", "**/pages/api/**"]
+    severity: warning
