@@ -39,3 +39,18 @@ rules:
       - "redis"
       - "celery"
     severity: error
+
+  - id: clean-arch/no-infrastructure-in-use-cases
+    type: boundary
+    description: Use cases must not import infrastructure packages - depend on abstractions, not implementations.
+    source: "use_cases/**"
+    blocked_imports:
+      - "sqlalchemy"
+      - "psycopg2"
+      - "pymongo"
+      - "redis"
+      - "boto3"
+      - "stripe"
+      - "sendgrid"
+      - "twilio"
+    severity: error

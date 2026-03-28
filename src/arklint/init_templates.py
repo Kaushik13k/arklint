@@ -18,7 +18,7 @@ from pathlib import Path
 _PYTHON_TEMPLATE = r"""version: "1"
 
 # Arklint - architectural rules for your Python project
-# Docs: https://arklintapp.com
+# Docs: https://arklint.elevane.org
 
 rules:
   # ── BOUNDARY ──────────────────────────────────────────────────────────────
@@ -66,6 +66,34 @@ rules:
       - "scripts/**"
     severity: warning
 
+  # Bare except swallows every exception including KeyboardInterrupt and SystemExit.
+  - id: no-bare-except
+    type: pattern-ban
+    description: "Use specific exception types, not bare except:"
+    pattern: '^\s*except:\s*$'
+    exclude:
+      - "tests/**"
+    severity: warning
+
+  # Hardcoded secrets must never land in source code.
+  - id: no-hardcoded-secrets
+    type: pattern-ban
+    description: "No hardcoded passwords, tokens, or API keys"
+    pattern: '(?i)(?:password|secret|api_key|token|private_key)\s*=\s*["\x27][A-Za-z0-9+/=_\-]{8,}'
+    exclude:
+      - "tests/**"
+      - "**/*.example*"
+      - "**/*.sample*"
+      - "docs/**"
+    severity: error
+
+  # Debug breakpoints must never be committed.
+  - id: no-debug-breakpoints
+    type: pattern-ban
+    description: "Remove debug breakpoints before committing"
+    pattern: 'pdb\.set_trace\(\)|breakpoint\(\)'
+    severity: error
+
   # ── LAYER-BOUNDARY ────────────────────────────────────────────────────────
   # Enforce a strict dependency direction: routes → services → repositories.
   - id: layered-architecture
@@ -90,7 +118,7 @@ rules:
 _NODE_TEMPLATE = r"""version: "1"
 
 # Arklint - architectural rules for your Node / TypeScript project
-# Docs: https://arklintapp.com
+# Docs: https://arklint.elevane.org
 
 rules:
   # ── BOUNDARY ──────────────────────────────────────────────────────────────
@@ -143,6 +171,40 @@ rules:
       - "scripts/**"
     severity: warning
 
+  # TypeScript any defeats the purpose of static typing.
+  - id: no-any-type
+    type: pattern-ban
+    description: "Avoid TypeScript 'any' - use proper types or 'unknown'"
+    pattern: ':\s*any\b'
+    exclude:
+      - "**/*.js"
+      - "**/*.test.*"
+      - "**/*.spec.*"
+      - "**/*.d.ts"
+    severity: warning
+
+  # Hardcoded secrets must never land in source code.
+  - id: no-hardcoded-secrets
+    type: pattern-ban
+    description: "No hardcoded passwords, tokens, or API keys"
+    pattern: '(?i)(?:password|secret|apiKey|api_key|token|privateKey)\s*[:=]\s*["\x27][A-Za-z0-9+/=_\-]{8,}'
+    exclude:
+      - "**/*.test.*"
+      - "**/*.spec.*"
+      - "**/*.example*"
+      - "docs/**"
+    severity: error
+
+  # Debug breakpoints must never be committed.
+  - id: no-debug-breakpoints
+    type: pattern-ban
+    description: "Remove debugger statements before committing"
+    pattern: '\bdebugger\b'
+    exclude:
+      - "**/*.test.*"
+      - "**/*.spec.*"
+    severity: error
+
   # ── LAYER-BOUNDARY ────────────────────────────────────────────────────────
   # Enforce a strict dependency direction: routes → services → repositories.
   - id: layered-architecture
@@ -167,7 +229,7 @@ rules:
 _DOTNET_TEMPLATE = r"""version: "1"
 
 # Arklint - architectural rules for your .NET / C# project
-# Docs: https://arklintapp.com
+# Docs: https://arklint.elevane.org
 
 rules:
   # ── BOUNDARY ──────────────────────────────────────────────────────────────
@@ -214,6 +276,37 @@ rules:
       - "**/*Tests/**"
       - "scripts/**"
     severity: warning
+
+  # async void swallows exceptions and cannot be awaited - always use async Task.
+  - id: no-async-void
+    type: pattern-ban
+    description: "Use async Task instead of async void - async void exceptions are unobservable"
+    pattern: 'async\s+void\s+\w+'
+    exclude:
+      - "**/*Tests/**"
+      - "**/*Test.cs"
+    severity: error
+
+  # Hardcoded secrets must never land in source code.
+  - id: no-hardcoded-secrets
+    type: pattern-ban
+    description: "No hardcoded passwords, tokens, or connection strings"
+    pattern: '(?i)(?:Password|Secret|ApiKey|Token|ConnectionString)\s*=\s*"[A-Za-z0-9+/=_\-]{8,}"'
+    exclude:
+      - "**/*Tests/**"
+      - "**/*Test.cs"
+      - "**/*.example*"
+    severity: error
+
+  # Debug breakpoints must never be committed.
+  - id: no-debug-breakpoints
+    type: pattern-ban
+    description: "Remove Debugger.Break() and System.Diagnostics.Debugger calls before committing"
+    pattern: 'Debugger\.Break\(\)|System\.Diagnostics\.Debugger\.Launch\(\)'
+    exclude:
+      - "**/*Tests/**"
+      - "**/*Test.cs"
+    severity: error
 
   # ── LAYER-BOUNDARY ────────────────────────────────────────────────────────
   # Enforce strict Clean Architecture direction.

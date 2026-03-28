@@ -1,0 +1,58 @@
+name: arklint/spring
+description: Spring Boot conventions - enforces Controller/Service/Repository layer separation, constructor injection, and DTO placement.
+version: "1"
+
+rules:
+  - id: spring/no-db-in-controllers
+    type: boundary
+    description: Spring controllers must not inject JPA repositories or EntityManager directly - use a service layer.
+    source: "**/controller/**"
+    blocked_imports:
+      - "org.springframework.data.jpa.repository"
+      - "javax.persistence.EntityManager"
+      - "jakarta.persistence.EntityManager"
+    severity: error
+
+  - id: spring/entities-in-entity-dir
+    type: file-pattern
+    description: JPA entity classes must live in entity/, model/, or domain/ packages.
+    pattern: '@Entity\b'
+    allowed_in: ["**/entity/**", "**/entities/**", "**/model/**", "**/domain/**"]
+    severity: warning
+
+  - id: spring/dtos-in-dto-dir
+    type: file-pattern
+    description: DTO/request/response classes must live in dto/, request/, or response/ packages.
+    pattern: 'public\s+(?:class|record)\s+\w+(?:Dto|Request|Response|DTO)\b'
+    allowed_in: ["**/dto/**", "**/dtos/**", "**/request/**", "**/response/**"]
+    severity: warning
+
+  - id: spring/no-field-injection
+    type: pattern-ban
+    description: Use constructor injection, not @Autowired field injection - field injection makes testing harder.
+    pattern: '@Autowired\s*\n\s*(?:private|protected|public)\s+'
+    exclude: ["**/*Test.java", "**/*Tests.java", "**/*IT.java"]
+    severity: warning
+
+  - id: spring/layered-architecture
+    type: layer-boundary
+    description: Enforce Controller → Service → Repository dependency direction.
+    layers:
+      - name: controllers
+        path: "**/controller/**"
+      - name: services
+        path: "**/service/**"
+      - name: repositories
+        path: "**/repository/**"
+    allowed_dependencies:
+      controllers: [services]
+      services: [repositories]
+      repositories: []
+    severity: error
+
+  - id: spring/no-transactional-in-controllers
+    type: pattern-ban
+    description: "@Transactional must not be placed on controller methods - transaction boundaries belong in services."
+    pattern: '@Transactional'
+    exclude: ["**/service/**", "**/services/**", "**/*Service.java", "**/*Test.java"]
+    severity: warning

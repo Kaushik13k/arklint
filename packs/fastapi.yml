@@ -29,3 +29,26 @@ rules:
     description: Use only one HTTP client library - mixing httpx and requests causes inconsistency.
     allow_only_one_of: ["httpx", "requests", "aiohttp"]
     severity: warning
+
+  - id: fastapi/layered-architecture
+    type: layer-boundary
+    description: Enforce routers → services → repositories dependency direction.
+    layers:
+      - name: routers
+        path: "routers/**"
+      - name: services
+        path: "services/**"
+      - name: repositories
+        path: "repositories/**"
+    allowed_dependencies:
+      routers: [services]
+      services: [repositories]
+      repositories: []
+    severity: error
+
+  - id: fastapi/no-settings-outside-config
+    type: file-pattern
+    description: Pydantic Settings/BaseSettings classes must live in config/ or core/ - not scattered in route files.
+    pattern: 'class\s+\w+\s*\(\s*(?:BaseSettings|Settings)\s*\)'
+    allowed_in: ["config/**", "core/**", "settings/**"]
+    severity: warning

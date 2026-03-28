@@ -1,0 +1,54 @@
+name: arklint/nestjs
+description: NestJS conventions - enforces module/controller/service separation, DI patterns, and single ORM.
+version: "1"
+
+rules:
+  - id: nestjs/no-db-in-controllers
+    type: boundary
+    description: NestJS controllers must not inject repositories or database clients directly - use a service layer.
+    source: "**/*.controller.ts"
+    blocked_imports: ["typeorm", "@prisma/client", "mongoose", "pg", "mysql2", "sequelize"]
+    severity: error
+
+  - id: nestjs/single-orm
+    type: dependency
+    description: Use only one ORM or database client - mixing TypeORM and Prisma causes confusion.
+    allow_only_one_of: ["@nestjs/typeorm", "@nestjs/mongoose", "@nestjs/sequelize", "prisma", "@prisma/client"]
+    severity: error
+
+  - id: nestjs/no-circular-dependency
+    type: pattern-ban
+    description: Avoid forwardRef() - it signals circular dependencies that should be refactored into a shared module.
+    pattern: 'forwardRef\(\(\)\s*=>'
+    exclude: ["tests/**", "**/*.spec.ts"]
+    severity: warning
+
+  - id: nestjs/dtos-in-dto-dir
+    type: file-pattern
+    description: NestJS DTO classes must live in dto/ directories.
+    pattern: 'export\s+class\s+\w+(?:Dto|Request|Response)\b'
+    allowed_in: ["**/dto/**", "**/dtos/**"]
+    severity: warning
+
+  - id: nestjs/no-business-logic-in-controllers
+    type: pattern-ban
+    description: Keep business logic out of controllers - controllers should only delegate to services.
+    pattern: '@(?:Get|Post|Put|Patch|Delete)\([^)]*\)[^{]*\{[^}]*(?:if|for|while|try)[^}]*\}'
+    exclude: ["tests/**", "**/*.spec.ts"]
+    severity: warning
+
+  - id: nestjs/layered-architecture
+    type: layer-boundary
+    description: Enforce controllers → services → repositories dependency direction.
+    layers:
+      - name: controllers
+        path: "**/*.controller.ts"
+      - name: services
+        path: "**/*.service.ts"
+      - name: repositories
+        path: "**/*.repository.ts"
+    allowed_dependencies:
+      controllers: [services]
+      services: [repositories]
+      repositories: []
+    severity: error
