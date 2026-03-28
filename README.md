@@ -1,11 +1,13 @@
 <p align="center">
-  <img src="docs/site/favicon.svg" width="64" height="64" alt="Arklint logo">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/site/arklint-wordmark-dark.svg">
+    <img src="docs/site/arklint-wordmark-light.svg" alt="Arklint" width="260">
+  </picture>
 </p>
 
-# Arklint
+<p align="center"><em>The architectural rulebook for your codebase. Prevention, not detection.</em></p>
 
-> The architectural rulebook for your codebase. Prevention, not detection.
-
+[![Docs](https://img.shields.io/badge/docs-arklint.elevane.org-0ea5e9)](https://arklint.elevane.org)
 [![PyPI version](https://badge.fury.io/py/arklint.svg)](https://pypi.org/project/arklint/)
 [![npm version](https://badge.fury.io/js/arklint.svg)](https://www.npmjs.com/package/arklint)
 [![NuGet version](https://badge.fury.io/nu/arklint.svg)](https://www.nuget.org/packages/arklint/)
@@ -239,6 +241,7 @@ arklint add arklint/<pack>            Add a pack to .arklint.yml
 arklint export --format cursorrules   Export rules for Cursor IDE
 arklint export --format claude        Export rules for Claude Code
 arklint export --format copilot       Export rules for GitHub Copilot
+arklint export --output <dir>         Write exported file to a specific directory
 
 arklint learn --describe <text>       Generate a rule from plain English
 arklint learn --provider anthropic    AI provider (anthropic or openai)
@@ -261,13 +264,13 @@ arklint --version                     Show version and exit
 ### GitHub Action
 
 ```yaml
-- uses: actions/checkout@v5
+- uses: actions/checkout@v4
   with:
     fetch-depth: 0
-- uses: Kaushik13k/arklint@v0.5.1
+- uses: Kaushik13k/arklint@main
   with:
     strict: "true"          # exit 1 on warnings too
-    diff: origin/main       # only scan changed files (fast)
+    diff: "origin/main"     # only scan changed files (fast)
 ```
 
 ### pip
@@ -303,14 +306,29 @@ arklint --version                     Show version and exit
 
 ## MCP server (AI agents)
 
-Connect Claude, Cursor, or any MCP-compatible agent to arklint so it can query your architectural rules before generating code:
+Expose your architectural rules to AI agents so they can check code before writing it.
 
 ```bash
 pip install 'arklint[mcp]'
 arklint mcp
 ```
 
-Add to `claude_desktop_config.json`:
+> The MCP server is bundled in the npm and .NET binaries — no extra install needed, just run `arklint mcp` directly.
+
+**Claude Code** — add to `.claude/settings.json` (or `~/.claude/settings.json`):
+
+```json
+{
+  "mcpServers": {
+    "arklint": {
+      "command": "arklint",
+      "args": ["mcp"]
+    }
+  }
+}
+```
+
+**Cursor** — add to `.cursor/mcp.json`:
 
 ```json
 {
@@ -324,6 +342,13 @@ Add to `claude_desktop_config.json`:
 ```
 
 Tools exposed: `list_rules`, `get_rule_details`, `check_file`, `check_snippet`.
+
+For the strongest enforcement, pair the MCP server with exported rule instructions — the export teaches agents your rules at generation time, the MCP validates before writing:
+
+```bash
+arklint export --format claude        # writes CLAUDE.md
+arklint export --format cursorrules   # writes .cursorrules
+```
 
 ---
 
