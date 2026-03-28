@@ -1,4 +1,4 @@
-"""File-pattern rule — ensure code patterns only appear in allowed directories.
+"""File-pattern rule - ensure code patterns only appear in allowed directories.
 
 Example config::
 
@@ -50,7 +50,7 @@ class FilePatternRule(BaseRule):
         for file in files:
             rel = self._rel(file)
             if allowed_spec.match_file(rel):
-                continue  # file is in an allowed location — skip
+                continue  # file is in an allowed location - skip
 
             for match in scan_pattern(file, pattern):
                 violations.append(

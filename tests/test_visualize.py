@@ -1,4 +1,4 @@
-"""Tests for arklint visualize — Mermaid diagram generation."""
+"""Tests for arklint visualize - Mermaid diagram generation."""
 from __future__ import annotations
 
 from pathlib import Path
@@ -36,7 +36,7 @@ class TestSafeId:
 
 
 # ---------------------------------------------------------------------------
-# build_mermaid — layer-boundary rules
+# build_mermaid - layer-boundary rules
 # ---------------------------------------------------------------------------
 
 def _make_cfg(rules: list[dict]) -> ArklintConfig:
@@ -102,7 +102,7 @@ class TestLayerBoundaryDiagram:
 
 
 # ---------------------------------------------------------------------------
-# build_mermaid — boundary rules
+# build_mermaid - boundary rules
 # ---------------------------------------------------------------------------
 
 class TestBoundaryDiagram:
@@ -135,7 +135,7 @@ class TestBoundaryDiagram:
 
 
 # ---------------------------------------------------------------------------
-# build_mermaid — dependency rules
+# build_mermaid - dependency rules
 # ---------------------------------------------------------------------------
 
 class TestDependencyDiagram:
@@ -164,7 +164,7 @@ class TestDependencyDiagram:
 
 
 # ---------------------------------------------------------------------------
-# build_mermaid — empty / unknown rules
+# build_mermaid - empty / unknown rules
 # ---------------------------------------------------------------------------
 
 class TestEmptyConfig:
@@ -219,11 +219,13 @@ rules:
     def test_visualize_output_file(self, tmp_path):
         cfg = self._write_config(tmp_path)
         out = tmp_path / "diagram.md"
-        result = runner.invoke(app, ["visualize", "--config", str(cfg), "--output", str(out)])
+        result = runner.invoke(
+            app, ["visualize", "--config", str(cfg), "--output", str(out)])
         assert result.exit_code == 0
         assert out.exists()
         assert "flowchart LR" in out.read_text()
 
     def test_visualize_missing_config_exits_1(self, tmp_path):
-        result = runner.invoke(app, ["visualize", "--config", str(tmp_path / "missing.yml")])
+        result = runner.invoke(
+            app, ["visualize", "--config", str(tmp_path / "missing.yml")])
         assert result.exit_code == 1

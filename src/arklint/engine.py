@@ -40,7 +40,7 @@ def run_rules(
 ) -> list[CheckResult]:
     """Evaluate every rule in *config* against *files*.
 
-    *scan_root* overrides ``config.root`` when computing relative paths — use
+    *scan_root* overrides ``config.root`` when computing relative paths - use
     this when scanning a directory other than where ``.arklint.yml`` lives.
 
     Returns one :class:`CheckResult` per configured rule, in config order.

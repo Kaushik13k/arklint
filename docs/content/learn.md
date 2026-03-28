@@ -11,7 +11,7 @@ Arklint prompts the AI with your description and the full rule schema. The AI re
 
 The `anthropic` and `openai` SDKs are bundled in the prebuilt binary, so `arklint learn` works out of the box regardless of whether you installed via pip, npm, or .NET. All you need is an API key.
 
-## pip install — optional extras
+## pip install - optional extras
 
 If you installed via pip, install the AI extra for your provider:
 
@@ -20,7 +20,7 @@ $ pip install 'arklint[ai-anthropic]'   # Claude (Anthropic)
 $ pip install 'arklint[ai-openai]'      # GPT-4o-mini (OpenAI)
 ```
 
-> **Note:** The pip extras are named `ai-anthropic` and `ai-openai` — with the `ai-` prefix. `pip install arklint[anthropic]` will fail. The `--provider` flag uses just `anthropic` or `openai` (no prefix) — a different naming from the pip extras.
+> **Note:** The pip extras are named `ai-anthropic` and `ai-openai` - with the `ai-` prefix. `pip install arklint[anthropic]` will fail. The `--provider` flag uses just `anthropic` or `openai` (no prefix) - a different naming from the pip extras.
 
 ## Options
 

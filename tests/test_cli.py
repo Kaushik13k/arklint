@@ -67,7 +67,8 @@ class TestValidate:
         assert result.exit_code == 1
 
     def test_missing_config_exits_1(self):
-        result = runner.invoke(app, ["validate", "--config", "/nonexistent/.arklint.yml"])
+        result = runner.invoke(
+            app, ["validate", "--config", "/nonexistent/.arklint.yml"])
         assert result.exit_code == 1
 
 
@@ -100,22 +101,25 @@ class TestQuiet:
 
     def test_quiet_suppresses_passing_rules(self):
         cfg, scan_dir = self._make_project("x = 1\n")
-        result = runner.invoke(app, ["check", str(scan_dir), "--config", str(cfg), "--quiet"])
+        result = runner.invoke(
+            app, ["check", str(scan_dir), "--config", str(cfg), "--quiet"])
         assert "PASS" not in result.output
 
     def test_quiet_still_shows_violations(self):
         cfg, scan_dir = self._make_project('print("bad")\n')
-        result = runner.invoke(app, ["check", str(scan_dir), "--config", str(cfg), "--quiet"])
+        result = runner.invoke(
+            app, ["check", str(scan_dir), "--config", str(cfg), "--quiet"])
         assert "WARN" in result.output or "FAIL" in result.output
 
     def test_without_quiet_shows_passing_rules(self):
         cfg, scan_dir = self._make_project("x = 1\n")
-        result = runner.invoke(app, ["check", str(scan_dir), "--config", str(cfg)])
+        result = runner.invoke(
+            app, ["check", str(scan_dir), "--config", str(cfg)])
         assert "PASS" in result.output
 
 
 # ---------------------------------------------------------------------------
-# arklint check — status line and exit codes
+# arklint check - status line and exit codes
 # ---------------------------------------------------------------------------
 
 class TestCheckStatusLine:
@@ -136,38 +140,45 @@ class TestCheckStatusLine:
 
     def test_clean_shows_all_rules_passed(self):
         cfg, scan_dir = self._make_project("x = 1\n")
-        result = runner.invoke(app, ["check", str(scan_dir), "--config", str(cfg)])
+        result = runner.invoke(
+            app, ["check", str(scan_dir), "--config", str(cfg)])
         assert result.exit_code == 0
         assert "all rules passed" in result.output
 
     def test_warning_without_strict_exits_0(self):
         cfg, scan_dir = self._make_project('print("hi")\n', severity="warning")
-        result = runner.invoke(app, ["check", str(scan_dir), "--config", str(cfg)])
+        result = runner.invoke(
+            app, ["check", str(scan_dir), "--config", str(cfg)])
         assert result.exit_code == 0
 
     def test_warning_without_strict_shows_warning_message(self):
         cfg, scan_dir = self._make_project('print("hi")\n', severity="warning")
-        result = runner.invoke(app, ["check", str(scan_dir), "--config", str(cfg)])
+        result = runner.invoke(
+            app, ["check", str(scan_dir), "--config", str(cfg)])
         assert "warnings" in result.output.lower()
         assert "all rules passed" not in result.output
 
     def test_warning_with_strict_exits_1(self):
         cfg, scan_dir = self._make_project('print("hi")\n', severity="warning")
-        result = runner.invoke(app, ["check", str(scan_dir), "--config", str(cfg), "--strict"])
+        result = runner.invoke(
+            app, ["check", str(scan_dir), "--config", str(cfg), "--strict"])
         assert result.exit_code == 1
 
     def test_warning_with_strict_shows_strict_message(self):
         cfg, scan_dir = self._make_project('print("hi")\n', severity="warning")
-        result = runner.invoke(app, ["check", str(scan_dir), "--config", str(cfg), "--strict"])
+        result = runner.invoke(
+            app, ["check", str(scan_dir), "--config", str(cfg), "--strict"])
         assert "strict" in result.output.lower()
 
     def test_error_exits_1(self):
         cfg, scan_dir = self._make_project('print("hi")\n', severity="error")
-        result = runner.invoke(app, ["check", str(scan_dir), "--config", str(cfg)])
+        result = runner.invoke(
+            app, ["check", str(scan_dir), "--config", str(cfg)])
         assert result.exit_code == 1
 
     def test_error_shows_violations_message(self):
         cfg, scan_dir = self._make_project('print("hi")\n', severity="error")
-        result = runner.invoke(app, ["check", str(scan_dir), "--config", str(cfg)])
+        result = runner.invoke(
+            app, ["check", str(scan_dir), "--config", str(cfg)])
         assert "violations" in result.output.lower()
         assert "all rules passed" not in result.output

@@ -1,5 +1,5 @@
 name: arklint/django
-description: Django conventions — enforces view/model/serializer separation and bans raw SQL in views.
+description: Django conventions - enforces view/model/serializer separation and bans raw SQL in views.
 version: "1"
 
 rules:

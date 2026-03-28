@@ -1,6 +1,6 @@
 """Base types for Arklint rules.
 
-Every rule must satisfy the ``Rule`` Protocol — implement ``check()`` and
+Every rule must satisfy the ``Rule`` Protocol - implement ``check()`` and
 nothing else is required.  The ``BaseRule`` convenience class handles the
 boilerplate (config access, root path, violation factory).
 """
@@ -21,7 +21,8 @@ class Violation:
     rule_id: str
     severity: str       # "error" | "warning"
     file: Path
-    line: int | None    # None when not applicable (e.g. dependency-level check)
+    # None when not applicable (e.g. dependency-level check)
+    line: int | None
     message: str
 
 
@@ -52,7 +53,8 @@ class BaseRule:
         self.root = root
 
     def check(self, files: list[Path]) -> list[Violation]:  # pragma: no cover
-        raise NotImplementedError(f"{type(self).__name__}.check() not implemented")
+        raise NotImplementedError(
+            f"{type(self).__name__}.check() not implemented")
 
     # ------------------------------------------------------------------
     # Helpers

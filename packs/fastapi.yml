@@ -1,5 +1,5 @@
 name: arklint/fastapi
-description: FastAPI best practices — enforces clean separation of routers, services, schemas, and repositories.
+description: FastAPI best practices - enforces clean separation of routers, services, schemas, and repositories.
 version: "1"
 
 rules:
@@ -12,7 +12,7 @@ rules:
 
   - id: fastapi/no-business-logic-in-routes
     type: pattern-ban
-    description: Keep business logic out of route handlers — move if/for/while logic to a service layer.
+    description: Keep business logic out of route handlers - move if/for/while logic to a service layer.
     pattern: '(?:async\s+)?def\s+\w+\s*\([^)]*(?:Request|Response|Depends)[^)]*\)[^:]*:\s*\n(?:\s+.*\n)*?\s+(?:if|for|while|try)\b'
     exclude: ["tests/**", "**/services/**", "**/repositories/**"]
     severity: warning
@@ -26,6 +26,6 @@ rules:
 
   - id: fastapi/single-http-client
     type: dependency
-    description: Use only one HTTP client library — mixing httpx and requests causes inconsistency.
+    description: Use only one HTTP client library - mixing httpx and requests causes inconsistency.
     allow_only_one_of: ["httpx", "requests", "aiohttp"]
     severity: warning

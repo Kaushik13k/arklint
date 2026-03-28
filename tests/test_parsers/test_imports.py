@@ -69,7 +69,8 @@ class TestJavaScript:
         assert "lodash" in extract_imports(f)
 
     def test_typescript_file(self, tmp_path):
-        f = _file(tmp_path, "f.ts", "import { Component } from '@angular/core';\n")
+        f = _file(tmp_path, "f.ts",
+                  "import { Component } from '@angular/core';\n")
         assert "@angular/core" in extract_imports(f)
 
     def test_tsx_file(self, tmp_path):
@@ -151,7 +152,8 @@ class TestJava:
         assert "java.util.List" in extract_imports(f)
 
     def test_static_import(self, tmp_path):
-        f = _file(tmp_path, "f.java", "import static org.junit.Assert.assertEquals;\n")
+        f = _file(tmp_path, "f.java",
+                  "import static org.junit.Assert.assertEquals;\n")
         assert "org.junit.Assert.assertEquals" in extract_imports(f)
 
     def test_wildcard_import(self, tmp_path):
@@ -206,5 +208,5 @@ class TestUnknownExtension:
 
     def test_unreadable_file_returns_empty(self, tmp_path):
         f = tmp_path / "f.py"
-        # Don't write it — file doesn't exist
+        # Don't write it - file doesn't exist
         assert extract_imports(f) == []

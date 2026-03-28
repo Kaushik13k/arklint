@@ -5,7 +5,7 @@
 ## Why is this change needed?
 
 <!-- Required: The motivation. Link to an issue if applicable. -->
-<!-- "because it was broken" is not enough — explain the root cause or the goal. -->
+<!-- "because it was broken" is not enough - explain the root cause or the goal. -->
 
 ## How was it tested?
 

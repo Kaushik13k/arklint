@@ -60,7 +60,7 @@ def _render_cursorrules(rules: list[RuleConfig]) -> str:
     bullet_block = "\n".join(_rule_lines(rules))
     return (
         "# Arklint architectural rules\n"
-        "# Auto-generated — do not edit by hand. Re-run `arklint export --format cursorrules`.\n\n"
+        "# Auto-generated - do not edit by hand. Re-run `arklint export --format cursorrules`.\n\n"
         "## Code rules\n\n"
         "The following architectural rules are enforced by arklint. "
         "When writing or suggesting code, do not introduce violations:\n\n"
@@ -72,7 +72,7 @@ def _render_claude(rules: list[RuleConfig]) -> str:
     bullet_block = "\n".join(_rule_lines(rules))
     return (
         "# Arklint architectural rules\n\n"
-        "> Auto-generated — do not edit by hand. "
+        "> Auto-generated - do not edit by hand. "
         "Re-run `arklint export --format claude` to refresh.\n\n"
         "## Rules\n\n"
         "The following architectural rules are enforced by arklint. "
@@ -85,7 +85,7 @@ def _render_copilot(rules: list[RuleConfig]) -> str:
     bullet_block = "\n".join(_rule_lines(rules))
     return (
         "# Arklint architectural rules\n\n"
-        "<!-- Auto-generated — do not edit by hand. "
+        "<!-- Auto-generated - do not edit by hand. "
         "Re-run `arklint export --format copilot` to refresh. -->\n\n"
         "## Code rules\n\n"
         "The following architectural rules are enforced by arklint. "

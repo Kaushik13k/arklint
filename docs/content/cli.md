@@ -9,7 +9,7 @@ Every command and flag Arklint supports.
 | `arklint check` | Scan the codebase from the current directory |
 | `arklint check <path>` | Scan a specific directory |
 | `arklint check --strict` | Exit with code 1 on warnings (not just errors) |
-| `arklint check --quiet` / `-q` | Suppress passing rules — only show failures and warnings |
+| `arklint check --quiet` / `-q` | Suppress passing rules - only show failures and warnings |
 | `arklint check --json` | Machine-readable JSON output for CI pipelines |
 | `arklint check --diff <ref>` | Only scan files changed vs a git ref |
 | `arklint check --github-annotations` | Emit GitHub Actions inline PR annotations |

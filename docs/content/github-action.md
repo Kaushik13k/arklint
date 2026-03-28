@@ -72,4 +72,4 @@ If your config lives elsewhere (e.g. a monorepo), point the action to it explici
 
 ## Inline PR annotations
 
-When `diff` mode is enabled, the action automatically passes `--github-annotations` to emit inline annotations on the pull request. Violations appear directly on the changed lines — no need to scroll through logs.
+When `diff` mode is enabled, the action automatically passes `--github-annotations` to emit inline annotations on the pull request. Violations appear directly on the changed lines - no need to scroll through logs.

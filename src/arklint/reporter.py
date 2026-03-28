@@ -13,7 +13,7 @@ from rich.text import Text
 from arklint.engine import CheckResult
 
 
-# Single shared console — callers can import this to print their own messages.
+# Single shared console - callers can import this to print their own messages.
 console = Console()
 err_console = Console(stderr=True)
 
@@ -22,7 +22,7 @@ _DIVIDER = "─" * 52
 
 def print_header(version: str, file_count: int, rule_count: int) -> None:
     console.print(
-        f"\n[bold cyan]Arklint v{version}[/bold cyan] [dim]—[/dim] "
+        f"\n[bold cyan]Arklint v{version}[/bold cyan] [dim]-[/dim] "
         f"Scanning [bold]{file_count}[/bold] files against "
         f"[bold]{rule_count}[/bold] rule{'s' if rule_count != 1 else ''}...\n"
     )
@@ -35,7 +35,7 @@ def print_report(
 ) -> tuple[int, int]:
     """Render all results to the terminal.
 
-    When *quiet* is True, passing rules are suppressed — only failures
+    When *quiet* is True, passing rules are suppressed - only failures
     and warnings are printed.
 
     Returns ``(total_errors, total_warnings)``.
@@ -63,7 +63,7 @@ def emit_github_annotations(
     """Write GitHub Actions workflow commands for every violation.
 
     Each line is picked up by the GitHub Actions runner and shown as an
-    inline annotation on the PR diff — no API token required.
+    inline annotation on the PR diff - no API token required.
     """
     for result in results:
         for v in result.violations:
@@ -87,7 +87,8 @@ def emit_github_annotations(
 def _render_result(result: CheckResult, scan_root: Path, quiet: bool = False) -> None:
     if result.passed:
         if not quiet:
-            console.print(f"  [bold green]✓ PASS[/bold green]  [dim]{result.rule.id}[/dim]")
+            console.print(
+                f"  [bold green]✓ PASS[/bold green]  [dim]{result.rule.id}[/dim]")
         return
 
     severity = result.rule.severity
@@ -115,7 +116,8 @@ def _render_result(result: CheckResult, scan_root: Path, quiet: bool = False) ->
         else:
             location = f"[cyan]{rel_path}[/cyan]"
 
-        console.print(f"         {location} [dim]→[/dim] [{msg_color}]{v.message}[/{msg_color}]")
+        console.print(
+            f"         {location} [dim]→[/dim] [{msg_color}]{v.message}[/{msg_color}]")
 
 
 def _render_summary(
@@ -128,7 +130,8 @@ def _render_summary(
 
     parts: list[str] = []
     if errors:
-        parts.append(f"[bold red]{errors} error{'s' if errors != 1 else ''}[/bold red]")
+        parts.append(
+            f"[bold red]{errors} error{'s' if errors != 1 else ''}[/bold red]")
     if warnings:
         parts.append(
             f"[bold yellow]{warnings} warning{'s' if warnings != 1 else ''}[/bold yellow]"
@@ -138,7 +141,8 @@ def _render_summary(
             f"[bold green]{passed} passed[/bold green]"
         )
 
-    summary = ", ".join(parts) if parts else "[bold green]all rules passed[/bold green]"
+    summary = ", ".join(
+        parts) if parts else "[bold green]all rules passed[/bold green]"
     console.print(f"Results: {summary}")
     console.print(_DIVIDER)
     console.print()

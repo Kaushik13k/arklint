@@ -1,4 +1,4 @@
-"""Tests for scanner.py — file collection and default excludes."""
+"""Tests for scanner.py - file collection and default excludes."""
 import tempfile
 from pathlib import Path
 

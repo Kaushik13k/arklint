@@ -44,7 +44,8 @@ def _add_layer_boundary(cfg: ArklintConfig, lines: list[str]) -> None:
         if not layers:
             continue
 
-        lines.append(f"\n    subgraph {_safe_id(rule.id)} [\"{rule.description}\"]")
+        lines.append(
+            f"\n    subgraph {_safe_id(rule.id)} [\"{rule.description}\"]")
 
         layer_names = [lay["name"] for lay in layers if lay.get("name")]
 
@@ -55,7 +56,7 @@ def _add_layer_boundary(cfg: ArklintConfig, lines: list[str]) -> None:
             nid = _safe_id(name)
             lines.append(f"        {nid}[\"{name}\\n{path}\"]")
 
-        # Edges — allowed deps get a solid arrow, blocked get a red X edge
+        # Edges - allowed deps get a solid arrow, blocked get a red X edge
         all_pairs: set[tuple[str, str]] = set()
         for src in layer_names:
             for tgt in layer_names:

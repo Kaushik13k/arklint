@@ -1,4 +1,4 @@
-"""Boundary rule — prevent cross-directory import violations.
+"""Boundary rule - prevent cross-directory import violations.
 
 Example config::
 
@@ -27,9 +27,11 @@ class BoundaryRule(BaseRule):
     def check(self, files: list[Path]) -> list[Violation]:
         raw = self.config.raw
         source_globs: list[str] = (
-            [raw["source"]] if isinstance(raw.get("source"), str) else raw.get("source", [])
+            [raw["source"]] if isinstance(
+                raw.get("source"), str) else raw.get("source", [])
         )
-        blocked: list[str] = [b.lower() for b in raw.get("blocked_imports", [])]
+        blocked: list[str] = [b.lower()
+                              for b in raw.get("blocked_imports", [])]
 
         if not source_globs or not blocked:
             return []
@@ -42,7 +44,7 @@ class BoundaryRule(BaseRule):
             if not source_spec.match_file(rel):
                 continue
 
-            # Deduplicate: one violation per (file, blocked_package) — don't
+            # Deduplicate: one violation per (file, blocked_package) - don't
             # emit the same violation for `import sqlalchemy` AND
             # `from sqlalchemy import Session` in the same file.
             seen_blocked: set[str] = set()
@@ -57,7 +59,7 @@ class BoundaryRule(BaseRule):
                             self._violation(
                                 file=file,
                                 line=None,
-                                message=f"imports '{imp}' — blocked by this rule",
+                                message=f"imports '{imp}' - blocked by this rule",
                             )
                         )
 

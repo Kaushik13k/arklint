@@ -1,6 +1,6 @@
 version: "1"
 
-# Arklint — architectural rules for your codebase
+# Arklint - architectural rules for your codebase
 # Docs: https://github.com/arklint/arklint
 
 rules:
@@ -18,7 +18,7 @@ rules:
     severity: error
 
   # ── FILE-PATTERN ──────────────────────────────────────────────────────────
-  # Data models belong in models/ or schemas/ — nowhere else.
+  # Data models belong in models/ or schemas/ - nowhere else.
   - id: models-in-models-dir
     type: file-pattern
     description: "Data models must live in models/ or schemas/"
@@ -29,7 +29,7 @@ rules:
     severity: warning
 
   # ── PATTERN-BAN ───────────────────────────────────────────────────────────
-  # Use structured logging — never bare print().
+  # Use structured logging - never bare print().
   - id: no-print-statements
     type: pattern-ban
     description: "Use structured logging, not print()"
