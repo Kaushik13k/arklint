@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/site/favicon.svg" width="64" height="64" alt="Arklint logo">
+</p>
+
 # Arklint
 
 > The architectural rulebook for your codebase. Prevention, not detection.
