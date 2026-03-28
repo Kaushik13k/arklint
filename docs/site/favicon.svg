@@ -3,17 +3,20 @@
     <clipPath id="lh-fv"><rect x="0" y="0" width="32" height="64"/></clipPath>
     <clipPath id="rh-fv"><rect x="32" y="0" width="32" height="64"/></clipPath>
     <mask id="km-fv">
-      <polygon points="11,10 53,10 53,31 32,55 11,31" fill="white"/>
+      <polygon points="12,11 52,11 52,30 32,54 12,30" fill="white"/>
     </mask>
   </defs>
   <rect width="64" height="64" rx="13" fill="#0f172a"/>
   <g mask="url(#km-fv)" clip-path="url(#lh-fv)">
-    <rect x="0" y="10" width="64" height="12" fill="#ffffff"/>
-    <rect x="0" y="22" width="64" height="33" fill="#34d399"/>
+    <rect x="0" y="11" width="64" height="10" fill="#ffffff"/>
+    <rect x="0" y="21" width="64" height="17" fill="#34d399"/>
+    <rect x="0" y="38" width="64" height="20" fill="#fbbf24"/>
   </g>
-  <polygon points="11,10 53,10 53,31 32,55 11,31"
-           fill="none" stroke="white" stroke-width="6" stroke-linejoin="round"
+  <line x1="12" y1="21" x2="32" y2="21" stroke="#0f172a" stroke-width="1.5" opacity="0.35"/>
+  <line x1="12" y1="38" x2="32" y2="38" stroke="#0f172a" stroke-width="1.5" opacity="0.35"/>
+  <polygon points="12,11 52,11 52,30 32,54 12,30"
+           fill="none" stroke="white" stroke-width="3.5" stroke-linejoin="round"
            clip-path="url(#rh-fv)" opacity="0.6"/>
-  <polygon points="11,10 53,10 53,31 32,55 11,31"
-           fill="none" stroke="white" stroke-width="2" stroke-linejoin="round" opacity="0.15"/>
+  <polygon points="12,11 52,11 52,30 32,54 12,30"
+           fill="none" stroke="white" stroke-width="1.5" stroke-linejoin="round" opacity="0.15"/>
 </svg>
