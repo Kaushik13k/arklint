@@ -157,6 +157,25 @@ def check(
 # ---------------------------------------------------------------------------
 
 
+def _run_watch(cfg, scan_root: Path, strict: bool) -> None:
+    """Run a single check cycle used by the watch command."""
+    console.rule("[dim]arklint[/dim]")
+    files = collect_files(scan_root)
+    print_header(__version__, len(files), len(cfg.rules))
+    results = run_rules(cfg, files, scan_root=scan_root)
+    errors, warnings = print_report(results, scan_root)
+    if errors > 0:
+        console.print("[bold red]✗ violations found[/bold red]")
+    elif strict and warnings > 0:
+        console.print("[bold red]✗ warnings treated as errors (--strict)[/bold red]")
+    elif warnings > 0:
+        console.print(
+            "[bold yellow]⚠ warnings - run with --strict to treat as errors[/bold yellow]"
+        )
+    else:
+        console.print("[bold green]✓ all rules passed[/bold green]")
+
+
 @app.command()
 def watch(
     path: Path | None = typer.Argument(
@@ -195,24 +214,13 @@ def watch(
         err_console.print(f"[bold red]Config error:[/bold red] {exc}")
         raise typer.Exit(2) from exc
 
-    def _run() -> None:
-        console.rule("[dim]arklint[/dim]")
-        files = collect_files(scan_root)
-        print_header(__version__, len(files), len(cfg.rules))
-        results = run_rules(cfg, files, scan_root=scan_root)
-        errors, warnings = print_report(results, scan_root)
-        if errors > 0:
-            console.print("[bold red]✗ violations found[/bold red]")
-        elif strict and warnings > 0:
-            console.print("[bold red]✗ warnings treated as errors (--strict)[/bold red]")
-        elif warnings > 0:
-            console.print(
-                "[bold yellow]⚠ warnings - run with --strict to treat as errors[/bold yellow]"
-            )
-        else:
-            console.print("[bold green]✓ all rules passed[/bold green]")
-
     class _Handler(FileSystemEventHandler):
+        def __init__(self, cfg, scan_root: Path, strict: bool) -> None:
+            super().__init__()
+            self._cfg = cfg
+            self._scan_root = scan_root
+            self._strict = strict
+
         def on_any_event(self, event: FileSystemEvent) -> None:
             if event.is_directory:
                 return
@@ -223,13 +231,13 @@ def watch(
                 for part in Path(src).parts
             ):
                 return
-            _run()
+            _run_watch(self._cfg, self._scan_root, self._strict)
 
-    _run()
+    _run_watch(cfg, scan_root, strict)
     console.print(f"\n[dim]Watching [cyan]{scan_root}[/cyan] - press Ctrl+C to stop.[/dim]\n")
 
     observer = Observer()
-    observer.schedule(_Handler(), str(scan_root), recursive=True)
+    observer.schedule(_Handler(cfg, scan_root, strict), str(scan_root), recursive=True)
     observer.start()
     try:
         while observer.is_alive():
@@ -415,10 +423,12 @@ def learn(
         err_console.print(f"[bold red]Config error:[/bold red] {exc}")
         raise typer.Exit(1) from exc
 
-    with open(cfg_path, "a", encoding="utf-8") as f:
-        with open(cfg_path, "a", encoding="utf-8") as f:
-            indented_snippet = yaml_snippet.replace("\n", "\n  ")
-            f.write("\n  " + indented_snippet + "\n")
+    raw_cfg = yaml.safe_load(cfg_path.read_text()) or {}
+    new_rule = yaml.safe_load(yaml_snippet)
+    if isinstance(new_rule, list):
+        new_rule = new_rule[0]
+    raw_cfg.setdefault("rules", []).append(new_rule)
+    cfg_path.write_text(yaml.dump(raw_cfg, default_flow_style=False, sort_keys=False))
 
     console.print(
         f"[bold green]✓ Rule appended[/bold green] to [cyan]{cfg_path}[/cyan]\n"
@@ -663,7 +673,7 @@ def _check_json(cfg, files, scan_root, strict: bool, diff_base: str | None = Non
             else:
                 warnings += 1
 
-    console.print(json.dumps(output, indent=2))
+    print(json.dumps(output, indent=2))
     if errors > 0 or (strict and warnings > 0):
         raise typer.Exit(1)
 

@@ -21,11 +21,13 @@ DEFAULT_EXCLUDES = [
     ".arklint.yaml",
 ]
 
+_DEFAULT_SPEC = pathspec.PathSpec.from_lines("gitignore", DEFAULT_EXCLUDES)
+
 
 def collect_files(root: Path) -> list[Path]:
     """Walk root, respecting .gitignore, and return all non-excluded files."""
     gitignore_spec = _load_gitignore(root)
-    default_spec = pathspec.PathSpec.from_lines("gitignore", DEFAULT_EXCLUDES)
+    default_spec = _DEFAULT_SPEC
 
     files = []
     for path in sorted(root.rglob("*")):
@@ -70,7 +72,7 @@ def collect_diff_files(root: Path, base: str = "HEAD") -> list[Path]:
     names.update(_git("diff", "--name-only"))
 
     gitignore_spec = _load_gitignore(root)
-    default_spec = pathspec.PathSpec.from_lines("gitignore", DEFAULT_EXCLUDES)
+    default_spec = _DEFAULT_SPEC
 
     files = []
     for name in sorted(names):
