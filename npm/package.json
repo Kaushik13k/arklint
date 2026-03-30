@@ -1,7 +1,7 @@
 {
   "name": "arklint",
-  "version": "0.6.0",
-  "binaryVersion": "0.6.0",
+  "version": "1.0.0",
+  "binaryVersion": "1.0.0",
   "description": "The architectural rulebook for your codebase. Prevention, not detection.",
   "bin": {
     "arklint": "./run.js"
