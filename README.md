@@ -391,3 +391,4 @@ Dependency parsing works for: `requirements.txt`, `package.json`, `pyproject.tom
 ## License
 
 MIT - see [LICENSE](LICENSE).
+
