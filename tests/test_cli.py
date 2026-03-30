@@ -188,3 +188,69 @@ class TestCheckStatusLine:
         result = runner.invoke(app, ["check", str(scan_dir), "--config", str(cfg)])
         assert "violations" in result.output.lower()
         assert "all rules passed" not in result.output
+
+
+# ---------------------------------------------------------------------------
+# arklint check --json
+# ---------------------------------------------------------------------------
+
+
+class TestCheckJson:
+    def _make_project(self, code: str, severity: str = "error") -> tuple[Path, Path]:
+        tmp_dir = Path(tempfile.mkdtemp())
+        cfg = tmp_dir / ".arklint.yml"
+        cfg.write_text(
+            textwrap.dedent(
+                f"""
+            version: "1"
+            rules:
+              - id: no-print
+                type: pattern-ban
+                description: No print
+                pattern: 'print\\('
+                severity: {severity}
+        """
+            )
+        )
+        (tmp_dir / "main.py").write_text(code)
+        return cfg, tmp_dir
+
+    def test_json_output_is_parseable(self):
+        import json
+
+        cfg, scan_dir = self._make_project('print("hi")\n')
+        result = runner.invoke(app, ["check", str(scan_dir), "--config", str(cfg), "--json"])
+        parsed = json.loads(result.output)
+        assert isinstance(parsed, list)
+
+    def test_json_output_contains_violation_fields(self):
+        import json
+
+        cfg, scan_dir = self._make_project('print("hi")\n')
+        result = runner.invoke(app, ["check", str(scan_dir), "--config", str(cfg), "--json"])
+        violations = json.loads(result.output)
+        assert len(violations) > 0
+        v = violations[0]
+        assert "rule" in v
+        assert "severity" in v
+        assert "file" in v
+
+    def test_json_clean_output_is_empty_list(self):
+        import json
+
+        cfg, scan_dir = self._make_project("x = 1\n")
+        result = runner.invoke(app, ["check", str(scan_dir), "--config", str(cfg), "--json"])
+        parsed = json.loads(result.output)
+        assert parsed == []
+
+
+# ---------------------------------------------------------------------------
+# _run_watch module-level accessibility
+# ---------------------------------------------------------------------------
+
+
+class TestRunWatch:
+    def test_run_watch_is_module_level_callable(self):
+        from arklint.cli import _run_watch
+
+        assert callable(_run_watch)

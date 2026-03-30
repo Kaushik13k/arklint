@@ -339,3 +339,75 @@ class TestLearnCLI:
             ],
         )
         assert "appended" in result.output.lower()
+
+    def test_append_produces_valid_yaml(self, monkeypatch, tmp_path):
+        import yaml
+
+        _mock_suggest(monkeypatch)
+        cfg = _make_config(tmp_path)
+        runner.invoke(
+            app,
+            [
+                "learn",
+                "--describe",
+                "no raw sql",
+                "--config",
+                str(cfg),
+                "--provider",
+                "anthropic",
+                "--api-key",
+                "sk-test",
+                "--append",
+            ],
+        )
+        parsed = yaml.safe_load(cfg.read_text())
+        assert isinstance(parsed, dict)
+
+    def test_append_rule_is_structurally_correct(self, monkeypatch, tmp_path):
+        import yaml
+
+        _mock_suggest(monkeypatch)
+        cfg = _make_config(tmp_path)
+        runner.invoke(
+            app,
+            [
+                "learn",
+                "--describe",
+                "no raw sql",
+                "--config",
+                str(cfg),
+                "--provider",
+                "anthropic",
+                "--api-key",
+                "sk-test",
+                "--append",
+            ],
+        )
+        parsed = yaml.safe_load(cfg.read_text())
+        rule_ids = [r["id"] for r in parsed["rules"]]
+        assert "no-raw-sql" in rule_ids
+
+    def test_append_preserves_existing_rules(self, monkeypatch, tmp_path):
+        import yaml
+
+        _mock_suggest(monkeypatch)
+        cfg = _make_config(tmp_path)
+        runner.invoke(
+            app,
+            [
+                "learn",
+                "--describe",
+                "no raw sql",
+                "--config",
+                str(cfg),
+                "--provider",
+                "anthropic",
+                "--api-key",
+                "sk-test",
+                "--append",
+            ],
+        )
+        parsed = yaml.safe_load(cfg.read_text())
+        rule_ids = [r["id"] for r in parsed["rules"]]
+        assert "no-print" in rule_ids
+        assert "no-raw-sql" in rule_ids
