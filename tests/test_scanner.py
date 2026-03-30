@@ -3,7 +3,9 @@
 import tempfile
 from pathlib import Path
 
-from arklint.scanner import DEFAULT_EXCLUDES, collect_files
+import pathspec
+
+from arklint.scanner import _DEFAULT_SPEC, DEFAULT_EXCLUDES, collect_files
 
 
 class TestDefaultExcludes:
@@ -12,6 +14,38 @@ class TestDefaultExcludes:
 
     def test_arklint_yaml_is_excluded(self):
         assert ".arklint.yaml" in DEFAULT_EXCLUDES
+
+
+class TestDefaultSpec:
+    def test_is_pathspec_instance(self):
+        assert isinstance(_DEFAULT_SPEC, pathspec.PathSpec)
+
+    def test_matches_git_dir(self):
+        assert _DEFAULT_SPEC.match_file(".git/config")
+
+    def test_matches_pycache(self):
+        assert _DEFAULT_SPEC.match_file("__pycache__/foo.pyc")
+
+    def test_does_not_match_source_file(self):
+        assert not _DEFAULT_SPEC.match_file("src/app.py")
+
+
+class TestCollectDiffFiles:
+    def _make_project(self, files: dict[str, str]) -> Path:
+        tmp = Path(tempfile.mkdtemp())
+        for name, content in files.items():
+            path = tmp / name
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(content)
+        return tmp
+
+    def test_returns_empty_list_outside_git_repo(self):
+        from arklint.scanner import collect_diff_files
+
+        root = self._make_project({"main.py": "x = 1"})
+        # Not a git repo — git commands fail, result should be empty
+        result = collect_diff_files(root, base="HEAD")
+        assert result == []
 
 
 class TestCollectFiles:
