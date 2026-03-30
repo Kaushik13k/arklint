@@ -20,7 +20,7 @@ Arklint enforces **architectural rules** before bad code ever lands - whether wr
 ```
 $ arklint check
 
-Arklint v0.6.0 - Scanning 142 files against 5 rules...
+Arklint v1.0.0 - Scanning 142 files against 5 rules...
 
   ✗ FAIL  no-direct-db-in-routes
          API routes must not import database modules directly
@@ -302,7 +302,7 @@ arklint --version                     Show version and exit
 
 ```yaml
 - repo: https://github.com/Kaushik13k/arklint
-  rev: v0.6.0
+  rev: v1.0.0
   hooks:
     - id: arklint
 ```
